@@ -16,5 +16,5 @@ COPY . .
 
 EXPOSE 8000
 
-# Use shell form to expand the dynamic $PORT environment variable provided by Railway
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Explicitly invoke sh -c to guarantee shell expansion of $PORT in all cloud container runtimes
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
