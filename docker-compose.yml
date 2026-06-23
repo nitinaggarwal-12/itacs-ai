@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:16-pg16
+    container_name: itacs-db
+    environment:
+      POSTGRES_DB: itacs_enterprise
+      POSTGRES_USER: itacs_admin
+      POSTGRES_PASSWORD: itacs_secure_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U itacs_admin -d itacs_enterprise"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: itacs-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://itacs_admin:itacs_secure_pass_2026@db:5432/itacs_enterprise
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: itacs-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:

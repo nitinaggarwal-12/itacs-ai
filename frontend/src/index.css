@@ -1,0 +1,168 @@
+/* Custom Styles & Design System for ITACS Enterprise Insights Platform */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.3), 0 0 10px rgba(99, 102, 241, 0.1); }
+  50% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.6), 0 0 25px rgba(99, 102, 241, 0.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: #f3f4f6;
+  background-color: #080b11;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #151a2e 0%, #080b11 70%);
+  background-attachment: fixed;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphic Panel Card */
+.glass-panel {
+  background: rgba(13, 20, 35, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Active Glowing Border */
+.glow-border-active {
+  border-color: rgba(6, 182, 212, 0.5) !important;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+}
+
+/* Premium Gradient Headers */
+.gradient-text {
+  font-family: 'Outfit', sans-serif;
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #d946ef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Micro-interactions */
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-weight: 500;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Animated Entrance */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Dynamic Strategy Lanes */
+.workflow-step-node {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.workflow-step-node::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  width: 16px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.workflow-step-node:last-child::after {
+  display: none;
+}
+
+/* Pulse animation for active step */
+.pulse-active {
+  animation: pulseGlow 2s infinite;
+}
+
+/* Sidebar navigation item active state */
+.sidebar-item-active {
+  background: rgba(99, 102, 241, 0.15) !important;
+  border-left: 3px solid #6366f1 !important;
+  color: white !important;
+}
+
+/* Utility layout cards */
+.title-font {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+}
