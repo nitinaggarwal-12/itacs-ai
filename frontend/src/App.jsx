@@ -3058,13 +3058,44 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             
             {/* Left: Collaborative Digital Node Board */}
             <div className="workshop-canvas-container">
-              <div className="glass-card" style={{ padding: '16px', marginBottom: '14px' }}>
-                <h3 style={{ fontSize: '14.5px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800 }}>
-                  <Users size={14} style={{ color: 'var(--brand-cyan)' }} /> Cross-Functional Alignment Workshop
-                </h3>
-                <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-                  Collaboratively prioritize AI-synthesized themes. Drag nodes on the board to cluster related ideas.
-                </p>
+              <div className="glass-card" style={{ padding: '16px', marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ fontSize: '14.5px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800 }}>
+                    <Users size={14} style={{ color: 'var(--brand-cyan)' }} /> Cross-Functional Alignment Workshop
+                  </h3>
+                  <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                    Collaboratively prioritize AI-synthesized themes. Drag nodes to cluster, double-click to edit, or add custom brainstorm cards.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    const name = prompt("Enter a title for the new strategic launch theme:");
+                    if (!name) return;
+                    const desc = prompt("Enter a short description or weight for this theme:");
+                    if (!desc) return;
+                    
+                    const newId = `node_${Math.random().toString(36).substring(2, 9)}`;
+                    setWorkshopNodes(prev => ({
+                      ...prev,
+                      [newId]: {
+                        id: newId,
+                        name: name,
+                        desc: desc,
+                        left: 180 + Math.random() * 80,
+                        top: 140 + Math.random() * 80,
+                        color: 'var(--brand-cyan)'
+                      }
+                    }));
+                    setWorkshopVotes(prev => ({
+                      ...prev,
+                      [name]: 0
+                    }));
+                  }}
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
+                >
+                  <Plus size={13} /> Add Custom Theme
+                </button>
               </div>
 
               <div 
@@ -3089,26 +3120,46 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </linearGradient>
                   </defs>
                   {/* Elastic roadmap links (Updates in real-time on drag!) */}
-                  <path d={getDynamicLinkPath('node1', 'node2')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d={getDynamicLinkPath('node1', 'node3')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d={getDynamicLinkPath('node2', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  {workshopNodes.node1 && workshopNodes.node2 && <path d={getDynamicLinkPath('node1', 'node2')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />}
+                  {workshopNodes.node1 && workshopNodes.node3 && <path d={getDynamicLinkPath('node1', 'node3')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />}
+                  {workshopNodes.node2 && workshopNodes.node4 && <path d={getDynamicLinkPath('node2', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />}
                   
                   {/* Outer elastic strategic links */}
-                  <path d={getDynamicLinkPath('node2', 'node5')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d={getDynamicLinkPath('node5', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d={getDynamicLinkPath('node6', 'node1')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d={getDynamicLinkPath('node6', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d={getDynamicLinkPath('node3', 'node6')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  {workshopNodes.node2 && workshopNodes.node5 && <path d={getDynamicLinkPath('node2', 'node5')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />}
+                  {workshopNodes.node5 && workshopNodes.node4 && <path d={getDynamicLinkPath('node5', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />}
+                  {workshopNodes.node6 && workshopNodes.node1 && <path d={getDynamicLinkPath('node6', 'node1')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />}
+                  {workshopNodes.node6 && workshopNodes.node4 && <path d={getDynamicLinkPath('node6', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />}
+                  {workshopNodes.node3 && workshopNodes.node6 && <path d={getDynamicLinkPath('node3', 'node6')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />}
                 </svg>
                 
                 {/* Dynamically Render Coordinates & Drag Listeners */}
                 {Object.values(workshopNodes).map(node => {
                   const isBeingDragged = activeDragNode === node.id;
+                  const votesCount = workshopVotes[node.name] || 0;
                   return (
                     <div 
                       key={node.id}
                       className="interactive-theme-node"
                       onMouseDown={(e) => handleNodeMouseDown(node.id, e)}
+                      onDoubleClick={() => {
+                        const newName = prompt("Edit Theme Title:", node.name);
+                        if (!newName) return;
+                        const newDesc = prompt("Edit Theme Description:", node.desc);
+                        if (!newDesc) return;
+                        
+                        setWorkshopNodes(prev => ({
+                          ...prev,
+                          [node.id]: { ...prev[node.id], name: newName, desc: newDesc }
+                        }));
+                        setWorkshopVotes(prev => {
+                          const updated = { ...prev };
+                          if (node.name !== newName) {
+                            updated[newName] = updated[node.name] || 0;
+                            delete updated[node.name];
+                          }
+                          return updated;
+                        });
+                      }}
                       style={{ 
                         position: 'absolute',
                         left: `${node.left}px`, 
@@ -3119,11 +3170,59 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         borderLeft: `3px solid ${node.color || 'var(--brand-indigo)'}`,
                         boxShadow: isBeingDragged ? '0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(6, 182, 212, 0.3)' : 'none',
                         transition: isBeingDragged ? 'none' : 'box-shadow 0.2s ease, border 0.2s ease',
-                        boxSizing: 'border-box'
+                        boxSizing: 'border-box',
+                        padding: '16px 36px 16px 16px'
                       }}
+                      title="Drag to move • Double-click to edit"
                     >
-                      <h4>{node.name}</h4>
-                      <p>{node.desc}</p>
+                      {/* Delete node cross */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Delete "${node.name}" from the workshop board?`)) {
+                            setWorkshopNodes(prev => {
+                              const updated = { ...prev };
+                              delete updated[node.id];
+                              return updated;
+                            });
+                          }
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: '8px',
+                          right: '8px',
+                          background: 'transparent',
+                          border: 'none',
+                          color: 'var(--text-muted)',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          padding: '2px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '4px'
+                        }}
+                        title="Delete theme card"
+                      >
+                        <X size={10} />
+                      </button>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                        <h4 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, flex: 1, color: 'var(--text-primary)' }}>{node.name}</h4>
+                        <span style={{
+                          fontSize: '8.5px',
+                          fontWeight: 'bold',
+                          color: 'var(--brand-cyan)',
+                          background: 'rgba(6, 182, 212, 0.06)',
+                          border: '1px solid rgba(6, 182, 212, 0.2)',
+                          padding: '1px 5px',
+                          borderRadius: '10px',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {votesCount} Vote{votesCount !== 1 && 's'}
+                        </span>
+                      </div>
+                      <p style={{ marginTop: '6px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{node.desc}</p>
                     </div>
                   );
                 })}
@@ -3140,31 +3239,26 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </p>
 
               <div className="voting-list">
-                {[
-                  { name: "Personalized mRNA Logistics", desc: "Scale specialized cold-chain hubs" },
-                  { name: "KRAS Payer Prior Authorization", desc: "Structure volume rebates with payers" },
-                  { name: "Diagnostic Screening Speed", desc: "Deploy rapid single-gene test kits" },
-                  { name: "Subcutaneous Infusion Conversion", desc: "Shift stable adjuvant patients from IV" },
-                  { name: "Companion Diagnostic Kit Scaling", desc: "Install rapid IHC companion assays" },
-                  { name: "Risk-Sharing Payer Agreements", desc: "Structure milestone-based rebate contracts" }
-                ].map(item => {
-                  const itemVotes = workshopVotes[item.name] || 0;
+                {Object.values(workshopNodes).map(node => {
+                  const itemVotes = workshopVotes[node.name] || 0;
                   const totalVotes = Object.values(workshopVotes).reduce((a,b)=>a+b, 0);
                   const percentage = totalVotes > 0 ? Math.round((itemVotes / totalVotes) * 100) : 0;
 
                   return (
-                    <div key={item.name} className="voting-item">
+                    <div key={node.name} className="voting-item">
                       <div className="voting-item-header">
                         <div>
-                          <h5 style={{ fontSize: '14.5px', fontWeight: 800 }}>{item.name}</h5>
-                          <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginTop: '4px', display: 'inline-block' }}>{item.desc}</span>
+                          <h5 style={{ fontSize: '14px', fontWeight: 800 }}>{node.name}</h5>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', display: 'inline-block' }}>
+                            {node.desc.includes('•') ? node.desc.substring(node.desc.indexOf('•') + 1).trim() : node.desc}
+                          </span>
                         </div>
-                        <div className="vote-button-group">
-                          <span style={{ fontSize: '13.5px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>{itemVotes} Votes ({percentage}%)</span>
+                        <div className="vote-button-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 'bold', color: 'var(--brand-cyan)', whiteSpace: 'nowrap' }}>{itemVotes} Votes ({percentage}%)</span>
                           <button 
-                            onClick={() => handleCastWorkshopVote(item.name)}
+                            onClick={() => handleCastWorkshopVote(node.name)}
                             className="btn btn-primary"
-                            style={{ padding: '8px 14px', fontSize: '12px', cursor: 'pointer' }}
+                            style={{ padding: '6px 12px', fontSize: '11.5px', cursor: 'pointer' }}
                           >
                             Vote
                           </button>
