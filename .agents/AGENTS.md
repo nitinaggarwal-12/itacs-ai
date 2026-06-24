@@ -1,0 +1,22 @@
+# 🤖 Agent Rules: ITACS Workspace
+
+## 🚨 CRITICAL RULE: Independent Deployment Verification
+
+### 1. The Constraint
+You must **never** declare a frontend or backend deployment successful, "complete", or "live" based solely on:
+* CLI pipeline exit codes (`railway up` reporting success).
+* Dashboard status indicators (showing a green `Online` bubble).
+* Build log compilation completions.
+
+### 2. The Verification Protocol
+Before wrapping up your turn or notifying the user that a change is live, you **MUST** perform an independent, direct verification of the served assets:
+* **For Frontend SPAs**:
+  1. Perform an HTTP request (e.g. via `curl` or URL fetch tools) to the public or local URL.
+  2. Search the returned HTML or compiled JS asset for a **unique string literal** that only exists in the newly added code changes (a new label, a new tab name, or a new function identifier).
+  3. Verify that the server is physically delivering the new content, not a cached CDN asset or a rolled-back container image.
+* **For Backend APIs**:
+  1. Perform an HTTP request to the target API endpoint.
+  2. Verify that the response payload matches the new schema or database outputs exactly.
+
+### 3. Rationale
+This prevents false-positives caused by silent cloud rollbacks, Docker build caching anomalies, CDN edge caching, and browser bundle caching, ensuring 100% accuracy and respecting the user's time.
