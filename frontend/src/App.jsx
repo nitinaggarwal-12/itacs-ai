@@ -6217,69 +6217,69 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           <div className="drawer-inner-padding animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* Visual Indented Cascade Hierarchy */}
-            <div className="glass-card" style={{ padding: '16px', background: 'var(--bg-tertiary)' }}>
-              <span style={{ fontSize: '8px', color: 'var(--brand-indigo)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px', display: 'block', marginBottom: '12px' }}>
+            <div className="glass-card" style={{ padding: '20px', background: 'var(--bg-tertiary)' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-primary)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', display: 'block', marginBottom: '14px' }}>
                 🔗 Strategic Lineage (Opportunity Space → CSF → What → Why)
               </span>
               
-              <div className="cascade-flow-matrix">
+              <div className="cascade-flow-matrix" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {/* Node 1: Opportunity Space */}
-                <div className="cascade-flow-node">
-                  <div className="cascade-node-content">
-                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-indigo)' }}>OPPORTUNITY SPACE</span>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', fontWeight: 600, color: 'white' }}>{selectedBuilderCard.opportunity_space}</p>
+                <div className="cascade-flow-node" style={{ margin: 0 }}>
+                  <div className="cascade-node-content" style={{ padding: '14px 18px', borderLeft: '3.5px solid var(--brand-indigo)' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-indigo)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>OPPORTUNITY SPACE</span>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)', lineHeight: '1.4' }}>{selectedBuilderCard.opportunity_space}</p>
                   </div>
                 </div>
 
                 {/* Node 2: CSF */}
-                <div className="cascade-flow-node">
-                  <div className="cascade-node-content">
-                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-blue)' }}>CRITICAL SUCCESS FACTOR (CSF)</span>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.csf}</p>
+                <div className="cascade-flow-node" style={{ margin: 0 }}>
+                  <div className="cascade-node-content" style={{ padding: '14px 18px', borderLeft: '3.5px solid var(--brand-blue)' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-blue)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>CRITICAL SUCCESS FACTOR (CSF)</span>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{selectedBuilderCard.csf}</p>
                   </div>
                 </div>
 
                 {/* Node 3: Insight */}
-                <div className="cascade-flow-node">
-                  <div className="cascade-node-content">
-                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>WHAT (INFERRED CLINICAL INSIGHT)</span>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.insight}</p>
+                <div className="cascade-flow-node" style={{ margin: 0 }}>
+                  <div className="cascade-node-content" style={{ padding: '14px 18px', borderLeft: '3.5px solid var(--brand-cyan)' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-cyan)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>WHAT (INFERRED CLINICAL INSIGHT)</span>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{selectedBuilderCard.insight}</p>
                   </div>
                 </div>
 
                 {/* Node 4: Rationale */}
-                <div className="cascade-flow-node">
-                  <div className="cascade-node-content">
-                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-purple)' }}>WHY (COMMERCIAL/LAUNCH RATIONALE)</span>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.rationale}</p>
+                <div className="cascade-flow-node" style={{ margin: 0 }}>
+                  <div className="cascade-node-content" style={{ padding: '14px 18px', borderLeft: '3.5px solid var(--brand-purple)' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-purple)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>WHY (COMMERCIAL/LAUNCH RATIONALE)</span>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '13.5px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>{selectedBuilderCard.rationale}</p>
                   </div>
                 </div>
 
                 {/* Node 5: Implication */}
-                <div className="cascade-flow-node">
-                  <div className="cascade-node-content" style={{ background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.15)' }}>
-                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>HOW (IMPLICATION FOR ACTION)</span>
-                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', fontWeight: 700, color: 'var(--brand-cyan)' }}>{selectedBuilderCard.implication}</p>
+                <div className="cascade-flow-node" style={{ margin: 0 }}>
+                  <div className="cascade-node-content" style={{ padding: '14px 18px', background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.15)', borderLeft: '3.5px solid var(--brand-cyan)' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--brand-cyan)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>HOW (IMPLICATION FOR ACTION)</span>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '14px', fontWeight: 800, color: 'var(--brand-cyan)', lineHeight: '1.4' }}>{selectedBuilderCard.implication}</p>
                   </div>
                 </div>
               </div>
             </div>
             
             {/* Source Grounding References */}
-            <div className="glass-card" style={{ padding: '14px', background: 'var(--bg-tertiary)' }}>
-              <span style={{ fontSize: '8px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+            <div className="glass-card" style={{ padding: '18px', background: 'var(--bg-tertiary)' }}>
+              <span style={{ fontSize: '10.5px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px', display: 'block', marginBottom: '12px' }}>
                 📁 PixelRAG Source Document Grounding
               </span>
-              <div style={{ marginTop: '10px', fontSize: '11px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9px' }}>Source File & Slide Citation</span>
-                  <strong style={{ color: 'var(--text-primary)' }}>{selectedBuilderCard.slide_reference || "Veeva Vault Ingest, slide 1"}</strong>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9.5px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Source File & Slide Citation</span>
+                  <strong style={{ color: 'var(--text-primary)', fontSize: '13.5px', display: 'block', marginTop: '4px' }}>{selectedBuilderCard.slide_reference || "Veeva Vault Ingest, slide 1"}</strong>
                 </div>
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
-                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9px', marginBottom: '4px' }}>Immutable SME Bounding Quotes</span>
+                <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '12px' }}>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9.5px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Immutable SME Bounding Quotes</span>
                   {selectedBuilderCard.quotes && selectedBuilderCard.quotes.map((q, qIdx) => (
-                    <div key={qIdx} style={{ background: 'var(--bg-primary)', padding: '10px', borderRadius: '6px', border: '1px solid var(--glass-border)', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: '1.4', marginBottom: '6px' }}>
-                      "{q.text}" <span style={{ display: 'block', fontSize: '8.5px', color: 'var(--brand-cyan)', marginTop: '4px', fontWeight: 'bold' }}>— Area: {q.location}</span>
+                    <div key={qIdx} style={{ background: 'var(--bg-primary)', padding: '12px 16px', borderRadius: '8px', border: '1px solid var(--glass-border)', fontStyle: 'italic', color: 'var(--text-secondary)', fontSize: '13px', lineHeight: '1.5', marginBottom: '8px' }}>
+                      "{q.text}" <span style={{ display: 'block', fontSize: '9.5px', color: 'var(--brand-cyan)', marginTop: '6px', fontWeight: 'bold', fontStyle: 'normal', textTransform: 'uppercase', letterSpacing: '0.5px' }}>— Area: {q.location}</span>
                     </div>
                   ))}
                 </div>
