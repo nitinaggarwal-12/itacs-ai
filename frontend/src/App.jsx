@@ -2491,49 +2491,51 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                   {/* Sub-Tab 2: Slide Grounding */}
                   {detailTab === 'grounding' && (
-                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0 }}>
-                      <div className="mock-slide-box">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div className="slide-headline-indicator" style={{ width: '60px' }} />
-                          <div style={{ height: '5px', width: '20px', background: '#1e293b', borderRadius: '2px' }} />
+                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div className="mock-slide-box" style={{ padding: '24px', borderRadius: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                          <div className="slide-headline-indicator" style={{ width: '80px', height: '6px' }} />
+                          <div style={{ height: '6px', width: '24px', background: '#1e293b', borderRadius: '2px' }} />
                         </div>
 
-                        <div className="slide-bounding-tile-cyan">
-                          <span style={{ background: '#06b6d4', color: '#06080d', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>OCR COORDINATES BLOCK</span>
-                          <p style={{ fontSize: '7px', margin: 0 }}>"{selectedInsight.quotes[0]?.text || "Logistics are complex."}"</p>
+                        <div className="slide-bounding-tile-cyan" style={{ padding: '8px 12px', borderLeft: '3px solid #06b6d4', marginBottom: '10px' }}>
+                          <span style={{ background: '#06b6d4', color: '#06080d', fontSize: '9.5px', fontWeight: 'bold', padding: '2px 5px', borderRadius: '3px', display: 'inline-block', marginBottom: '6px', letterSpacing: '0.5px' }}>OCR COORDINATES BLOCK</span>
+                          <p style={{ fontSize: '12.5px', fontWeight: 700, margin: 0, color: 'white', lineHeight: '1.4' }}>"{selectedInsight.quotes[0]?.text || "Logistics are complex."}"</p>
                         </div>
 
-                        <div className="slide-bounding-tile-purple">
-                          <span style={{ background: '#c084fc', color: 'white', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>CHART TEXT FIELD</span>
-                          <p style={{ fontSize: '7px', color: '#c084fc', margin: 0 }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
+                        <div className="slide-bounding-tile-purple" style={{ padding: '8px 12px', borderLeft: '3px solid #c084fc' }}>
+                          <span style={{ background: '#c084fc', color: 'white', fontSize: '9.5px', fontWeight: 'bold', padding: '2px 5px', borderRadius: '3px', display: 'inline-block', marginBottom: '6px', letterSpacing: '0.5px' }}>CHART TEXT FIELD</span>
+                          <p style={{ fontSize: '12.5px', color: '#c084fc', margin: 0, fontWeight: 700, lineHeight: '1.4' }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
                         </div>
 
-                        <div className="slide-footer-coords">
+                        <div className="slide-footer-coords" style={{ marginTop: '16px', fontSize: '10px', color: '#64748b', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}>
                           <span>SOURCE: {selectedInsight.slide_reference}</span>
                           <span>COORDS: [x: 104, y: 342, w: 590, h: 120]</span>
                         </div>
                       </div>
 
-                      <span className="verification-heading" style={{ marginTop: '8px', display: 'block', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Verbatim Slide Grounding</span>
-                      {selectedInsight.quotes.map((q, i) => (
-                        <div key={i} className="verbatim-container" style={{ marginTop: '6px' }}>
-                          <p className="italic">"{q.text}"</p>
-                          <span>— Grounded Area: {q.location}</span>
-                        </div>
-                      ))}
+                      <div>
+                        <span className="verification-heading" style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px', marginBottom: '8px' }}>Verbatim Slide Grounding</span>
+                        {selectedInsight.quotes.map((q, i) => (
+                          <div key={i} className="verbatim-container" style={{ marginTop: '8px', background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', padding: '14px 18px', borderRadius: '10px' }}>
+                            <p className="italic" style={{ fontSize: '13.5px', margin: 0, lineHeight: '1.5', color: 'var(--text-primary)' }}>"{q.text}"</p>
+                            <span style={{ display: 'block', fontSize: '10.5px', color: 'var(--brand-cyan)', marginTop: '8px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>— Grounded Area: {q.location}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
 
                   {/* Sub-Tab 3: Compliance & Memory Bank Timeline */}
                   {detailTab === 'audit' && (
-                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, gap: '14px', display: 'flex', flexDirection: 'column', maxHeight: '520px', overflowY: 'auto' }}>
-                      <div className="compliance-metric-row" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '14px', alignItems: 'center', marginTop: '10px' }}>
-                        <div className="compliance-donut" style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #1e293b', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>{Math.round(selectedInsight.compliance_score * 100)}%</span>
+                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, gap: '16px', display: 'flex', flexDirection: 'column', maxHeight: '520px', overflowY: 'auto' }}>
+                      <div className="compliance-metric-row" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '14px', alignItems: 'center', marginTop: '10px', border: '1px solid var(--glass-border)' }}>
+                        <div className="compliance-donut" style={{ width: '44px', height: '44px', borderRadius: '50%', border: '3.5px solid var(--glass-border)', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{Math.round(selectedInsight.compliance_score * 100)}%</span>
                         </div>
                         <div className="compliance-donut-text">
-                          <h5 style={{ fontSize: '10px', margin: 0, fontWeight: 700 }}>Compliance Verification Gating</h5>
-                          <p style={{ fontSize: '8.5px', margin: '2px 0 0 0', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                          <h5 style={{ fontSize: '11.5px', margin: 0, fontWeight: 800, color: 'var(--text-primary)' }}>Compliance Verification Gating</h5>
+                          <p style={{ fontSize: '9.5px', margin: '4px 0 0 0', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                             {selectedInsight.compliance_score >= 0.8
                               ? "APPROVED: Cleared for scientific exchange."
                               : "QUARANTINED: Contains non-compliant commercial terms."}
@@ -2542,31 +2544,30 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       </div>
 
                       {/* SYSTEM OF RECORD: IMMUTABLE MEMORY BANK LEDGER TIMELINE */}
-                      <div style={{ marginTop: '6px' }}>
-                        <span style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
+                      <div style={{ marginTop: '8px' }}>
+                        <span style={{ fontSize: '10.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '12px', letterSpacing: '0.5px' }}>
                           📁 System of Record: Agent Memory Bank
                         </span>
                         
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', borderLeft: '1.5px solid rgba(255,255,255,0.04)', paddingLeft: '14px', marginLeft: '6px', position: 'relative' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderLeft: '2px solid var(--glass-border)', paddingLeft: '16px', marginLeft: '8px', position: 'relative' }}>
                           {activeRevisions.map((rev, rIdx) => (
-                            <div key={rIdx} style={{ position: 'relative', fontSize: '9.5px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid rgba(255, 255, 255, 0.02)', borderRadius: '6px', padding: '10px' }}>
+                            <div key={rIdx} style={{ position: 'relative', background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '14px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)' }}>
                               {/* Glowing dot for revision step */}
-                              <div style={{ position: 'absolute', left: '-20px', top: '12px', width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#06b6d4', border: '2px solid #0b0f19', boxShadow: '0 0 6px #06b6d4' }} />
+                              <div style={{ position: 'absolute', left: '-21px', top: '16px', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--brand-cyan)', border: '2px solid var(--bg-canvas)', boxShadow: '0 0 6px var(--brand-cyan)' }} />
                               
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', color: 'white', marginBottom: '4px' }}>
-                                <span>Version {rev.version} {rev.version === 1 ? '(Genesis)' : '(SME Edit)'}</span>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '8px' }}>{new Date(rev.created_at).toLocaleTimeString()}</span>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', color: 'var(--text-primary)', marginBottom: '6px' }}>
+                                <span style={{ fontSize: '13px', fontWeight: 800 }}>Version {rev.version} {rev.version === 1 ? '(Genesis)' : '(SME Edit)'}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '10px' }}>{new Date(rev.created_at).toLocaleTimeString()}</span>
                               </div>
-                              <p style={{ margin: '0 0 4px 0', color: 'var(--text-secondary)' }}>{rev.change_summary}</p>
-                              <div style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                <span>Identity: <strong>{rev.modified_by.substring(rev.modified_by.lastIndexOf('/') + 1)}</strong></span>
-                                <span style={{ fontFamily: 'monospace', color: 'rgba(6, 182, 212, 0.6)' }}>Hash: {rev.row_hash.substring(0, 20)}...</span>
+                              <p style={{ margin: '0 0 8px 0', fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{rev.change_summary}</p>
+                              <div style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '3px', borderTop: '1px solid var(--glass-border)', paddingTop: '8px' }}>
+                                <span>Identity: <strong style={{ color: 'var(--text-primary)' }}>{rev.modified_by.substring(rev.modified_by.lastIndexOf('/') + 1)}</strong></span>
+                                <span style={{ fontFamily: 'monospace', color: 'var(--brand-cyan)' }}>Hash: {rev.row_hash.substring(0, 20)}...</span>
                               </div>
                             </div>
                           ))}
                         </div>
                       </div>
-
                     </div>
                   )}
 
