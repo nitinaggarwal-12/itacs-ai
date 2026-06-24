@@ -2517,56 +2517,56 @@ export default function App() {
               overflowY: 'auto'
             }}>
               <div>
-                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   EXECUTION TELEMETRY
                 </span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   AI Workstream Diagnostics
                 </h3>
               </div>
 
               {/* Stats Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '10px' }}>
-                  <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>COMPLETION RATE</span>
-                  <strong style={{ fontSize: '20px', color: 'var(--brand-cyan)' }}>
+                <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>COMPLETION RATE</span>
+                  <strong style={{ fontSize: '24px', color: 'var(--brand-cyan)' }}>
                     {Math.round((tacticalTasks.filter(t => t.status === 'Completed').length / tacticalTasks.length) * 100)}%
                   </strong>
-                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                  <span style={{ fontSize: '11.5px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
                     {tacticalTasks.filter(t => t.status === 'Completed').length} of {tacticalTasks.length} tasks completed
                   </span>
                 </div>
 
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '10px' }}>
-                  <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ACTIVE SPRINT</span>
-                  <strong style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>HQ-MELANOMA-26</strong>
-                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>Sprint cycle ends in 12 days</span>
+                <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>ACTIVE SPRINT</span>
+                  <strong style={{ fontSize: '16px', color: 'var(--text-primary)', display: 'block', marginTop: '4px', fontWeight: 800 }}>HQ-MELANOMA-26</strong>
+                  <span style={{ fontSize: '11.5px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Sprint cycle ends in 12 days</span>
                 </div>
               </div>
 
               {/* Progress bars by focus area */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <h4 style={{ margin: 0, fontSize: '9.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                <h4 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
                   Focus Area Distribution
                 </h4>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>Market Access (HEOR)</span>
                       <strong style={{ color: 'var(--text-primary)' }}>2 Tasks</strong>
                     </div>
-                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{ width: '50%', height: '100%', background: 'var(--brand-indigo)' }} />
                     </div>
                   </div>
 
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '4px' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>Medical Affairs</span>
                       <strong style={{ color: 'var(--text-primary)' }}>2 Tasks</strong>
                     </div>
-                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '3px', overflow: 'hidden' }}>
                       <div style={{ width: '50%', height: '100%', background: 'var(--brand-cyan)' }} />
                     </div>
                   </div>
@@ -2575,15 +2575,15 @@ export default function App() {
 
               {/* AI Diagnostic Warnings Feed */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                <h4 style={{ margin: 0, fontSize: '9.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                <h4 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
                   Live Diagnostic Logs
                 </h4>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ background: 'rgba(16,185,129,0.03)', border: '1px solid rgba(16,185,129,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                  <div style={{ background: 'rgba(16,185,129,0.03)', border: '1px solid rgba(16,185,129,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                     <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓ Task T-2 Completed</span>: Diagnostic molecular PCR kit deployment successfully verified at US clinics.
                   </div>
-                  <div style={{ background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                  <div style={{ background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                     <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⚠️ Task T-4 In Progress</span>: MSL training on KRAS clinical packs is currently at 40%. Recommend expediting before Q4 PDUFA review.
                   </div>
                 </div>
@@ -2593,7 +2593,7 @@ export default function App() {
               <button
                 onClick={() => alert("⚡ Downstream execution timelines successfully synchronized with regional MSL and KAM channels!")}
                 className="btn btn-primary"
-                style={{ width: '100%', padding: '12px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: 'auto' }}
+                style={{ width: '100%', padding: '12px', borderRadius: '10px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', marginTop: 'auto' }}
               >
                 ⚡ Synchronize Execution Teams
               </button>
@@ -2680,14 +2680,14 @@ export default function App() {
                       <div className="voting-item-header">
                         <div>
                           <h5>{item.name}</h5>
-                          <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>{item.desc}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', display: 'inline-block' }}>{item.desc}</span>
                         </div>
                         <div className="vote-button-group">
-                          <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>{itemVotes} Votes ({percentage}%)</span>
+                          <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>{itemVotes} Votes ({percentage}%)</span>
                           <button 
                             onClick={() => handleCastWorkshopVote(item.name)}
                             className="btn btn-primary"
-                            style={{ padding: '4px 8px', fontSize: '8px' }}
+                            style={{ padding: '6px 12px', fontSize: '11px', cursor: 'pointer' }}
                           >
                             Vote
                           </button>
@@ -5591,28 +5591,28 @@ export default function App() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {/* Score 1: Clinical Efficacy */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                     <span style={{ color: 'var(--text-secondary)' }}>Clinical Evidence Pitching</span>
-                    <strong style={{ color: 'white' }}>{roleplayScores.clinicalEvidence}/100</strong>
+                    <strong style={{ color: 'var(--text-primary)' }}>{roleplayScores.clinicalEvidence}/100</strong>
                   </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${roleplayScores.clinicalEvidence}%`, height: '100%', background: '#10b981', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+                  <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: `${roleplayScores.clinicalEvidence}%`, height: '100%', background: '#10b981', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                   </div>
                 </div>
 
                 {/* Score 2: HEOR Payer Argument */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
                     <span style={{ color: 'var(--text-secondary)' }}>Payer / HEOR Value Alignment</span>
-                    <strong style={{ color: 'white' }}>{roleplayScores.payerArgument}/100</strong>
+                    <strong style={{ color: 'var(--text-primary)' }}>{roleplayScores.payerArgument}/100</strong>
                   </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${roleplayScores.payerArgument}%`, height: '100%', background: 'var(--brand-cyan)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+                  <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div style={{ width: `${roleplayScores.payerArgument}%`, height: '100%', background: 'var(--brand-cyan)', borderRadius: '4px', transition: 'width 0.4s ease' }} />
                   </div>
                 </div>
               </div>
 
-              <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px 14px', borderRadius: '10px', fontSize: '9.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              <div style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', padding: '14px 16px', borderRadius: '10px', fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
                 💡 <strong>MSL Messaging Coach Tip:</strong><br />
                 To secure a Grade A pitch, make sure to explicitly cite:
                 <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px' }}>
