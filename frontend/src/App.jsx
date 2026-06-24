@@ -209,6 +209,25 @@ export default function App() {
       if (simIntervalRef.current) clearInterval(simIntervalRef.current);
     };
   }, []);
+
+  // 1. Competitive Wargaming States
+  const [warTimeline, setWarTimeline] = useState(6); // months
+  const [warRebate, setWarRebate] = useState(15); // %
+  const [warOSMargin, setWarOSMargin] = useState(10); // %
+
+  // 2. Agent Skill Studio States
+  const [forbiddenWords, setForbiddenWords] = useState(["ROI", "Market Share", "Revenue", "Off-Label"]);
+  const [newWordInput, setNewWordInput] = useState("");
+  const [testBenchInput, setTestBenchInput] = useState("");
+  const [testBenchResult, setTestBenchResult] = useState(null);
+
+  // 3. Global Market Radar States
+  const [selectedRegionFilter, setSelectedRegionFilter] = useState('ALL');
+
+  // 4. Executive Deck Studio States
+  const [deckApprovedSlides, setDeckApprovedSlides] = useState([]);
+  const [isCompilingDeck, setIsCompilingDeck] = useState(false);
+  const [compilationStep, setCompilationStep] = useState(0);
   
   // Selection
   const [selectedInsight, setSelectedInsight] = useState(DEFAULT_INSIGHTS[0]);
@@ -1268,6 +1287,18 @@ export default function App() {
             <Sparkles size={16} /> Launch Cockpit
           </button>
           <button 
+            onClick={() => setActiveTab('wargaming')}
+            className={`sidebar-nav-btn ${activeTab === 'wargaming' ? 'active' : ''}`}
+          >
+            <Play size={16} style={{ color: 'var(--brand-purple)' }} /> Competitive Wargaming
+          </button>
+          <button 
+            onClick={() => setActiveTab('radar')}
+            className={`sidebar-nav-btn ${activeTab === 'radar' ? 'active' : ''}`}
+          >
+            <Eye size={16} style={{ color: 'var(--brand-cyan)' }} /> Global Market Radar
+          </button>
+          <button 
             onClick={() => setActiveTab('tracker')}
             className={`sidebar-nav-btn ${activeTab === 'tracker' ? 'active' : ''}`}
           >
@@ -1298,12 +1329,28 @@ export default function App() {
         </div>
 
         <div className="nav-group">
+          <span className="nav-group-title">Deliverables</span>
+          <button 
+            onClick={() => setActiveTab('deck')}
+            className={`sidebar-nav-btn ${activeTab === 'deck' ? 'active' : ''}`}
+          >
+            <FileText size={16} style={{ color: 'var(--brand-blue)' }} /> Executive Deck Studio
+          </button>
+        </div>
+
+        <div className="nav-group">
           <span className="nav-group-title">Govern & Control</span>
           <button 
             onClick={() => setActiveTab('ingest')}
             className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
           >
             <Database size={16} /> Ingestion Factory
+          </button>
+          <button 
+            onClick={() => setActiveTab('skills')}
+            className={`sidebar-nav-btn ${activeTab === 'skills' ? 'active' : ''}`}
+          >
+            <Settings size={16} style={{ color: 'var(--brand-cyan)' }} /> Agent Skill Studio
           </button>
         </div>
 
@@ -3443,8 +3490,829 @@ export default function App() {
                 </div>
               </div>
             </div>
+        )}
+
+        {/* 1. EXECUTIVE DECK STUDIO */}
+        {activeTab === 'deck' && (
+          <div className="deck-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '360px 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left: Outline Pane */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '16px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-blue)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  GOLT DELIVERABLE CONSOLE
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Executive Deck Studio
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Assemble, review, and compile the final Oncology Launch Strategy slide deck. Approve imperatives slide-by-slide.
+                </p>
+              </div>
+
+              {/* Slide List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, marginTop: '10px' }}>
+                {[
+                  { index: 1, type: 'Title Slide', title: 'ITACS Adjuvant Launch Strategy', pillar: 'Executive Intro' },
+                  { index: 2, type: 'Strategic Imperative', title: 'Sharpen Clinical Differentiation via Adjuvant Combo', pillar: 'Sharpen Clinical Differentiation' },
+                  { index: 3, type: 'Strategic Imperative', title: 'Demonstrate Payer Value & HEOR Evidence', pillar: 'Demonstrate Payer Value' },
+                  { index: 4, type: 'Strategic Imperative', title: 'Accelerate Diagnostic Screening Infrastructure', pillar: 'Accelerate Diagnostic Speed' },
+                  { index: 5, type: 'Strategic Imperative', title: 'Optimize Operational Launch Readiness Timeline', pillar: 'Optimize Launch Readiness' }
+                ].map(slide => (
+                  <div
+                    key={slide.index}
+                    style={{
+                      padding: '12px',
+                      borderRadius: '10px',
+                      background: 'rgba(255,255,255,0.01)',
+                      border: '1px solid rgba(255,255,255,0.04)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '10px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>
+                        SLIDE {slide.index} • {slide.type}
+                      </span>
+                      <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 700 }}>
+                        {slide.title.substring(0, 32)}...
+                      </h4>
+                    </div>
+                    
+                    {/* Slide approval checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={deckApprovedSlides.includes(slide.index)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setDeckApprovedSlides(prev => [...prev, slide.index]);
+                        } else {
+                          setDeckApprovedSlides(prev => prev.filter(idx => idx !== slide.index));
+                        }
+                      }}
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        accentColor: 'var(--brand-cyan)',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0 }}>
+                <button
+                  onClick={() => {
+                    setIsCompilingDeck(true);
+                    setCompilationStep(1);
+                    setTimeout(() => setCompilationStep(2), 1500);
+                    setTimeout(() => setCompilationStep(3), 3000);
+                    setTimeout(() => {
+                      setIsCompilingDeck(false);
+                      alert("⚡ GOLT Strategic Presentation compiled successfully! Download dispatched.");
+                    }, 4500);
+                  }}
+                  disabled={isCompilingDeck}
+                  className="btn btn-primary"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-indigo) 100%)',
+                    fontWeight: 'bold',
+                    fontSize: '11.5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Sparkles size={14} fill="white" />
+                  {isCompilingDeck ? 'Compiling presentation deck...' : '⚡ Auto-Generate GOLT Deck'}
+                </button>
+                <div style={{ fontSize: '8.5px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                  Approved Slides: {deckApprovedSlides.length} of 5 selected
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Slide Preview Pane */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              height: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}>
+              {/* PPTX slide mockup container */}
+              <div className="glass-card" style={{
+                flex: 1,
+                background: '#0b0f19',
+                border: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: '16px',
+                padding: '40px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                aspectRatio: '16/9',
+                position: 'relative',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}>
+                {/* PPTX Border Badge */}
+                <div style={{
+                  position: 'absolute',
+                  top: '20px', right: '24px',
+                  fontSize: '8px',
+                  color: 'var(--text-muted)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '2px 8px',
+                  borderRadius: '10px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  Microsoft PowerPoint • 16:9 widescreen template
+                </div>
+
+                {/* Merck Corporate Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '18px' }}>🧬</span>
+                  <div>
+                    <h5 style={{ margin: 0, fontSize: '13px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 800 }}>
+                      ITACS GOLT STRATEGIC ROADMAP
+                    </h5>
+                    <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)' }}>
+                      Strictly Confidential • Oncology Launch Command
+                    </p>
+                  </div>
+                </div>
+
+                {/* Slide content area */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+                  <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'white', letterSpacing: '-0.5px' }}>
+                    MK-940 Adjuvant Recurrence Risk Reduction Plan
+                  </h1>
+                  
+                  {/* Grid showing bullets mapping to active Postgres memory */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '10px' }}>
+                    <div style={{ borderLeft: '3px solid var(--brand-indigo)', paddingLeft: '14px' }}>
+                      <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-indigo)', fontWeight: 700 }}>
+                        CLINICAL DIFFERENTIATION STRATEGY
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch.
+                      </p>
+                    </div>
+                    <div style={{ borderLeft: '3px solid var(--brand-purple)', paddingLeft: '14px' }}>
+                      <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-purple)', fontWeight: 700 }}>
+                        MARKET ACCESS REIMBURSEMENT ROADMAP
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer brand block */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
+                  <span style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
+                    Author: Global Oncology Leadership Team (GOLT)
+                  </span>
+                  <span style={{ fontSize: '9.5px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>
+                    Slide 2 of 5 • Approved: {deckApprovedSlides.includes(2) ? '✓ Yes' : '✕ Pending'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Deck Compiler Console */}
+              {isCompilingDeck && (
+                <div className="glass-card animate-scale-in" style={{
+                  padding: '16px 20px',
+                  background: 'rgba(5, 7, 12, 0.95)',
+                  border: '1px solid rgba(99, 102, 241, 0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '16px'
+                }}>
+                  <RefreshCw className="animate-spin" style={{ color: 'var(--brand-indigo)' }} size={20} />
+                  <div style={{ flex: 1 }}>
+                    <h5 style={{ margin: 0, fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                      {compilationStep === 1 && "Ingesting approved OKF memory pillars..."}
+                      {compilationStep === 2 && "Mapping strategic timelines and JSON metrics..."}
+                      {compilationStep === 3 && "Injecting corporate slide templates & compiling PPTX..."}
+                    </h5>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                      VLM document-generator pipeline active. Spiffe identity token checked.
+                    </p>
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>
+                    {compilationStep * 33}% Complete
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         )}
+
+        {/* 2. COMPETITIVE WARGAMING SANDBOX */}
+        {activeTab === 'wargaming' && (
+          <div className="wargaming-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflowY: 'auto'
+          }}>
+            {/* Top row: Slider parameter controls */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  PREDICTIVE SCENARIO SIMULATOR
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Competitive Wargaming Sandbox
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Adjust competitor market variables using the sliders below. ITACS' AI instantly evaluates the structural risk on your Strategic Imperatives.
+                </p>
+              </div>
+
+              {/* Sliders Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px', marginTop: '10px' }}>
+                {/* Slider 1: Competitor Timeline */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Competitor X FDA Approval</span>
+                    <strong style={{ color: 'white' }}>{warTimeline} Months</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="12"
+                    value={warTimeline}
+                    onChange={(e) => setWarTimeline(parseInt(e.target.value))}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                    <span>Immediate (1m)</span>
+                    <span>Delayed (12m)</span>
+                  </div>
+                </div>
+
+                {/* Slider 2: Payer Rebates */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Competitor Rebate Pressure</span>
+                    <strong style={{ color: 'white' }}>{warRebate}% Discount</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    value={warRebate}
+                    onChange={(e) => setWarRebate(parseInt(e.target.value))}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                    <span>0% rebate</span>
+                    <span>Aggressive (50%)</span>
+                  </div>
+                </div>
+
+                {/* Slider 3: Clinical OS Margin */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Trial OS (Overall Survival) Margin</span>
+                    <strong style={{ color: 'white' }}>+{warOSMargin}% Margin</strong>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="30"
+                    value={warOSMargin}
+                    onChange={(e) => setWarOSMargin(parseInt(e.target.value))}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                  />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                    <span>Unblinded (0%)</span>
+                    <span>Superior (+30%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom row: Impact Heatmap Matrix */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'white' }}>
+                  Imperative Strategic Impact Heatmap
+                </h3>
+                {/* Flash Warning Badge */}
+                {(warRebate >= 30 || warOSMargin < 5) && (
+                  <span className="animate-pulse" style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#ef4444', background: 'rgba(239,68,68,0.1)', padding: '3px 10px', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.2)' }}>
+                    ⚠️ ALERT: HIGH COMPETITIVE PRESSURE IN MARKET
+                  </span>
+                )}
+              </div>
+
+              {/* Heatmap Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginTop: '10px' }}>
+                {[
+                  {
+                    id: 1,
+                    title: 'CSF-1: Clinical Differentiation',
+                    desc: 'Evaluates the survival margin difference against competitor discount plans.',
+                    eval: () => {
+                      if (warOSMargin >= 15) return { status: '🟢 LOW RISK', color: '#10b981', bg: 'rgba(16,185,129,0.02)', border: 'rgba(16,185,129,0.15)' };
+                      if (warOSMargin >= 5) return { status: '🟡 MODERATE', color: '#f59e0b', bg: 'rgba(245,158,11,0.02)', border: 'rgba(245,158,11,0.15)' };
+                      return { status: '🔴 HIGH RISK', color: '#ef4444', bg: 'rgba(239,68,68,0.02)', border: 'rgba(239,68,68,0.15)' };
+                    }
+                  },
+                  {
+                    id: 2,
+                    title: 'CSF-2: Payer Reimbursement Access',
+                    desc: 'Evaluates pricing integrity under aggressive rebate demands.',
+                    eval: () => {
+                      if (warRebate <= 15) return { status: '🟢 LOW RISK', color: '#10b981', bg: 'rgba(16,185,129,0.02)', border: 'rgba(16,185,129,0.15)' };
+                      if (warRebate <= 30) return { status: '🟡 MODERATE', color: '#f59e0b', bg: 'rgba(245,158,11,0.02)', border: 'rgba(245,158,11,0.15)' };
+                      return { status: '🔴 HIGH RISK', color: '#ef4444', bg: 'rgba(239,68,68,0.02)', border: 'rgba(239,68,68,0.15)' };
+                    }
+                  },
+                  {
+                    id: 3,
+                    title: 'CSF-3: Diagnostic Speed & Scale',
+                    desc: 'Evaluates operational readiness delays under competitor approval acceleration.',
+                    eval: () => {
+                      if (warTimeline >= 8) return { status: '🟢 LOW RISK', color: '#10b981', bg: 'rgba(16,185,129,0.02)', border: 'rgba(16,185,129,0.15)' };
+                      if (warTimeline >= 4) return { status: '🟡 MODERATE', color: '#f59e0b', bg: 'rgba(245,158,11,0.02)', border: 'rgba(245,158,11,0.15)' };
+                      return { status: '🔴 HIGH RISK', color: '#ef4444', bg: 'rgba(239,68,68,0.02)', border: 'rgba(239,68,68,0.15)' };
+                    }
+                  }
+                ].map(csf => {
+                  const rating = csf.eval();
+                  return (
+                    <div
+                      key={csf.id}
+                      style={{
+                        padding: '20px',
+                        borderRadius: '12px',
+                        background: rating.bg,
+                        border: `1px solid ${rating.border}`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 800, color: 'white' }}>
+                            {csf.title}
+                          </h4>
+                          <span style={{ fontSize: '9px', fontWeight: 'bold', color: rating.color }}>
+                            {rating.status}
+                          </span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                          {csf.desc}
+                        </p>
+                      </div>
+                      
+                      {/* Metric readout */}
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
+                        Current Threshold: <strong style={{ color: 'white' }}>
+                          {csf.id === 1 && `+${warOSMargin}% OS Margin`}
+                          {csf.id === 2 && `${warRebate}% rebate`}
+                          {csf.id === 3 && `${warTimeline}m competitor lead`}
+                        </strong>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 3. GLOBAL MARKET RADAR */}
+        {activeTab === 'radar' && (
+          <div className="radar-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '360px 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left: Region List & Filters */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '16px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  GEOGRAPHIC ROLLOUT GRID
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Global Market Radar
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Oncology launches are global. Filter the strategic memory log and insights database by clicking regional markets below.
+                </p>
+              </div>
+
+              {/* Filter controls */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', flex: 1 }}>
+                <button
+                  onClick={() => setSelectedRegionFilter('ALL')}
+                  className={`btn ${selectedRegionFilter === 'ALL' ? 'btn-primary' : 'btn-subtle'}`}
+                  style={{ width: '100%', padding: '10px', fontSize: '11px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                >
+                  <span>🌍 All Global Launch Insights</span>
+                  <span>{insights.length} Cards</span>
+                </button>
+
+                {[
+                  { code: 'US', label: 'United States (FDA)', color: '#10b981', status: 'GREEN (Ready)', desc: 'FDA clearance achieved, clinical pathways validated.' },
+                  { code: 'EU', label: 'European Union (EMA)', color: '#f59e0b', status: 'AMBER (HEOR Review)', desc: 'EMA approval secured; Germany G-BA pricing pushback active.' },
+                  { code: 'APAC', label: 'Asia-Pacific (APAC)', color: '#f59e0b', status: 'AMBER (Diagnostic Lag)', desc: 'Japan PMDA bridge trials active; diagnostic kit scale delay.' }
+                ].map(region => (
+                  <button
+                    key={region.code}
+                    onClick={() => setSelectedRegionFilter(region.code)}
+                    className="glass-card"
+                    style={{
+                      width: '100%',
+                      padding: '14px',
+                      background: selectedRegionFilter === region.code ? 'rgba(255,255,255,0.03)' : 'transparent',
+                      border: `1px solid ${selectedRegionFilter === region.code ? 'var(--brand-cyan)' : 'rgba(255,255,255,0.04)'}`,
+                      borderLeft: `3px solid ${region.color}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4px',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                      <strong style={{ fontSize: '11.5px', color: 'white' }}>{region.label}</strong>
+                      <span style={{ fontSize: '8px', fontWeight: 'bold', color: region.color }}>{region.status}</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)', lineHeight: '1.3' }}>
+                      {region.desc}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Filtered Strategic Memory Grid */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              height: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}>
+              {/* Header */}
+              <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                  Active Region Filter: <strong style={{ color: 'var(--brand-cyan)' }}>{selectedRegionFilter === 'ALL' ? 'All Global Markets' : selectedRegionFilter}</strong>
+                </span>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Showing {selectedRegionFilter === 'ALL' ? insights.length : insights.filter(ins => ins.tumor === selectedRegionFilter || (selectedRegionFilter === 'US' && ins.tumor === 'Melanoma') || (selectedRegionFilter === 'EU' && ins.tumor === 'Neoadjuvant')).length} strategic records
+                </span>
+              </div>
+
+              {/* Cards Grid */}
+              <div style={{
+                flex: 1,
+                overflowY: 'auto',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '16px',
+                alignContent: 'start',
+                paddingRight: '6px'
+              }}>
+                {insights
+                  .filter(ins => {
+                    if (selectedRegionFilter === 'ALL') return true;
+                    if (selectedRegionFilter === 'US') return ins.tumor === 'Melanoma' || ins.owner === 'Dr. Sarah Patel';
+                    if (selectedRegionFilter === 'EU') return ins.tumor === 'Neoadjuvant' || ins.owner === 'Dr. Marcus Vance';
+                    if (selectedRegionFilter === 'APAC') return ins.tumor === 'Diagnostic' || ins.owner === 'Global Market Access';
+                    return true;
+                  })
+                  .map(ins => (
+                    <div
+                      key={ins.id}
+                      className="glass-card animate-scale-in"
+                      style={{
+                        padding: '16px',
+                        borderLeft: `3px solid ${ins.strategic_pillar ? 'var(--brand-indigo)' : 'var(--brand-purple)'}`,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '12px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6,182,212,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                            {ins.strategic_pillar || 'UNASSIGNED PILLAR'}
+                          </span>
+                          <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>ID: {ins.id.substring(0, 8)}</span>
+                        </div>
+                        <h4 style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                          {ins.title}
+                        </h4>
+                        <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                          {ins.implication}
+                        </p>
+                      </div>
+                      
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px', fontSize: '9px', color: 'var(--text-muted)' }}>
+                        <span>Asset: <strong>{ins.asset}</strong></span>
+                        <span>Owner: <strong>{ins.owner}</strong></span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 4. AGENT SKILL STUDIO */}
+        {activeTab === 'skills' && (
+          <div className="skills-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '360px 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left: Dictionary Manager */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '16px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  NO-CODE AI CONTROL ROOM
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Agent Skill Studio
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Visual dictionary management for the Compliance Supervisor agent. Add or remove custom forbidden vocabulary.
+                </p>
+              </div>
+
+              {/* Forbidden Words List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, overflowY: 'auto', marginTop: '10px' }}>
+                <span style={{ fontSize: '8.5px', color: 'var(--text-muted)', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                  Active Compliance Dictionary ({forbiddenWords.length} tokens)
+                </span>
+                
+                {forbiddenWords.map(word => (
+                  <div
+                    key={word}
+                    style={{
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      background: 'rgba(239,68,68,0.02)',
+                      border: '1px solid rgba(239,68,68,0.08)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span style={{ fontSize: '11px', color: 'white', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                      {word}
+                    </span>
+                    
+                    {/* Delete button */}
+                    <button
+                      onClick={() => {
+                        setForbiddenWords(prev => prev.filter(w => w !== word));
+                        setTestBenchResult(null);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'rgba(255,255,255,0.4)',
+                        cursor: 'pointer',
+                        fontSize: '11px'
+                      }}
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Custom Word Input */}
+              <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                <input
+                  type="text"
+                  placeholder="Type new forbidden word..."
+                  value={newWordInput}
+                  onChange={(e) => setNewWordInput(e.target.value)}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    fontSize: '11px',
+                    color: 'white'
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    if (!newWordInput.trim()) return;
+                    if (forbiddenWords.includes(newWordInput.trim())) return;
+                    setForbiddenWords(prev => [...prev, newWordInput.trim()]);
+                    setNewWordInput("");
+                    setTestBenchResult(null);
+                  }}
+                  className="btn btn-primary"
+                  style={{ padding: '8px 14px', fontSize: '11px', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  Add Word
+                </button>
+              </div>
+            </div>
+
+            {/* Right: Test Bench chat window */}
+            <div style={{
+              display: 'grid',
+              gridTemplateRows: '1fr auto',
+              gap: '20px',
+              height: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}>
+              {/* Test Sandbox Terminal */}
+              <div className="glass-card" style={{
+                background: 'rgba(5, 7, 12, 0.6)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '16px',
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                overflowY: 'auto'
+              }}>
+                <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'white', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShieldAlert size={14} style={{ color: 'var(--brand-cyan)' }} /> Guardrail Validation Test Bench
+                </h3>
+                <p style={{ margin: 0, fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Write or paste a sample clinical draft below and click "Validate Guardrails" to verify how the supervisor agent intercepts commercial vocabulary before pushing it to production.
+                </p>
+
+                {/* Plaintext input */}
+                <textarea
+                  value={testBenchInput}
+                  onChange={(e) => setTestBenchInput(e.target.value)}
+                  placeholder="Example: Medical Affairs expectations: Strong clinical adoption in clinics which will drive rapid market share gains and guarantee a high ROI on our investments."
+                  style={{
+                    flex: 1,
+                    background: '#04060b',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    fontFamily: 'monospace',
+                    fontSize: '11.5px',
+                    color: 'white',
+                    resize: 'none',
+                    lineHeight: '1.6'
+                  }}
+                />
+
+                {/* Validation Response Panel */}
+                {testBenchResult && (
+                  <div className="animate-scale-in" style={{
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    background: testBenchResult.status === 'pass' ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)',
+                    border: `1px solid ${testBenchResult.status === 'pass' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px'
+                  }}>
+                    <span style={{ fontSize: '9px', fontWeight: 'bold', color: testBenchResult.status === 'pass' ? '#10b981' : '#ef4444', textTransform: 'uppercase' }}>
+                      {testBenchResult.status === 'pass' ? '✓ Compliance Verification Passed' : '⚠️ Guardrail Breach Intercepted'}
+                    </span>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'white', lineHeight: '1.4' }}>
+                      {testBenchResult.message}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Trigger Row */}
+              <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
+                <button
+                  onClick={() => {
+                    if (!testBenchInput.trim()) {
+                      alert("Please type a test paragraph first.");
+                      return;
+                    }
+                    const textLower = testBenchInput.toLowerCase();
+                    const detected = forbiddenWords.filter(word => textLower.includes(word.toLowerCase()));
+                    
+                    if (detected.length > 0) {
+                      setTestBenchResult({
+                        status: 'fail',
+                        message: `COMPLIANCE REGRESSION: Paragraph blocked. Prohibited lane vocabulary detected: [${detected.join(', ')}]. Spiffe gateway has quarantined this record.`
+                      });
+                    } else {
+                      setTestBenchResult({
+                        status: 'pass',
+                        message: `SAFE CLINICAL DRAFT: Ingress pipeline approved. Zero compliance regressions found against active vocabulary dictionary.`
+                      });
+                    }
+                  }}
+                  className="btn btn-primary"
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
+                    fontWeight: 'bold',
+                    fontSize: '11.5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Test Compliance Guardrail Rule
+                </button>
+                <button
+                  onClick={() => {
+                    setTestBenchInput("");
+                    setTestBenchResult(null);
+                  }}
+                  className="btn btn-subtle"
+                  style={{ padding: '12px 20px', borderRadius: '10px', cursor: 'pointer', fontSize: '11.5px' }}
+                >
+                  Reset Bench
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
 
       </div>
 
