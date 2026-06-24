@@ -1633,7 +1633,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
 
                 <div className="glass-card" style={{ padding: '16px' }}>
                   <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Ledger Output</span>
-                  <pre style={{ margin: '8px 0 0 0', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', fontSize: '9px', color: 'var(--brand-cyan)', overflowX: 'auto', white-space: 'pre-wrap' }}>
+                  <pre style={{ margin: '8px 0 0 0', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', fontSize: '9px', color: 'var(--brand-cyan)', overflowX: 'auto', whiteSpace: 'pre-wrap' }}>
                     {selectedAuditLog.model_output}
                   </pre>
                 </div>
