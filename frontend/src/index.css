@@ -1029,51 +1029,45 @@ body {
   opacity: 0.9;
 }
 
-/* The Connected Cascade Flow (The World-Class Fix!) */
+/* The Connected Cascade Flow (The Indented Cascading Hierarchy) */
 .cascade-flow-matrix {
   display: flex;
   flex-direction: column;
-  position: relative;
-  padding-left: 20px;
   margin-top: 10px;
-}
-
-/* Vertical Laser Line */
-.cascade-flow-matrix::before {
-  content: '';
-  position: absolute;
-  top: 15px;
-  bottom: 15px;
-  left: 5px;
-  width: 2px;
-  background: linear-gradient(180deg, var(--brand-indigo) 0%, var(--brand-cyan) 50%, var(--color-success) 100%);
-  z-index: 1;
+  gap: 12px;
 }
 
 .cascade-flow-node {
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-bottom: 16px;
-  z-index: 2;
+  transition: all 0.3s ease;
 }
 
-.cascade-node-marker {
-  position: absolute;
-  left: -20px;
-  top: 2px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--bg-primary);
-  border: 2px solid var(--brand-indigo);
-  box-shadow: 0 0 6px var(--brand-indigo);
+/* Progressive Indentation & Color-Coded Elbow Borders (Drill-Down Logic!) */
+.cascade-flow-node:nth-child(1) {
+  margin-left: 0;
 }
-
-.cascade-flow-node:nth-child(2) .cascade-node-marker { border-color: var(--brand-blue); box-shadow: 0 0 6px var(--brand-blue); }
-.cascade-flow-node:nth-child(3) .cascade-node-marker { border-color: var(--brand-cyan); box-shadow: 0 0 6px var(--brand-cyan); }
-.cascade-flow-node:nth-child(4) .cascade-node-marker { border-color: var(--brand-purple); box-shadow: 0 0 6px var(--brand-purple); }
-.cascade-flow-node:nth-child(5) .cascade-node-marker { border-color: var(--color-success); box-shadow: 0 0 6px var(--color-success); }
+.cascade-flow-node:nth-child(2) {
+  margin-left: 20px;
+  border-left: 2px solid var(--brand-blue);
+  padding-left: 14px;
+}
+.cascade-flow-node:nth-child(3) {
+  margin-left: 40px;
+  border-left: 2px solid var(--brand-cyan);
+  padding-left: 14px;
+}
+.cascade-flow-node:nth-child(4) {
+  margin-left: 40px;
+  border-left: 2px solid var(--brand-purple);
+  padding-left: 14px;
+}
+.cascade-flow-node:nth-child(5) {
+  margin-left: 40px;
+  border-left: 2px solid var(--color-success);
+  padding-left: 14px;
+}
 
 .cascade-node-content {
   background: rgba(255, 255, 255, 0.015);
@@ -1635,8 +1629,8 @@ body {
   gap: 20px;
   padding: 24px 32px;
   box-sizing: border-box;
-  height: calc(100vh - 80px);
-  overflow-y: auto;
+  height: calc(100vh - 120px);
+  overflow-y: hidden; /* Lock outer board */
 }
 
 .kanban-column {
@@ -1646,7 +1640,8 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 100%;
+  max-height: calc(100vh - 140px); /* Fill the screen height */
   box-sizing: border-box;
 }
 
@@ -1661,7 +1656,7 @@ body {
 
 .kanban-column-header h3 {
   font-family: 'Outfit', sans-serif;
-  font-size: 12px;
+  font-size: 14.5px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1673,7 +1668,7 @@ body {
 .kanban-column-header.diag h3 { color: var(--color-success); }
 
 .kanban-card-count {
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   background-color: rgba(255, 255, 255, 0.04);
   padding: 2px 6px;
@@ -1683,11 +1678,19 @@ body {
 
 .kanban-cards-container {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* Independent scrollway! */
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding-right: 4px;
+}
+/* Hide scrollbar for kanban column cards scrollway */
+.kanban-cards-container::-webkit-scrollbar {
+  width: 4px;
+}
+.kanban-cards-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
 }
 
 .kanban-card {
@@ -1751,6 +1754,8 @@ body {
    TACTICAL WORKSTREAM TRACKER (GANTT & PROJECT VIEW)
    ===================================================================== */
 .workstream-layout {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 28px 32px;
   box-sizing: border-box;
 }
@@ -1766,12 +1771,12 @@ body {
   background-color: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 16px 20px;
-  display: grid;
-  grid-template-columns: 0.8fr 1.8fr 1fr 1.2fr 0.8fr;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  transition: border-color 0.2s ease;
+  gap: 24px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .workstream-row:hover {
@@ -2109,6 +2114,18 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* Visual Connecting Tethers (Glow Animation!) */
+@keyframes stroke-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.animated-tether {
+  animation: stroke-flow 1.5s linear infinite;
+  filter: drop-shadow(0 0 4px var(--brand-cyan));
 }
 
 

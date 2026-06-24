@@ -56,7 +56,7 @@ const DEFAULT_INSIGHTS = [
     },
     compliance_score: 0.72,
     requires_human_review: true,
-    is_quarantined: true,
+    is_quarantined: false,
     is_stale: false,
     is_validated: false,
     created_at: new Date(Date.now() - 3600000 * 2).toISOString()
@@ -278,7 +278,9 @@ export default function App() {
       const confRes = await fetch(`${API_URL}/api/conflicts`);
       if (confRes.ok) {
         const data = await confRes.json();
-        setConflicts(data);
+        if (data && data.length > 0) {
+          setConflicts(data);
+        }
       }
 
       const auditRes = await fetch(`${API_URL}/api/audit-trail`);
@@ -1125,6 +1127,30 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Balances Grid: Truth Ledger & Recent System Activity */}
+              <div className="glass-card" style={{ marginTop: '16px' }}>
+                <h3 className="glass-card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <History size={16} style={{ color: 'var(--brand-cyan)' }} /> Truth Ledger & System Activity
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px' }}>
+                  {[
+                    { id: 1, agent: 'Medical Affairs Agent', text: 'Validated clinical efficacy implication for Opportunity-1', time: '2 mins ago', color: '#10b981' },
+                    { id: 2, agent: 'Market Access Agent', text: 'Flagged a payer contradiction on step-therapy CSF-3', time: '14 mins ago', color: '#f59e0b' },
+                    { id: 3, agent: 'Ingestion Pipeline', text: 'Synchronized 14 new clinical deck slides from Veeva Vault', time: '1 hour ago', color: '#06b6d4' }
+                  ].map(act => (
+                    <div key={act.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                      <div>
+                        <span style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: act.color, display: 'block', letterSpacing: '0.5px' }}>
+                          {act.agent}
+                        </span>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)' }}>{act.text}</p>
+                      </div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: '12px' }}>{act.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
             </div>
 
             {/* Right Column: Grounded Strategic Chat Advisor */}
@@ -1389,18 +1415,10 @@ export default function App() {
                       <h3>ITACS Card Validation</h3>
                       <p>Validate the extracted fields and review compliance gating.</p>
                     </div>
-                    
-                    <div className="drawer-actions">
-                      <button onClick={() => setShowConflictForm(true)} className="btn btn-warn">
-                        <AlertTriangle size={12} /> Flag Contradiction
-                      </button>
-                      <button onClick={handleApprove} className="btn btn-primary">
-                        <Check size={12} /> Approve to Memory
-                      </button>
-                    </div>
                   </div>
 
-                  <div className="nav-tabs" style={{ marginBottom: '16px', background: 'rgba(0, 0, 0, 0.25)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: '4px', marginBottom: '16px' }}>
+                    <div className="nav-tabs" style={{ marginBottom: '16px', background: 'rgba(0, 0, 0, 0.25)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
                     <button 
                       onClick={() => setDetailTab('framework')} 
                       className={`tab-btn ${detailTab === 'framework' ? 'active' : ''}`}
@@ -1608,6 +1626,26 @@ export default function App() {
                     </div>
                   )}
 
+                  </div>
+
+                  {/* Sticky Action Footer (Protected Tab Navigation!) */}
+                  <div className="drawer-footer" style={{ 
+                    marginTop: '20px', 
+                    paddingTop: '14px', 
+                    borderTop: '1px solid rgba(255, 255, 255, 0.04)', 
+                    display: 'flex', 
+                    gap: '10px', 
+                    justifyContent: 'flex-end',
+                    flexShrink: 0
+                  }}>
+                    <button onClick={() => setShowConflictForm(true)} className="btn btn-warn" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                      <AlertTriangle size={14} /> Flag Contradiction
+                    </button>
+                    <button onClick={handleApprove} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                      <Check size={14} /> Approve to Memory
+                    </button>
+                  </div>
+
                 </div>
               </div>
             )}
@@ -1636,8 +1674,8 @@ export default function App() {
                     {colCards.map(card => (
                       <div key={card.id} className="kanban-card">
                         <h4>{card.opportunity_space}</h4>
-                        <p style={{ fontSize: '9.5px', fontStyle: 'italic', color: 'var(--brand-cyan)' }}>
-                          "Implication: {card.implication.substring(0, 100)}..."
+                        <p style={{ fontSize: '12.5px', fontStyle: 'italic', color: 'var(--brand-cyan)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
+                          "Implication: {card.implication}"
                         </p>
                         
                         <div className="kanban-card-footer">
@@ -1699,30 +1737,33 @@ export default function App() {
 
               <div className="workstream-grid">
                 {tacticalTasks.map(task => (
-                  <div key={task.id} className="workstream-row">
-                    <span className="workstream-task-id">{task.id}</span>
-                    
-                    <div className="workstream-task-info">
-                      <h4>{task.title}</h4>
-                      <p>Focus: <strong>{task.function}</strong></p>
-                    </div>
-
-                    <div className="workstream-owner">
-                      <div className="owner-avatar">{task.owner.split(' ').map(n=>n[0]).join('')}</div>
-                      <span className="owner-name">{task.owner}</span>
-                    </div>
-
-                    <div className="workstream-progress-col">
-                      <div className="progress-track">
-                        <div className="progress-fill" style={{ width: `${task.progress}%` }} />
+                  <div key={task.id} className="workstream-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', gap: '20px' }}>
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flex: 1 }}>
+                      <span className="workstream-task-id" style={{ marginTop: '2px' }}>{task.id}</span>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                          <h4 style={{ margin: 0, fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{task.title}</h4>
+                          <span className={`matrix-status-badge ${task.status === 'Completed' ? 'validated' : 'draft'}`} style={{ padding: '3px 6px', fontSize: '9.5px', display: 'inline-block' }}>
+                            {task.status}
+                          </span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+                          <span>Focus: <strong>{task.function}</strong></span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, maxWidth: '200px' }}>
+                            <div className="progress-track" style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden', flex: 1 }}>
+                              <div className="progress-fill" style={{ width: `${task.progress}%`, height: '100%', background: 'var(--brand-cyan)' }} />
+                            </div>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{task.progress}%</span>
+                          </div>
+                        </div>
                       </div>
-                      <span className="progress-label">{task.progress}% Complete</span>
                     </div>
 
-                    <div className="workstream-status-col" style={{ textAlign: 'right' }}>
-                      <span className={`matrix-status-badge ${task.status === 'Completed' ? 'validated' : 'draft'}`} style={{ padding: '4px 8px', fontSize: '8px' }}>
-                        {task.status}
-                      </span>
+                    <div className="workstream-owner" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                      <div className="owner-avatar">{task.owner.split(' ').map(n=>n[0]).join('')}</div>
+                      <span className="owner-name" style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>{task.owner}</span>
                     </div>
                   </div>
                 ))}
@@ -1749,20 +1790,37 @@ export default function App() {
               <div className="workshop-canvas">
                 <div className="workshop-grid-overlay" />
                 
+                {/* Visual Bezier Tethers (Wired Nodes!) */}
+                <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
+                  <defs>
+                    <linearGradient id="tether-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="var(--brand-indigo)" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="var(--brand-cyan)" stopOpacity="0.6" />
+                    </linearGradient>
+                    <linearGradient id="tether-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="var(--brand-cyan)" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="var(--color-success)" stopOpacity="0.6" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 170 140 Q 280 130 430 210" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d="M 170 140 Q 140 250 270 390" fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d="M 430 210 Q 380 300 270 390" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                </svg>
+                
                 {/* Node 1: Logistics Theme */}
-                <div className="interactive-theme-node" style={{ left: '60px', top: '90px' }}>
+                <div className="interactive-theme-node" style={{ left: '60px', top: '90px', zIndex: 2 }}>
                   <h4>Personalized mRNA Logistics</h4>
                   <p>Weight: 16.20 • Operations & Logistics bottleneck in community clinics.</p>
                 </div>
 
                 {/* Node 2: Prior Auth Theme */}
-                <div className="interactive-theme-node" style={{ left: '320px', top: '160px' }}>
+                <div className="interactive-theme-node" style={{ left: '320px', top: '160px', zIndex: 2 }}>
                   <h4>KRAS Payer Prior Authorization</h4>
                   <p>Weight: 12.45 • Step therapy blocking access to combinations.</p>
                 </div>
 
                 {/* Node 3: Diagnostics Theme */}
-                <div className="interactive-theme-node" style={{ left: '160px', top: '340px' }}>
+                <div className="interactive-theme-node" style={{ left: '160px', top: '340px', zIndex: 2 }}>
                   <h4>Diagnostic Screening Speed</h4>
                   <p>Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.</p>
                 </div>
@@ -1814,13 +1872,13 @@ export default function App() {
                 })}
               </div>
 
-              <div style={{ marginTop: '28px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '16px', textAlign: 'center' }}>
+              <div style={{ marginTop: '28px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button 
                   onClick={() => alert("Consensus Locked! Syncing workshop ranks to GOLT launch deck.")}
                   className="btn btn-primary"
-                  style={{ width: '100%', justifyContent: 'center', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
+                  style={{ width: 'auto', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
                 >
-                  Lock Alignment & Finalize Rank
+                  <UserCheck size={14} /> Lock Alignment Consensus
                 </button>
               </div>
             </div>
@@ -1830,7 +1888,7 @@ export default function App() {
 
         {/* TAB 3: GOVERN & CONTROL (INGESTION, MCP REGISTRY, QA SIMULATOR) */}
         {activeTab === 'ingest' && (
-          <main className="ingest-layout animate-fade-in" style={{ gridTemplateColumns: '1.2fr 1fr', gap: '28px' }}>
+          <main className="ingest-layout animate-fade-in">
             
             {/* Left Column: Asset Ingestion & Connected MCP Servers */}
             <div className="ingest-left-controls">
@@ -2065,15 +2123,26 @@ export default function App() {
                       key={lIdx} 
                       onClick={() => handleAuditNodeClick(log)}
                       className="audit-node animate-fade-in"
-                      style={{ borderLeft: '3px solid #4f46e5', cursor: 'pointer' }}
+                      style={{ display: 'flex', gap: '16px', alignItems: 'center', cursor: 'pointer', padding: '14px 18px' }}
                       title="Click to slide open visual handoffs and transaction payloads"
                     >
-                      <div className="audit-node-header" style={{ marginBottom: 0 }}>
-                        <div className="audit-badge">
-                          <div className="audit-num">{log.step_index}</div>
-                          <span className="audit-name">{log.step_name}</span>
-                        </div>
-                        <span className="audit-agent">Agent: <strong>{log.agent_name}</strong></span>
+                      <div className="step-node-circle" style={{ 
+                        flexShrink: 0, 
+                        width: '28px', 
+                        height: '28px', 
+                        fontSize: '11px',
+                        borderColor: 'var(--brand-indigo)',
+                        boxShadow: '0 0 10px rgba(79, 70, 229, 0.25)',
+                        color: 'var(--brand-cyan)',
+                        background: 'var(--bg-primary)'
+                      }}>
+                        {log.step_index}
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flex: 1 }}>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{log.step_name}</span>
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                          Agent: <strong style={{ color: 'var(--brand-cyan)' }}>{log.agent_name}</strong>
+                        </span>
                       </div>
                     </div>
                   ))}
