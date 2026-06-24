@@ -2552,8 +2552,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     {/* Sub-Tab 2: Slide Grounding */}
                     {detailTab === 'grounding' && (
                       <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <div className="mock-slide-box" style={{ padding: '24px', borderRadius: '12px' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <div className="mock-slide-box" style={{ padding: '20px 24px', borderRadius: '12px', height: 'auto', minHeight: '190px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', flexShrink: 0 }}>
                             <div className="slide-headline-indicator" style={{ width: '80px', height: '6px' }} />
                             <div style={{ height: '6px', width: '24px', background: '#1e293b', borderRadius: '2px' }} />
                           </div>
