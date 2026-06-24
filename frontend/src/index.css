@@ -1560,3 +1560,356 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* =====================================================================
+   IMPERATIVE BUILDER (STRATEGIC KANBAN BOARD)
+   ===================================================================== */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.kanban-column {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  box-sizing: border-box;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.kanban-column-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.kanban-column-header.diff h3 { color: var(--brand-indigo); }
+.kanban-column-header.value h3 { color: var(--brand-cyan); }
+.kanban-column-header.diag h3 { color: var(--color-success); }
+
+.kanban-card-count {
+  font-size: 8px;
+  font-weight: 800;
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 20px;
+  color: var(--text-muted);
+}
+
+.kanban-cards-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.kanban-card {
+  background-color: var(--bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.kanban-card:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.02);
+  transform: translateY(-1px);
+}
+
+.kanban-card h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.kanban-card p {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.kanban-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 8.5px;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+  padding-top: 8px;
+}
+
+.kanban-move-btn {
+  background: transparent;
+  border: none;
+  color: var(--brand-cyan);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.kanban-move-btn:hover {
+  transform: scale(1.2);
+}
+
+/* =====================================================================
+   TACTICAL WORKSTREAM TRACKER (GANTT & PROJECT VIEW)
+   ===================================================================== */
+.workstream-layout {
+  padding: 28px 32px;
+  box-sizing: border-box;
+}
+
+.workstream-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.workstream-row {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 0.8fr 1.8fr 1fr 1.2fr 0.8fr;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.workstream-row:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.workstream-task-id {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--brand-cyan);
+}
+
+.workstream-task-info h4 {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.workstream-task-info p {
+  margin: 2px 0 0 0;
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
+
+.workstream-owner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.owner-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8.5px;
+  font-weight: 700;
+  color: var(--brand-cyan);
+}
+
+.owner-name {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.progress-track {
+  height: 6px;
+  background-color: rgba(255,255,255,0.03);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-indigo) 0%, var(--brand-cyan) 100%);
+  border-radius: 3px;
+}
+
+.progress-label {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+/* =====================================================================
+   LIVE WORKSHOP MODE (COLLABORATIVE DIGITAL BOARD)
+   ===================================================================== */
+.workshop-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+  padding: 28px 32px;
+  box-sizing: border-box;
+  height: calc(100vh - 80px);
+}
+
+.workshop-canvas-container {
+  display: flex;
+  flex-direction: column;
+  height: 620px;
+}
+
+.workshop-canvas {
+  flex: 1;
+  background-color: #030407;
+  border: 1.5px dashed rgba(255,255,255,0.06);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+}
+
+.workshop-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+
+.interactive-theme-node {
+  position: absolute;
+  background-color: var(--glass-bg);
+  border: 1.5px solid var(--brand-indigo);
+  border-radius: 12px;
+  padding: 16px;
+  width: 200px;
+  cursor: move;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
+  backdrop-filter: blur(8px);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.interactive-theme-node:hover {
+  border-color: var(--brand-cyan);
+  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.25);
+}
+
+.interactive-theme-node h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: white;
+  line-height: 1.3;
+}
+
+.interactive-theme-node p {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Blind Voting Console */
+.voting-console {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.voting-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.voting-item {
+  background-color: rgba(255,255,255,0.015);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voting-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.voting-item-header h5 {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.vote-button-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.vote-tally-bar {
+  height: 4px;
+  background-color: rgba(255,255,255,0.03);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.vote-tally-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-indigo) 0%, var(--brand-cyan) 100%);
+  border-radius: 2px;
+}
+
