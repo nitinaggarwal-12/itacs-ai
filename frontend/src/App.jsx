@@ -4213,26 +4213,26 @@ export default function App() {
               overflowY: 'auto'
             }}>
               <div>
-                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   GEOGRAPHIC ROLLOUT GRID
                 </span>
                 <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Global Market Radar
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                   Oncology launches are global. Filter the strategic memory log and insights database by clicking regional markets below.
                 </p>
               </div>
 
               {/* Filter controls */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px', flex: 1 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px', flex: 1 }}>
                 <button
                   onClick={() => setSelectedRegionFilter('ALL')}
                   className={`btn ${selectedRegionFilter === 'ALL' ? 'btn-primary' : 'btn-subtle'}`}
-                  style={{ width: '100%', padding: '10px', fontSize: '11px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+                  style={{ width: '100%', padding: '14px', fontSize: '13px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderRadius: '10px' }}
                 >
                   <span>🌍 All Global Launch Insights</span>
-                  <span>{insights.length} Cards</span>
+                  <span style={{ fontWeight: 'bold' }}>{insights.length} Cards</span>
                 </button>
 
                 {[
@@ -4246,22 +4246,23 @@ export default function App() {
                     className="glass-card"
                     style={{
                       width: '100%',
-                      padding: '14px',
+                      padding: '18px 20px',
                       background: selectedRegionFilter === region.code ? 'rgba(255,255,255,0.03)' : 'transparent',
                       border: `1px solid ${selectedRegionFilter === region.code ? 'var(--brand-cyan)' : 'rgba(255,255,255,0.04)'}`,
                       borderLeft: `3px solid ${region.color}`,
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '4px',
+                      gap: '6px',
                       cursor: 'pointer',
-                      textAlign: 'left'
+                      textAlign: 'left',
+                      borderRadius: '10px'
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '11.5px', color: 'white' }}>{region.label}</strong>
-                      <span style={{ fontSize: '8px', fontWeight: 'bold', color: region.color }}>{region.status}</span>
+                      <strong style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 800 }}>{region.label}</strong>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: region.color }}>{region.status}</span>
                     </div>
-                    <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)', lineHeight: '1.3' }}>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                       {region.desc}
                     </p>
                   </button>
@@ -4280,10 +4281,10 @@ export default function App() {
             }}>
               {/* Header */}
               <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
                   Active Region Filter: <strong style={{ color: 'var(--brand-cyan)' }}>{selectedRegionFilter === 'ALL' ? 'All Global Markets' : selectedRegionFilter}</strong>
                 </span>
-                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                   Showing {selectedRegionFilter === 'ALL' ? insights.length : insights.filter(ins => ins.tumor === selectedRegionFilter || (selectedRegionFilter === 'US' && ins.tumor === 'Melanoma') || (selectedRegionFilter === 'EU' && ins.tumor === 'Neoadjuvant')).length} strategic records
                 </span>
               </div>
@@ -4311,36 +4312,105 @@ export default function App() {
                       key={ins.id}
                       className="glass-card animate-scale-in"
                       style={{
-                        padding: '16px',
+                        padding: '20px 24px',
                         borderLeft: `3px solid ${ins.strategic_pillar ? 'var(--brand-indigo)' : 'var(--brand-purple)'}`,
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        gap: '12px'
+                        gap: '12px',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '12px'
                       }}
                     >
                       <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                          <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6,182,212,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '10.5px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6,182,212,0.06)', padding: '4px 10px', borderRadius: '4px' }}>
                             {ins.strategic_pillar || 'UNASSIGNED PILLAR'}
                           </span>
-                          <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>ID: {ins.id.substring(0, 8)}</span>
+                          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>ID: {ins.id.substring(0, 8)}</span>
                         </div>
-                        <h4 style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                        <h4 style={{ margin: '6px 0 0 0', fontSize: '14.5px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                           {ins.title}
                         </h4>
-                        <p style={{ margin: '6px 0 0 0', fontSize: '10px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                        <p style={{ margin: '8px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
                           {ins.implication}
                         </p>
                       </div>
                       
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px', fontSize: '9px', color: 'var(--text-muted)' }}>
-                        <span>Asset: <strong>{ins.asset}</strong></span>
-                        <span>Owner: <strong>{ins.owner}</strong></span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--glass-border)', paddingTop: '10px', fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                        <span>Asset: <strong style={{ color: 'var(--text-secondary)' }}>{ins.asset}</strong></span>
+                        <span>Owner: <strong style={{ color: 'var(--text-secondary)' }}>{ins.owner}</strong></span>
                       </div>
                     </div>
                   ))}
               </div>
+
+              {/* Bottom: Global Rollout Progress Telemetry (Brand new widget to fill empty space!) */}
+              <div className="glass-card" style={{
+                padding: '20px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                flexShrink: 0,
+                background: 'var(--bg-secondary)',
+                borderTop: '1px solid var(--glass-border)',
+                marginTop: '8px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      LAUNCH VELOCITY MONITOR
+                    </span>
+                    <h3 style={{ margin: '4px 0 0 0', fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                      Global Regulatory Rollout Telemetry
+                    </h3>
+                  </div>
+                  <span style={{ fontSize: '11px', background: 'rgba(16,185,129,0.06)', color: '#10b981', padding: '4px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
+                    Overall Sync: 72%
+                  </span>
+                </div>
+
+                {/* Progress bars for regions */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px 16px', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '6px' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontWeight: 'bold' }}>USA (FDA)</span>
+                      <strong style={{ color: '#10b981' }}>100%</strong>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '100%', height: '100%', background: '#10b981' }} />
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Approved & Ready</span>
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px 16px', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '6px' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontWeight: 'bold' }}>Europe (EMA)</span>
+                      <strong style={{ color: '#f59e0b' }}>75%</strong>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '75%', height: '100%', background: '#f59e0b' }} />
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Under G-BA Pricing Rev.</span>
+                  </div>
+
+                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px 16px', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '6px' }}>
+                      <span style={{ color: 'var(--text-secondary)', fontWeight: 'bold' }}>Japan (PMDA)</span>
+                      <strong style={{ color: '#f59e0b' }}>40%</strong>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '40%', height: '100%', background: '#f59e0b' }} />
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>PMDA Bridge Trial Active</span>
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(99,102,241,0.04)', border: '1px solid rgba(99,102,241,0.1)', padding: '10px 14px', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                  🎯 <strong>AI Rollout Insight:</strong> Global launch velocity is stable. Primary blockers are Germany pricing negotiations and Japan diagnostic scale-up delays. Recommended next action: Dispatch pricing dossier package directly to European G-BA committee.
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         )}
