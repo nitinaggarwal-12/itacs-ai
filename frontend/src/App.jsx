@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
-  HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History
+  HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play
 } from 'lucide-react';
 
 // API Configuration
@@ -159,7 +159,7 @@ export default function App() {
     try {
       const insRes = await fetch(`${API_URL}/api/insights`);
       if (insRes.ok) {
-        const data = await insRes.ok ? await insRes.json() : [];
+        const data = await insRes.json();
         if (data && data.length > 0) {
           setInsights(data);
           setSelectedInsight(data[0]);
@@ -197,6 +197,84 @@ export default function App() {
     } catch (e) {
       console.error("Synthesis API failed.", e);
     }
+  };
+
+  // Run a quick, beautiful, automated demo sequence
+  const handleTriggerDemo = () => {
+    setIsUploading(true);
+    setActiveStep(1);
+    setUploadProgress(0);
+    
+    // Set metadata for demo
+    setUploadLane("Medical Affairs");
+    setUploadAsset("MK-1084");
+    setUploadTumor("Lung");
+    setUploadSubTumor("Non-Small Cell");
+
+    const sessionId = "demo_walkthrough_" + Math.random().toString(36).substring(2, 6);
+    setIngestionSession(sessionId);
+
+    // Animate the progress bar
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 5;
+      setUploadProgress(progress);
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+      }
+    }, 150);
+
+    // Stepper transitions
+    setTimeout(() => setActiveStep(2), 800);
+    setTimeout(() => setActiveStep(3), 1600);
+    setTimeout(() => setActiveStep(4), 2400);
+    setTimeout(() => setActiveStep(5), 3200);
+
+    // End of demo: Inject a gorgeous compliant molecular sequencing card
+    setTimeout(() => {
+      setIsUploading(false);
+      setUploadProgress(100);
+      setActiveStep(6); // Halt at validation
+
+      const demoInsight = {
+        id: "demo-lung-insight-" + Math.random().toString(36).substring(2, 6),
+        opportunity_space: "Biomarker Diagnostics Optimization",
+        csf: "Accelerating G12C biomarker screening pathways in community clinics for early MK-1084 targeted matching",
+        insight: "Community oncology networks report a 3-week delay in receiving biomarker NGS readouts, causing 40% of KRAS G12C patients to start standard chemotherapy before molecular status is confirmed.",
+        rationale: "Starting chemotherapy early disqualifies patients from first-line targeted combinations, delaying adoption and reducing initial targeted clinical trial enrollment by an estimated 25%.",
+        implication: "Deploy rapid single-gene PCR molecular test kits to key community hubs to provide 24-hour G12C confirmation, bypassing the NGS registry bottleneck.",
+        quotes: [
+          { text: "We wait 21 days for NGS results. If the patient is highly symptomatic, we cannot wait—we start chemo immediately.", location: "slide 8, interview transcript" },
+          { text: "Rapid single-gene assays would solve our first-line sequencing dilemma.", location: "slide 8, quote box C" }
+        ],
+        slide_reference: "BiomarkerNGS_Report.pdf, slide 8",
+        metadata: {
+          function_lane: "Medical Affairs",
+          asset: "MK-1084",
+          tumor: "Lung",
+          sub_tumor: "Non-Small Cell"
+        },
+        compliance_score: 0.98,
+        requires_human_review: false,
+        is_quarantined: false,
+        is_stale: false,
+        is_validated: false,
+        created_at: new Date().toISOString()
+      };
+
+      setInsights(prev => [demoInsight, ...prev]);
+      setSelectedInsight(demoInsight);
+
+      // Add a mock audit trail for this demo
+      const newAudits = [
+        { step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: BiomarkerNGS_Report.pdf (2.4 MB)", model_output: "Document uploaded and converted to coordinate visual matrix." },
+        { step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding boxes mapped for slide 8. Extracted ITACS framework." },
+        { step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: MK-1084, Lung, Non-Small Cell." },
+        { step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.98. Approved. Enforces strict clinical focus on molecular screening; no commercial jargon detected." },
+        { step_index: 5, step_name: "Cross-Functional", agent_name: "Cross-Functional Synthesizer", user_input: "Run thematic synthesis", model_output: "Synthesis completed. Identified new theme regarding molecular diagnostics sequencing bottlenecks." }
+      ];
+      setAuditLogs(prev => [...newAudits, ...prev]);
+    }, 4500);
   };
 
   const handleFileUpload = async (e) => {
@@ -568,9 +646,19 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
           
           {/* Uploader Card */}
           <div className="glass-card">
-            <h3 className="glass-card-title">
-              <Upload size={16} /> Ingest Strategic Assets
-            </h3>
+            <div className="section-header" style={{ marginBottom: '12px' }}>
+              <h3 className="glass-card-title" style={{ marginBottom: 0 }}>
+                <Upload size={16} /> Ingest Strategic Assets
+              </h3>
+              <button 
+                onClick={handleTriggerDemo}
+                disabled={isUploading}
+                className="btn btn-primary"
+                style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)', fontSize: '9px', padding: '4px 8px' }}
+              >
+                <Play size={10} /> Prefill Demo
+              </button>
+            </div>
             
             <div className="meta-inputs">
               <div className="form-group">
