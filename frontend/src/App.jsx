@@ -5978,7 +5978,16 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {['ALL', 'MELANOMA', 'NSCLC', 'RCC', 'HNSCC', 'BLADDER'].map(ind => (
                   <button
                     key={ind}
-                    onClick={() => setSelectedIndicationFilter(ind)}
+                    onClick={() => {
+                      setSelectedIndicationFilter(ind);
+                      // Dynamically sync the active briefing card to the selected indication's primary readout!
+                      if (ind === 'MELANOMA') setSelectedRoadmapMilestone('melanoma_readout');
+                      else if (ind === 'NSCLC') setSelectedRoadmapMilestone('nsclc_readout');
+                      else if (ind === 'RCC') setSelectedRoadmapMilestone('rcc_readout');
+                      else if (ind === 'HNSCC') setSelectedRoadmapMilestone('hnscc_readout');
+                      else if (ind === 'BLADDER') setSelectedRoadmapMilestone('bladder_readout');
+                      else if (ind === 'ALL') setSelectedRoadmapMilestone('melanoma_readout');
+                    }}
                     className={`btn ${selectedIndicationFilter === ind ? 'btn-primary' : 'btn-subtle'}`}
                     style={{ fontSize: '10px', padding: '6px 12px', cursor: 'pointer' }}
                   >
