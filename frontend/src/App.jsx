@@ -2372,27 +2372,44 @@ export default function App() {
 
         {/* MISSING MODULE 2: TACTICAL WORKSTREAM TRACKER (PROJECT MANAGER) */}
         {activeTab === 'tracker' && (
-          <main className="workstream-layout animate-fade-in">
-            <div className="glass-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+          <div className="workstream-layout animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '1.2fr 0.8fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left Column: Workstream List */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexShrink: 0 }}>
                 <div>
-                  <h3 className="glass-card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h3 className="glass-card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
                     <ClipboardList size={16} style={{ color: '#06b6d4' }} /> Tactical Launch Readiness Workstreams
                   </h3>
-                  <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', margin: '4px 0 0 0' }}>
-                    Track and update execution milestones derived from validated strategic implications. Click a row to edit progress.
+                  <p style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '4px', margin: '4px 0 0 0' }}>
+                    Track and update execution milestones derived from validated strategic implications.
                   </p>
                 </div>
                 <button 
                   onClick={() => setIsTaskModalOpen(true)}
                   className="btn btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer' }}
                 >
-                  <Plus size={13} /> Add Tactical Task
+                  <Plus size={13} /> Add Task
                 </button>
               </div>
 
-              <div className="workstream-grid">
+              {/* Scrollable list */}
+              <div className="workstream-grid" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {tacticalTasks.map(task => (
                   <div 
                     key={task.id} 
@@ -2406,13 +2423,13 @@ export default function App() {
                       cursor: 'pointer',
                       borderLeft: editingTaskId === task.id ? '3px solid var(--brand-cyan)' : '1px solid var(--glass-border)',
                       background: editingTaskId === task.id ? 'rgba(255,255,255,0.01)' : 'var(--glass-bg)',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.2s ease',
+                      borderRadius: '10px'
                     }}
-                    title="Click to expand inline progress & status controls"
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                       <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flex: 1 }}>
-                        <span className="workstream-task-id" style={{ marginTop: '2px' }}>{task.id}</span>
+                        <span className="workstream-task-id" style={{ marginTop: '2px', fontSize: '11px' }}>{task.id}</span>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
@@ -2435,8 +2452,8 @@ export default function App() {
                       </div>
 
                       <div className="workstream-owner" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                        <div className="owner-avatar">{task.owner.split(' ').map(n=>n[0]).join('')}</div>
-                        <span className="owner-name" style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>{task.owner}</span>
+                        <div className="owner-avatar" style={{ width: '28px', height: '28px', fontSize: '10px' }}>{task.owner.split(' ').map(n=>n[0]).join('')}</div>
+                        <span className="owner-name" style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{task.owner}</span>
                       </div>
                     </div>
 
@@ -2457,7 +2474,7 @@ export default function App() {
                         boxSizing: 'border-box'
                       }} onClick={(e) => e.stopPropagation()}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Adjust Progress:</span>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Progress:</span>
                           <input 
                             type="range" 
                             min="0" 
@@ -2488,7 +2505,100 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </main>
+
+            {/* Right Column: Workstream Telemetry & AI Diagnostic Feed */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '20px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  EXECUTION TELEMETRY
+                </span>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  AI Workstream Diagnostics
+                </h3>
+              </div>
+
+              {/* Stats Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>COMPLETION RATE</span>
+                  <strong style={{ fontSize: '20px', color: 'var(--brand-cyan)' }}>
+                    {Math.round((tacticalTasks.filter(t => t.status === 'Completed').length / tacticalTasks.length) * 100)}%
+                  </strong>
+                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                    {tacticalTasks.filter(t => t.status === 'Completed').length} of {tacticalTasks.length} tasks completed
+                  </span>
+                </div>
+
+                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '10px' }}>
+                  <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ACTIVE SPRINT</span>
+                  <strong style={{ fontSize: '14px', color: 'var(--text-primary)', display: 'block', marginTop: '4px' }}>HQ-MELANOMA-26</strong>
+                  <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>Sprint cycle ends in 12 days</span>
+                </div>
+              </div>
+
+              {/* Progress bars by focus area */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <h4 style={{ margin: 0, fontSize: '9.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                  Focus Area Distribution
+                </h4>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Market Access (HEOR)</span>
+                      <strong style={{ color: 'var(--text-primary)' }}>2 Tasks</strong>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '50%', height: '100%', background: 'var(--brand-indigo)' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Medical Affairs</span>
+                      <strong style={{ color: 'var(--text-primary)' }}>2 Tasks</strong>
+                    </div>
+                    <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                      <div style={{ width: '50%', height: '100%', background: 'var(--brand-cyan)' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* AI Diagnostic Warnings Feed */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                <h4 style={{ margin: 0, fontSize: '9.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                  Live Diagnostic Logs
+                </h4>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ background: 'rgba(16,185,129,0.03)', border: '1px solid rgba(16,185,129,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>✓ Task T-2 Completed</span>: Diagnostic molecular PCR kit deployment successfully verified at US clinics.
+                  </div>
+                  <div style={{ background: 'rgba(245,158,11,0.03)', border: '1px solid rgba(245,158,11,0.12)', padding: '10px 12px', borderRadius: '8px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⚠️ Task T-4 In Progress</span>: MSL training on KRAS clinical packs is currently at 40%. Recommend expediting before Q4 PDUFA review.
+                  </div>
+                </div>
+              </div>
+
+              {/* Sync execution team button */}
+              <button
+                onClick={() => alert("⚡ Downstream execution timelines successfully synchronized with regional MSL and KAM channels!")}
+                className="btn btn-primary"
+                style={{ width: '100%', padding: '12px', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer', marginTop: 'auto' }}
+              >
+                ⚡ Synchronize Execution Teams
+              </button>
+            </div>
+          </div>
         )}
 
         {/* MISSING MODULE 3: LIVE WORKSHOP MODE (CONSENSUS BUILDING CANVAS) */}

@@ -49,6 +49,40 @@
   --text-muted: #64748b; /* Slate 500 */
 }
 
+/* Light Theme Brand & Sidebar Overrides for Pristine Contrast */
+.light-theme .brand-text h1 {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.light-theme .nav-group-title {
+  color: #334155; /* Slate 700 - much crispier than Slate 500! */
+}
+
+.light-theme .sidebar-nav-btn {
+  color: #334155; /* Slate 700 - dark and readable! */
+}
+
+.light-theme .sidebar-nav-btn:hover {
+  background-color: rgba(15, 23, 42, 0.04);
+  color: #0f172a;
+}
+
+.light-theme .sidebar-nav-btn.active {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, rgba(59, 130, 246, 0.04) 100%);
+  border: 1px solid rgba(79, 70, 229, 0.25);
+  color: #4f46e5; /* Stark brand indigo */
+}
+
+.light-theme .sidebar-nav-btn.active svg {
+  color: #4f46e5;
+}
+
+.light-theme .sidebar-footer {
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
 body {
   margin: 0;
   background-color: var(--bg-primary);
