@@ -1362,20 +1362,20 @@ export default function App() {
 
       if (trimmed.startsWith('### ')) {
         elements.push(
-          <h3 key={idx} style={{ marginTop: '16px', marginBottom: '8px', color: '#93c5fd', fontSize: '13px', fontWeight: 800 }}>
+          <h3 key={idx} style={{ marginTop: '16px', marginBottom: '8px', color: 'var(--brand-indigo)', fontSize: '15px', fontWeight: 800 }}>
             {parseBoldAndCitations(trimmed.substring(4))}
           </h3>
         );
       } else if (trimmed.startsWith('#### ')) {
         elements.push(
-          <h4 key={idx} style={{ marginTop: '12px', marginBottom: '6px', color: '#60a5fa', fontSize: '11px', fontWeight: 700 }}>
+          <h4 key={idx} style={{ marginTop: '12px', marginBottom: '6px', color: 'var(--brand-cyan)', fontSize: '13.5px', fontWeight: 700 }}>
             {parseBoldAndCitations(trimmed.substring(5))}
           </h4>
         );
       } else if (trimmed.startsWith('- ')) {
         inList = true;
         listItems.push(
-          <li key={`li-${idx}`} style={{ marginBottom: '6px', fontSize: '11px', color: '#cbd5e1', lineHeight: '1.6' }}>
+          <li key={`li-${idx}`} style={{ marginBottom: '6px', fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
             {parseBoldAndCitations(trimmed.substring(2))}
           </li>
         );
@@ -1383,7 +1383,7 @@ export default function App() {
         // Skip empty lines
       } else {
         elements.push(
-          <p key={idx} style={{ marginBottom: '10px', fontSize: '11px', color: '#cbd5e1', lineHeight: '1.6' }}>
+          <p key={idx} style={{ marginBottom: '10px', fontSize: '13.5px', color: 'var(--text-primary)', lineHeight: '1.6' }}>
             {parseBoldAndCitations(trimmed)}
           </p>
         );
@@ -1646,7 +1646,7 @@ export default function App() {
             
             <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span>User:</span>
-              <strong style={{ color: 'white' }}>HQ Ops (Jersey)</strong>
+              <strong style={{ color: 'var(--text-primary)' }}>HQ Ops (Jersey)</strong>
             </div>
           </div>
         </header>
@@ -2708,10 +2708,10 @@ export default function App() {
             {/* Left: Collaborative Digital Node Board */}
             <div className="workshop-canvas-container">
               <div className="glass-card" style={{ padding: '16px', marginBottom: '14px' }}>
-                <h3 style={{ fontSize: '13px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h3 style={{ fontSize: '14.5px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800 }}>
                   <Users size={14} style={{ color: 'var(--brand-cyan)' }} /> Cross-Functional Alignment Workshop
                 </h3>
-                <p style={{ fontSize: '9px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+                <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
                   Collaboratively prioritize AI-synthesized themes. Drag nodes on the board to cluster related ideas.
                 </p>
               </div>
@@ -2758,10 +2758,10 @@ export default function App() {
 
             {/* Right: Interactive Blind Voting Console */}
             <div className="voting-console glass-card">
-              <h3 className="glass-card-title">
+              <h3 className="glass-card-title" style={{ fontSize: '15px', fontWeight: 800 }}>
                 <Sparkles size={16} style={{ color: 'var(--color-warning)' }} /> Blind Alignment Vote
               </h3>
-              <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '-12px' }}>
+              <p style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '-8px', marginBottom: '16px' }}>
                 Lock in team consensus on launch priority. Cast your anonymous vote.
               </p>
 
@@ -2779,15 +2779,15 @@ export default function App() {
                     <div key={item.name} className="voting-item">
                       <div className="voting-item-header">
                         <div>
-                          <h5>{item.name}</h5>
-                          <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px', display: 'inline-block' }}>{item.desc}</span>
+                          <h5 style={{ fontSize: '14.5px', fontWeight: 800 }}>{item.name}</h5>
+                          <span style={{ fontSize: '12.5px', color: 'var(--text-secondary)', marginTop: '4px', display: 'inline-block' }}>{item.desc}</span>
                         </div>
                         <div className="vote-button-group">
-                          <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>{itemVotes} Votes ({percentage}%)</span>
+                          <span style={{ fontSize: '13.5px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>{itemVotes} Votes ({percentage}%)</span>
                           <button 
                             onClick={() => handleCastWorkshopVote(item.name)}
                             className="btn btn-primary"
-                            style={{ padding: '6px 12px', fontSize: '11px', cursor: 'pointer' }}
+                            style={{ padding: '8px 14px', fontSize: '12px', cursor: 'pointer' }}
                           >
                             Vote
                           </button>
@@ -2801,11 +2801,11 @@ export default function App() {
                 })}
               </div>
 
-              <div style={{ marginTop: '28px', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ marginTop: '28px', borderTop: '1px solid var(--glass-border)', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button 
                   onClick={() => alert("Consensus Locked! Syncing workshop ranks to GOLT launch deck.")}
                   className="btn btn-primary"
-                  style={{ width: 'auto', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
+                  style={{ width: 'auto', padding: '10px 18px', fontSize: '13.5px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
                 >
                   <UserCheck size={14} /> Lock Alignment Consensus
                 </button>
@@ -4767,13 +4767,13 @@ export default function App() {
               boxSizing: 'border-box'
             }}>
               <div>
-                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontSize: '11px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   CLINICAL ADVOCACY NETWORK
                 </span>
                 <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Key Opinion Leader (KOL) Network Graph
                 </h3>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
                   Visualizes co-authorships, clinical trials, and sentiment toward our V940 asset. Click a node to inspect advocacy details.
                 </p>
               </div>
@@ -4795,10 +4795,10 @@ export default function App() {
                 {/* Center Asset Node */}
                 <div style={{
                   position: 'absolute',
-                  width: '70px', height: '70px',
+                  width: '84px', height: '84px',
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
-                  border: '2px solid white',
+                  border: '2.5px solid white',
                   boxShadow: '0 0 25px rgba(99, 102, 241, 0.4)',
                   display: 'flex',
                   flexDirection: 'column',
@@ -4807,8 +4807,8 @@ export default function App() {
                   textAlign: 'center',
                   zIndex: 5
                 }}>
-                  <strong style={{ fontSize: '11px', color: 'white' }}>MK-940</strong>
-                  <span style={{ fontSize: '7px', color: 'rgba(255,255,255,0.7)' }}>(V940)</span>
+                  <strong style={{ fontSize: '13px', color: 'white' }}>MK-940</strong>
+                  <span style={{ fontSize: '9.5px', color: 'rgba(255,255,255,0.7)' }}>(V940)</span>
                 </div>
 
                 {/* Node 1: Dr. Sarah Patel */}
@@ -4817,7 +4817,7 @@ export default function App() {
                   style={{
                     position: 'absolute',
                     top: '30%', left: '25%',
-                    width: '56px', height: '56px',
+                    width: '66px', height: '66px',
                     borderRadius: '50%',
                     background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Sarah Patel' ? 'var(--brand-cyan)' : '#10b981'}`,
@@ -4831,8 +4831,8 @@ export default function App() {
                   }}
                 >
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
-                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Patel</strong>
+                    <div style={{ fontSize: '15px' }}>👩‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Patel</strong>
                   </div>
                 </div>
 
@@ -4842,7 +4842,7 @@ export default function App() {
                   style={{
                     position: 'absolute',
                     top: '30%', right: '25%',
-                    width: '56px', height: '56px',
+                    width: '66px', height: '66px',
                     borderRadius: '50%',
                     background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Marcus Vance' ? 'var(--brand-cyan)' : '#10b981'}`,
@@ -4856,8 +4856,8 @@ export default function App() {
                   }}
                 >
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
-                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Vance</strong>
+                    <div style={{ fontSize: '15px' }}>👨‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Vance</strong>
                   </div>
                 </div>
 
@@ -4867,7 +4867,7 @@ export default function App() {
                   style={{
                     position: 'absolute',
                     bottom: '25%', left: '30%',
-                    width: '56px', height: '56px',
+                    width: '66px', height: '66px',
                     borderRadius: '50%',
                     background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Aris Thorne' ? 'var(--brand-cyan)' : '#f59e0b'}`,
@@ -4881,8 +4881,8 @@ export default function App() {
                   }}
                 >
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
-                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Thorne</strong>
+                    <div style={{ fontSize: '15px' }}>👨‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Thorne</strong>
                   </div>
                 </div>
 
@@ -4892,7 +4892,7 @@ export default function App() {
                   style={{
                     position: 'absolute',
                     bottom: '25%', right: '30%',
-                    width: '56px', height: '56px',
+                    width: '66px', height: '66px',
                     borderRadius: '50%',
                     background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Evelyn Chen' ? 'var(--brand-cyan)' : '#10b981'}`,
@@ -4906,13 +4906,13 @@ export default function App() {
                   }}
                 >
                   <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
-                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Chen</strong>
+                    <div style={{ fontSize: '15px' }}>👩‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Chen</strong>
                   </div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
                 <span>🟢 Positive Sentiment (&gt;75%)</span>
                 <span>🟡 Neutral Payer Pushback (40%-70%)</span>
               </div>
@@ -4931,13 +4931,13 @@ export default function App() {
               {selectedKol ? (
                 <>
                   <div>
-                    <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       STAKEHOLDER PROFILE
                     </span>
-                    <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', color: 'var(--text-primary)', fontWeight: 800 }}>
+                    <h3 style={{ margin: '4px 0 0 0', fontSize: '16px', color: 'var(--text-primary)', fontWeight: 800 }}>
                       {selectedKol}
                     </h3>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: 'var(--text-muted)' }}>
                       {selectedKol === 'Dr. Sarah Patel' && 'Oncology Department Chair, Harvard Medical School'}
                       {selectedKol === 'Dr. Marcus Vance' && 'Chief HEOR Strategy Lead, Berlin Health Institute'}
                       {selectedKol === 'Dr. Aris Thorne' && 'Payer Advisory Board Director, US Humana Network'}
@@ -4948,8 +4948,8 @@ export default function App() {
                   {/* Sentiment Metric Grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                     <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px' }}>
-                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>AI SENTIMENT</span>
-                      <strong style={{ fontSize: '16px', color: selectedKol === 'Dr. Aris Thorne' ? '#f59e0b' : '#10b981' }}>
+                      <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>AI SENTIMENT</span>
+                      <strong style={{ fontSize: '18px', color: selectedKol === 'Dr. Aris Thorne' ? '#f59e0b' : '#10b981' }}>
                         {selectedKol === 'Dr. Sarah Patel' && '95% Positive'}
                         {selectedKol === 'Dr. Marcus Vance' && '80% Positive'}
                         {selectedKol === 'Dr. Aris Thorne' && '45% Neutral'}
@@ -4957,8 +4957,8 @@ export default function App() {
                       </strong>
                     </div>
                     <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px' }}>
-                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ADVOCACY ALIGNMENT</span>
-                      <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>
+                      <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: 'bold' }}>ADVOCACY ALIGNMENT</span>
+                      <strong style={{ fontSize: '14.5px', color: 'var(--text-primary)' }}>
                         {selectedKol === 'Dr. Sarah Patel' && 'Clinical Efficacy'}
                         {selectedKol === 'Dr. Marcus Vance' && 'HEOR Evidence'}
                         {selectedKol === 'Dr. Aris Thorne' && 'Prior-Auth Cost'}
@@ -4969,7 +4969,7 @@ export default function App() {
 
                   {/* PubMed Publication History */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <h5 style={{ margin: 0, fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                    <h5 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
                       Recent PubMed & ASCO Abstracts
                     </h5>
                     
@@ -4985,11 +4985,11 @@ export default function App() {
                         sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Moderate HEOR Friction' : 'Positive'
                       }
                     ].map((pub, pubIdx) => (
-                      <div key={pubIdx} style={{ background: 'var(--bg-primary)', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
-                        <h6 style={{ margin: '0 0 4px 0', fontSize: '11px', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: '1.4' }}>
+                      <div key={pubIdx} style={{ background: 'var(--bg-primary)', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                        <h6 style={{ margin: '0 0 6px 0', fontSize: '13.5px', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: '1.4' }}>
                           {pub.title}
                         </h6>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '8.5px', color: 'var(--text-muted)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
                           <span>{pub.journal}</span>
                           <span style={{ color: pub.sentiment.includes('Positive') ? '#10b981' : '#f59e0b', fontWeight: 'bold' }}>{pub.sentiment}</span>
                         </div>
@@ -4998,8 +4998,8 @@ export default function App() {
                   </div>
 
                   {/* Sentiment summary */}
-                  <div style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.12)', padding: '12px 14px', borderRadius: '10px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                    <strong>AI Sentiment Analysis Summary:</strong><br />
+                  <div style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.12)', padding: '16px 18px', borderRadius: '10px', fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.45' }}>
+                    <strong style={{ fontSize: '12.5px', color: 'var(--text-primary)', display: 'block', marginBottom: '4px' }}>AI Sentiment Analysis Summary:</strong>
                     {selectedKol === 'Dr. Sarah Patel' && 'Dr. Patel is a highly vocal advocate for our clinical efficacy data. Her recent ASCO presentations strongly endorse the 44% recurrence risk reduction.'}
                     {selectedKol === 'Dr. Marcus Vance' && 'Dr. Vance supports our HEOR package but notes that Germany pricing reviews will require strict overall survival endpoints compared to pembrolizumab alone.'}
                     {selectedKol === 'Dr. Aris Thorne' && 'Dr. Thorne represents significant payer friction. He demands further cost-effectiveness models and cold-chain operational guarantee data before easing prior-authorization restrictions.'}
@@ -5007,7 +5007,7 @@ export default function App() {
                   </div>
                 </>
               ) : (
-                <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '32px 0' }}>
+                <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '32px 0', fontSize: '13px' }}>
                   Select a KOL node on the graph to inspect sentiment and clinical advocacy logs.
                 </div>
               )}

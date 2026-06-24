@@ -538,9 +538,20 @@ body {
   transition: all 0.2s ease;
 }
 
+.light-theme .theme-item {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
 .theme-item:hover {
   border-color: rgba(255, 255, 255, 0.08);
   background-color: rgba(255, 255, 255, 0.03);
+}
+
+.light-theme .theme-item:hover {
+  border-color: var(--brand-indigo);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.05);
 }
 
 .theme-item-header {
@@ -553,15 +564,15 @@ body {
 
 .theme-item-header h4 {
   font-family: 'Outfit', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 800;
   margin: 0;
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 .theme-score {
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 700;
   background-color: rgba(79, 70, 229, 0.15);
   border: 1px solid rgba(79, 70, 229, 0.3);
@@ -572,7 +583,7 @@ body {
 }
 
 .theme-item p {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin: 0 0 12px 0;
   line-height: 1.5;
@@ -585,7 +596,7 @@ body {
 }
 
 .meta-chip {
-  font-size: 8px;
+  font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -654,9 +665,20 @@ body {
   box-sizing: border-box;
 }
 
+.light-theme .chat-speech-bubble {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
 .chat-bubble-row.user .chat-speech-bubble {
   background-color: rgba(6, 182, 212, 0.08);
   border-color: rgba(6, 182, 212, 0.15);
+}
+
+.light-theme .chat-bubble-row.user .chat-speech-bubble {
+  background-color: #ecfeff;
+  border-color: #cffafe;
 }
 
 /* Proactive Intelligence Widgets (The World-Class Fix!) */
@@ -703,10 +725,22 @@ body {
   text-align: left;
 }
 
+.light-theme .proactive-widget-card {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+}
+
 .proactive-widget-card:hover {
   border-color: rgba(6, 182, 212, 0.3);
   background: rgba(6, 182, 212, 0.02);
   transform: translateY(-2px);
+}
+
+.light-theme .proactive-widget-card:hover {
+  border-color: var(--brand-indigo);
+  background: rgba(99, 102, 241, 0.02);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.05);
 }
 
 .widget-card-header {
@@ -718,7 +752,7 @@ body {
 
 .widget-card-header h5 {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 14.5px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -728,7 +762,7 @@ body {
 
 .proactive-widget-card p {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -739,7 +773,7 @@ body {
 }
 
 .prompt-chips-header {
-  font-size: 11px;
+  font-size: 12.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -752,7 +786,7 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   color: var(--text-secondary);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-family: 'Inter', sans-serif;
   padding: 8px 14px;
   border-radius: 6px;
@@ -762,6 +796,17 @@ body {
   display: block;
   width: 100%;
   text-align: left;
+}
+
+.light-theme .prompt-suggestion-btn {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.light-theme .prompt-suggestion-btn:hover {
+  border-color: var(--brand-indigo);
+  background-color: rgba(99, 102, 241, 0.02);
+  color: var(--brand-indigo);
 }
 
 .prompt-suggestion-btn:hover {
@@ -1964,14 +2009,20 @@ body {
 .interactive-theme-node {
   position: absolute;
   background-color: var(--glass-bg);
-  border: 1.5px solid var(--brand-indigo);
+  border: 2px solid var(--brand-indigo);
   border-radius: 12px;
-  padding: 16px;
-  width: 200px;
+  padding: 18px;
+  width: 240px;
   cursor: move;
   box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
   backdrop-filter: blur(8px);
   transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.light-theme .interactive-theme-node {
+  background-color: #ffffff;
+  border-color: var(--brand-indigo);
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.08);
 }
 
 .interactive-theme-node:hover {
@@ -1981,7 +2032,7 @@ body {
 
 .interactive-theme-node h4 {
   font-family: 'Outfit', sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
   margin: 0 0 6px 0;
   color: var(--text-primary);
@@ -1989,7 +2040,7 @@ body {
 }
 
 .interactive-theme-node p {
-  font-size: 11px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
@@ -2014,10 +2065,16 @@ body {
   background-color: rgba(255,255,255,0.015);
   border: 1px solid rgba(255,255,255,0.03);
   border-radius: 10px;
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.light-theme .voting-item {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
 }
 
 .voting-item-header {
