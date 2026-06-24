@@ -140,7 +140,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('cockpit'); 
 
   // Theme: 'dark' or 'light'
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState('light');
   
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -206,6 +206,7 @@ export default function App() {
   const simIntervalRef = useRef(null);
 
   useEffect(() => {
+    document.body.classList.add('light-theme');
     return () => {
       if (simIntervalRef.current) clearInterval(simIntervalRef.current);
     };
