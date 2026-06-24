@@ -1311,7 +1311,9 @@ export default function App() {
           </div>
         </div>
 
-        <div className="nav-group">
+        {/* SCROLLABLE MIDDLE NAVIGATION LINKS DOCK */}
+        <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', marginBottom: '16px' }} className="sidebar-scroll-container">
+          <div className="nav-group">
           <span className="nav-group-title">Command & Interrogate</span>
           <button 
             onClick={() => setActiveTab('cockpit')}
@@ -1430,6 +1432,7 @@ export default function App() {
             <Play size={16} style={{ color: 'var(--brand-purple)' }} fill={activeTab === 'theater' ? 'var(--brand-purple)' : 'none'} /> Simulation Theater
           </button>
         </div>
+        </div>
 
         {/* THEME TOGGLE DOCK */}
         <div style={{ marginTop: 'auto', padding: '0 8px', marginBottom: '16px' }}>
@@ -1462,6 +1465,88 @@ export default function App() {
 
       {/* Main content display section */}
       <div className="main-content-area">
+
+        {/* UNIFIED PREMIUM STICKY HEADER BAR */}
+        <header style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          background: 'var(--bg-secondary)',
+          borderBottom: '1px solid var(--glass-border)',
+          padding: '16px 32px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          backdropFilter: 'blur(12px)',
+          boxSizing: 'border-box'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '9.5px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>
+              <span>ITACS Platform</span>
+              <span>/</span>
+              <span style={{ color: 'var(--brand-cyan)' }}>
+                {activeTab === 'cockpit' && 'Command & Interrogate'}
+                {activeTab === 'cascade' && 'Command & Interrogate'}
+                {activeTab === 'wargaming' && 'Command & Interrogate'}
+                {activeTab === 'radar' && 'Command & Interrogate'}
+                {activeTab === 'tracker' && 'Command & Interrogate'}
+                {activeTab === 'matrix' && 'Collaborate & Validate'}
+                {activeTab === 'builder' && 'Collaborate & Validate'}
+                {activeTab === 'workshop' && 'Collaborate & Validate'}
+                {activeTab === 'kol' && 'Collaborate & Validate'}
+                {activeTab === 'deck' && 'Deliverables'}
+                {activeTab === 'budget' && 'Deliverables'}
+                {activeTab === 'roleplay' && 'Deliverables'}
+                {activeTab === 'ingest' && 'Govern & Control'}
+                {activeTab === 'logistics' && 'Govern & Control'}
+                {activeTab === 'skills' && 'Govern & Control'}
+                {activeTab === 'theater' && 'Demo & Showcase'}
+              </span>
+            </div>
+            <h2 style={{ margin: '4px 0 0 0', fontSize: '18px', fontWeight: 800, fontFamily: "'Outfit', sans-serif", color: 'var(--text-primary)' }}>
+              {activeTab === 'cockpit' && 'Launch Cockpit'}
+              {activeTab === 'cascade' && 'Indication Roadmap'}
+              {activeTab === 'wargaming' && 'Competitive Wargaming'}
+              {activeTab === 'radar' && 'Global Market Radar'}
+              {activeTab === 'tracker' && 'Workstream Tracker'}
+              {activeTab === 'matrix' && 'Commercial Matrix'}
+              {activeTab === 'builder' && 'Imperative Builder'}
+              {activeTab === 'workshop' && 'Live Workshop'}
+              {activeTab === 'kol' && 'Stakeholder Engagement'}
+              {activeTab === 'deck' && 'Executive Deck Studio'}
+              {activeTab === 'budget' && 'Budget Strategy'}
+              {activeTab === 'roleplay' && 'Execution Readiness'}
+              {activeTab === 'ingest' && 'Ingestion Factory'}
+              {activeTab === 'logistics' && 'Manufacturing Readiness'}
+              {activeTab === 'skills' && 'Agent Skill Studio'}
+              {activeTab === 'theater' && 'Simulation Theater'}
+            </h2>
+          </div>
+
+          {/* Right side connection / status indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{
+              background: 'rgba(16, 185, 129, 0.08)',
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              borderRadius: '8px',
+              padding: '6px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '10px',
+              color: '#a7f3d0',
+              fontWeight: 'bold'
+            }}>
+              <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }} />
+              <span>CONNECTED: PIPELINE V1.3.1</span>
+            </div>
+            
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>User:</span>
+              <strong style={{ color: 'white' }}>HQ Ops (Jersey)</strong>
+            </div>
+          </div>
+        </header>
 
         {/* BRAND PLANNING MACRO-TIMELINE (L3Next Milestone Windows) */}
         {activeTab === 'cockpit' && (
