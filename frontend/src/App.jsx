@@ -366,7 +366,10 @@ export default function App() {
   const [workshopVotes, setWorkshopVotes] = useState({
     "Personalized mRNA Logistics": 12,
     "KRAS Payer Prior Authorization": 8,
-    "Diagnostic Screening Speed": 5
+    "Diagnostic Screening Speed": 5,
+    "Subcutaneous Infusion Conversion": 15,
+    "Companion Diagnostic Kit Scaling": 9,
+    "Risk-Sharing Payer Agreements": 20
   });
 
   // Simulation Theater States (Showcase Simulator)
@@ -2793,7 +2796,7 @@ export default function App() {
               <div className="workshop-canvas">
                 <div className="workshop-grid-overlay" />
                 
-                {/* Visual Bezier Tethers (Wired Nodes!) */}
+                {/* Visual Bezier Tethers (Busy, Interconnected Web!) */}
                 <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
                   <defs>
                     <linearGradient id="tether-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -2805,9 +2808,18 @@ export default function App() {
                       <stop offset="100%" stopColor="var(--color-success)" stopOpacity="0.6" />
                     </linearGradient>
                   </defs>
-                  <path d="M 170 140 Q 280 130 430 210" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d="M 170 140 Q 140 250 270 390" fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d="M 430 210 Q 380 300 270 390" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  {/* Primary roadmap links */}
+                  <path d="M 180 140 Q 280 110 380 120" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d="M 180 140 Q 140 240 180 370" fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d="M 380 120 Q 300 240 180 370" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  
+                  {/* Outer strategic clusters (busy web!) */}
+                  <path d="M 380 120 Q 480 200 480 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M 480 270 Q 380 350 180 370" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M 180 140 Q 90 220 180 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M 180 270 Q 280 300 480 270" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M 380 120 Q 480 90 540 130" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M 540 130 Q 520 200 480 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
                 </svg>
                 
                 {/* Node 1: Logistics Theme */}
@@ -2817,15 +2829,33 @@ export default function App() {
                 </div>
 
                 {/* Node 2: Prior Auth Theme */}
-                <div className="interactive-theme-node" style={{ left: '320px', top: '160px', zIndex: 2 }}>
+                <div className="interactive-theme-node" style={{ left: '270px', top: '70px', zIndex: 2 }}>
                   <h4>KRAS Payer Prior Authorization</h4>
                   <p>Weight: 12.45 • Step therapy blocking access to combinations.</p>
                 </div>
 
                 {/* Node 3: Diagnostics Theme */}
-                <div className="interactive-theme-node" style={{ left: '160px', top: '340px', zIndex: 2 }}>
+                <div className="interactive-theme-node" style={{ left: '60px', top: '340px', zIndex: 2 }}>
                   <h4>Diagnostic Screening Speed</h4>
                   <p>Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.</p>
+                </div>
+
+                {/* Node 4: Subcutaneous Conversion (NEW!) */}
+                <div className="interactive-theme-node" style={{ left: '360px', top: '240px', zIndex: 2, borderLeft: '3px solid var(--brand-cyan)' }}>
+                  <h4>Subcutaneous Infusion Conversion</h4>
+                  <p>Weight: 18.40 • Shift 60% of stable adjuvant patients from IV to subcutaneous within 6 months.</p>
+                </div>
+
+                {/* Node 5: Companion Diagnostic Kit Scaling (NEW!) */}
+                <div className="interactive-theme-node" style={{ left: '440px', top: '80px', zIndex: 2, borderLeft: '3px solid #10b981' }}>
+                  <h4>Companion Diagnostic Kit Scaling</h4>
+                  <p>Weight: 15.15 • Accelerate rapid IHC companion assay installations at community pathology labs.</p>
+                </div>
+
+                {/* Node 6: Risk-Sharing Payer Agreements (NEW!) */}
+                <div className="interactive-theme-node" style={{ left: '70px', top: '210px', zIndex: 2, borderLeft: '3px solid #ef4444' }}>
+                  <h4>Risk-Sharing Payer Agreements</h4>
+                  <p>Weight: 19.10 • Formulate performance milestone-based rebate contracts with commercial insurers.</p>
                 </div>
               </div>
             </div>
@@ -2843,7 +2873,10 @@ export default function App() {
                 {[
                   { name: "Personalized mRNA Logistics", desc: "Scale specialized cold-chain hubs" },
                   { name: "KRAS Payer Prior Authorization", desc: "Structure volume rebates with payers" },
-                  { name: "Diagnostic Screening Speed", desc: "Deploy rapid single-gene test kits" }
+                  { name: "Diagnostic Screening Speed", desc: "Deploy rapid single-gene test kits" },
+                  { name: "Subcutaneous Infusion Conversion", desc: "Shift stable adjuvant patients from IV" },
+                  { name: "Companion Diagnostic Kit Scaling", desc: "Install rapid IHC companion assays" },
+                  { name: "Risk-Sharing Payer Agreements", desc: "Structure milestone-based rebate contracts" }
                 ].map(item => {
                   const itemVotes = workshopVotes[item.name] || 0;
                   const totalVotes = Object.values(workshopVotes).reduce((a,b)=>a+b, 0);
@@ -4852,18 +4885,25 @@ export default function App() {
                 </p>
               </div>
 
-              {/* Force-directed graph canvas mockup */}
+              {/* Force-directed graph canvas mockup (6 Nodes dense web!) */}
               <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center' }}>
-                {/* SVG Connections */}
+                {/* SVG Connections (Intricate Collaboration Web!) */}
                 <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                  {/* Center to nodes */}
                   <line x1="50%" y1="50%" x2="25%" y2="30%" stroke="var(--glass-border)" strokeWidth="1.5" />
                   <line x1="50%" y1="50%" x2="75%" y2="30%" stroke="var(--glass-border)" strokeWidth="1.5" />
                   <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="var(--glass-border)" strokeWidth="1.5" />
                   <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="var(--glass-border)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="50%" y2="18%" stroke="var(--glass-border)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="50%" y2="82%" stroke="var(--glass-border)" strokeWidth="1.5" />
                   
-                  {/* Outer connections */}
-                  <line x1="25%" y1="30%" x2="75%" y2="30%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
-                  <line x1="30%" y1="75%" x2="70%" y2="75%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
+                  {/* Peer-to-peer collaboration links (co-authorship web!) */}
+                  <line x1="25%" y1="30%" x2="50%" y2="18%" stroke="var(--brand-indigo)" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+                  <line x1="50%" y1="18%" x2="75%" y2="30%" stroke="var(--brand-indigo)" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+                  <line x1="25%" y1="30%" x2="30%" y2="75%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="75%" y1="30%" x2="70%" y2="75%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="30%" y1="75%" x2="50%" y2="82%" stroke="var(--brand-cyan)" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+                  <line x1="50%" y1="82%" x2="70%" y2="75%" stroke="var(--brand-cyan)" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
                 </svg>
 
                 {/* Center Asset Node */}
@@ -4984,6 +5024,56 @@ export default function App() {
                     <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Chen</strong>
                   </div>
                 </div>
+
+                {/* Node 5: Dr. Helen Ross (NEW!) */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Helen Ross")}
+                  style={{
+                    position: 'absolute',
+                    top: '12%', left: '46%',
+                    width: '66px', height: '66px',
+                    borderRadius: '50%',
+                    background: 'var(--bg-secondary)',
+                    border: `2px solid ${selectedKol === 'Dr. Helen Ross' ? 'var(--brand-cyan)' : '#10b981'}`,
+                    boxShadow: selectedKol === 'Dr. Helen Ross' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '15px' }}>👩‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Ross</strong>
+                  </div>
+                </div>
+
+                {/* Node 6: Dr. Sanjay Gupta (NEW!) */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Sanjay Gupta")}
+                  style={{
+                    position: 'absolute',
+                    bottom: '10%', left: '46%',
+                    width: '66px', height: '66px',
+                    borderRadius: '50%',
+                    background: 'var(--bg-secondary)',
+                    border: `2px solid ${selectedKol === 'Dr. Sanjay Gupta' ? 'var(--brand-cyan)' : '#10b981'}`,
+                    boxShadow: selectedKol === 'Dr. Sanjay Gupta' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '15px' }}>👨‍⚕️</div>
+                    <strong style={{ fontSize: '11.5px', color: 'var(--text-primary)', display: 'block', marginTop: '2px' }}>Gupta</strong>
+                  </div>
+                </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
@@ -5016,6 +5106,8 @@ export default function App() {
                       {selectedKol === 'Dr. Marcus Vance' && 'Chief HEOR Strategy Lead, Berlin Health Institute'}
                       {selectedKol === 'Dr. Aris Thorne' && 'Payer Advisory Board Director, US Humana Network'}
                       {selectedKol === 'Dr. Evelyn Chen' && 'Clinical Lead and ASCO President (2026)'}
+                      {selectedKol === 'Dr. Helen Ross' && 'Director of Thoracic Oncology, Mayo Clinic'}
+                      {selectedKol === 'Dr. Sanjay Gupta' && 'Lead HEOR Investigator, MD Anderson'}
                     </p>
                   </div>
 
@@ -5028,6 +5120,8 @@ export default function App() {
                         {selectedKol === 'Dr. Marcus Vance' && '80% Positive'}
                         {selectedKol === 'Dr. Aris Thorne' && '45% Neutral'}
                         {selectedKol === 'Dr. Evelyn Chen' && '90% Positive'}
+                        {selectedKol === 'Dr. Helen Ross' && '92% Positive'}
+                        {selectedKol === 'Dr. Sanjay Gupta' && '88% Positive'}
                       </strong>
                     </div>
                     <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px' }}>
@@ -5037,6 +5131,8 @@ export default function App() {
                         {selectedKol === 'Dr. Marcus Vance' && 'HEOR Evidence'}
                         {selectedKol === 'Dr. Aris Thorne' && 'Prior-Auth Cost'}
                         {selectedKol === 'Dr. Evelyn Chen' && 'Adjuvant Trial Lead'}
+                        {selectedKol === 'Dr. Helen Ross' && 'Subcutaneous Option'}
+                        {selectedKol === 'Dr. Sanjay Gupta' && 'Biomarker Compliance'}
                       </strong>
                     </div>
                   </div>
@@ -5049,13 +5145,25 @@ export default function App() {
                     
                     {[
                       {
-                        title: selectedKol === 'Dr. Aris Thorne' ? 'Payer prior-authorization timelines and clinical outcomes in adjuvant melanoma' : 'Efficacy and safety of personalized mRNA vaccine combo V940 in melanoma',
-                        journal: selectedKol === 'Dr. Aris Thorne' ? 'Journal of Managed Care Pharmacy (2026)' : 'New England Journal of Medicine (2025)',
+                        title: selectedKol === 'Dr. Aris Thorne' ? 'Payer prior-authorization timelines and clinical outcomes in adjuvant melanoma' : 
+                               selectedKol === 'Dr. Helen Ross' ? 'Operational capacity gains of rapid subcutaneous immunotherapies in thoracic clinics' :
+                               selectedKol === 'Dr. Sanjay Gupta' ? 'Biomarker-directed therapy sequencing and real-world PFS in KRAS G12C NSCLC' :
+                               'Efficacy and safety of personalized mRNA vaccine combo V940 in melanoma',
+                        journal: selectedKol === 'Dr. Aris Thorne' ? 'Journal of Managed Care Pharmacy (2026)' : 
+                                 selectedKol === 'Dr. Helen Ross' ? 'Journal of Oncology Practice (2026)' :
+                                 selectedKol === 'Dr. Sanjay Gupta' ? 'Nature Medicine (2025)' :
+                                 'New England Journal of Medicine (2025)',
                         sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Neutral' : 'Highly Positive'
                       },
                       {
-                        title: selectedKol === 'Dr. Aris Thorne' ? 'Reimbursement cost-effectiveness thresholds for personalized gene therapies' : 'Phase 3 trial design and endpoints for neoadjuvant NSCLC vaccine protocols',
-                        journal: selectedKol === 'Dr. Aris Thorne' ? 'HEOR Quarterly Review (2026)' : 'Lancet Oncology (2026)',
+                        title: selectedKol === 'Dr. Aris Thorne' ? 'Reimbursement cost-effectiveness thresholds for personalized gene therapies' : 
+                               selectedKol === 'Dr. Helen Ross' ? 'Patient preference and adherence metrics for home-administered adjuvant lung therapies' :
+                               selectedKol === 'Dr. Sanjay Gupta' ? 'Cost-effectiveness thresholds of multi-gene diagnostic panels in early lung cancer' :
+                               'Phase 3 trial design and endpoints for neoadjuvant NSCLC vaccine protocols',
+                        journal: selectedKol === 'Dr. Aris Thorne' ? 'HEOR Quarterly Review (2026)' : 
+                                 selectedKol === 'Dr. Helen Ross' ? 'Lancet Respiratory Medicine (2026)' :
+                                 selectedKol === 'Dr. Sanjay Gupta' ? 'Value in Health (2026)' :
+                                 'Lancet Oncology (2026)',
                         sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Moderate HEOR Friction' : 'Positive'
                       }
                     ].map((pub, pubIdx) => (
@@ -5078,6 +5186,8 @@ export default function App() {
                     {selectedKol === 'Dr. Marcus Vance' && 'Dr. Vance supports our HEOR package but notes that Germany pricing reviews will require strict overall survival endpoints compared to pembrolizumab alone.'}
                     {selectedKol === 'Dr. Aris Thorne' && 'Dr. Thorne represents significant payer friction. He demands further cost-effectiveness models and cold-chain operational guarantee data before easing prior-authorization restrictions.'}
                     {selectedKol === 'Dr. Evelyn Chen' && 'Dr. Chen is highly optimistic about trial expansions in adjuvant lung cancer. She recommends accelerating patient diagnostic kit rollouts to clinics.'}
+                    {selectedKol === 'Dr. Helen Ross' && 'Dr. Ross is a strong proponent of our subcutaneous formulation. She emphasizes that shifting stable patients to a 5-minute injection is critical to relieving clinic nursing shortages.'}
+                    {selectedKol === 'Dr. Sanjay Gupta' && 'Dr. Gupta is highly supportive of our biomarker-driven sequencing models. He advocates for standardizing early reflex IHC screening to avoid chemotherapy misrouting.'}
                   </div>
                 </>
               ) : (
@@ -5085,7 +5195,6 @@ export default function App() {
                   Select a KOL node on the graph to inspect sentiment and clinical advocacy logs.
                 </div>
               )}
-            </div>
           </div>
         )}
 
