@@ -93,17 +93,19 @@ const MOCK_AUDIT = [
 ];
 
 export default function App() {
-  // Navigation
-  const [activeTab, setActiveTab] = useState('workspace'); // 'workspace', 'themes', 'audit'
+  // Navigation: 'cockpit' (Executive Cockpit), 'matrix' (Commercial Matrix), 'ingest' (Ingestion Factory)
+  const [activeTab, setActiveTab] = useState('cockpit'); 
   
   // Data lists
   const [insights, setInsights] = useState(MOCK_INSIGHTS);
   const [themes, setThemes] = useState(MOCK_THEMES);
   const [conflicts, setConflicts] = useState(MOCK_CONFLICTS);
   const [auditLogs, setAuditLogs] = useState(MOCK_AUDIT);
+  
+  // Selection
   const [selectedInsight, setSelectedInsight] = useState(MOCK_INSIGHTS[0]);
   
-  // Stepper & Session
+  // Stepper & Session (for Ingestion Factory)
   const [activeStep, setActiveStep] = useState(6); // 1 to 7
   const [ingestionSession, setIngestionSession] = useState("active_session_001");
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -115,7 +117,12 @@ export default function App() {
   const [uploadTumor, setUploadTumor] = useState("Melanoma");
   const [uploadSubTumor, setUploadSubTumor] = useState("Stage III/IV");
 
-  // Form edit states (for selectedInsight)
+  // Search & Filters (for Matrix Grid)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterLane, setFilterLane] = useState("All Functions");
+  const [filterAsset, setFilterAsset] = useState("All Assets");
+
+  // Form edit states (for selectedInsight details)
   const [editOpportunity, setEditOpportunity] = useState("");
   const [editCSF, setEditCSF] = useState("");
   const [editInsight, setEditInsight] = useState("");
@@ -222,13 +229,13 @@ export default function App() {
       if (progress >= 100) {
         clearInterval(progressInterval);
       }
-    }, 150);
+    }, 120);
 
     // Stepper transitions
-    setTimeout(() => setActiveStep(2), 800);
-    setTimeout(() => setActiveStep(3), 1600);
-    setTimeout(() => setActiveStep(4), 2400);
-    setTimeout(() => setActiveStep(5), 3200);
+    setTimeout(() => setActiveStep(2), 700);
+    setTimeout(() => setActiveStep(3), 1400);
+    setTimeout(() => setActiveStep(4), 2100);
+    setTimeout(() => setActiveStep(5), 2800);
 
     // End of demo: Inject a gorgeous compliant molecular sequencing card
     setTimeout(() => {
@@ -274,7 +281,11 @@ export default function App() {
         { step_index: 5, step_name: "Cross-Functional", agent_name: "Cross-Functional Synthesizer", user_input: "Run thematic synthesis", model_output: "Synthesis completed. Identified new theme regarding molecular diagnostics sequencing bottlenecks." }
       ];
       setAuditLogs(prev => [...newAudits, ...prev]);
-    }, 4500);
+      
+      // Auto transition to Matrix so they can inspect their newly processed card!
+      setActiveTab("matrix");
+      alert("Demo file successfully ingested! Showing results in the Commercial Intelligence Matrix.");
+    }, 3800);
   };
 
   const handleFileUpload = async (e) => {
@@ -330,6 +341,7 @@ export default function App() {
         }
         setActiveStep(6); 
         fetchData();
+        setActiveTab("matrix"); // Auto-show in Matrix
       } else {
         throw new Error("Upload failed");
       }
@@ -349,7 +361,7 @@ export default function App() {
           quotes: [
             { text: "We don't have sub-zero storage facilities here. Storing personalized components is impossible without new equipment.", location: "Advisory Panel, Page 2" }
           ],
-          slide_reference: `${file.filename}, slide 3`,
+          slide_reference: `${file.name}, slide 3`,
           metadata: {
             function_lane: uploadLane,
             asset: uploadAsset,
@@ -364,6 +376,7 @@ export default function App() {
         };
         setInsights(prev => [fallbackNew, ...prev]);
         setSelectedInsight(fallbackNew);
+        setActiveTab("matrix");
       }, 4000);
     }
   };
@@ -386,9 +399,6 @@ export default function App() {
       });
 
       if (response.ok) {
-        setActiveStep(7);
-        setTimeout(() => setActiveStep(6), 3000);
-        
         setInsights(prev => prev.map(ins => {
           if (ins.id === selectedInsight.id) {
             return {
@@ -430,8 +440,6 @@ export default function App() {
         return ins;
       }));
       setSelectedInsight(prev => ({ ...prev, is_validated: true, is_quarantined: false, requires_human_review: false }));
-      setActiveStep(7);
-      setTimeout(() => setActiveStep(6), 3000);
     }
   };
 
@@ -528,8 +536,8 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
 ---
 
 ### Strategy Refinement Options
-1. *Would you like to examine the detailed operational flowchart for regional delivery hubs to reduce community oncology lag?*
-2. *Should we run a simulation on payer prior authorization friction thresholds for customized immunotherapies?*`;
+- *Would you like to examine the detailed operational flowchart for regional delivery hubs to reduce community oncology lag?*
+- *Should we run a simulation on payer prior authorization friction thresholds for customized immunotherapies?*`;
         setChatMessages(prev => [...prev, { role: 'assistant', content: answer }]);
         setRetrievedContext([selectedInsight]);
       }, 1500);
@@ -548,6 +556,19 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
     }
   };
 
+  // Filtered insights list (for Tab 2 matrix grid)
+  const filteredInsights = insights.filter(ins => {
+    const matchesSearch = 
+      ins.opportunity_space.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ins.insight.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ins.metadata.tumor.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    const matchesLane = filterLane === "All Functions" || ins.metadata.function_lane === filterLane;
+    const matchesAsset = filterAsset === "All Assets" || ins.metadata.asset === filterAsset;
+    
+    return matchesSearch && matchesLane && matchesAsset;
+  });
+
   return (
     <div className="app-layout">
       {/* HEADER */}
@@ -556,189 +577,296 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
           <div className="logo-badge">🧬</div>
           <div className="logo-text">
             <h1>ITACS Enterprise Insights</h1>
-            <p>Strategic Synthesis Engine • Merck Oncology</p>
-          </div>
-        </div>
-
-        <div className="header-stats">
-          <div className="stat-chip">
-            <Database className="stat-icon" size={14} />
-            <span>Memory Pool: <strong>{insights.filter(i => i.is_validated).length} Validated</strong></span>
-          </div>
-          <div className="stat-chip">
-            <ShieldAlert className="stat-icon-warn" size={14} />
-            <span>Quarantined: <strong>{insights.filter(i => i.is_quarantined).length} Drafts</strong></span>
-          </div>
-          <div className="stat-chip">
-            <AlertTriangle className="stat-icon-alert" size={14} />
-            <span>Conflicts: <strong>{conflicts.filter(c => c.status === "Flagged").length} Flagged</strong></span>
+            <p>Strategic Launch Cockpit • Merck Oncology</p>
           </div>
         </div>
 
         <nav className="nav-tabs">
           <button 
-            onClick={() => setActiveTab('workspace')}
-            className={`tab-btn ${activeTab === 'workspace' ? 'active' : ''}`}
+            onClick={() => setActiveTab('cockpit')}
+            className={`tab-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
           >
-            <Layers size={14} /> SME Workspace
+            <Sparkles size={14} /> Launch Cockpit
           </button>
           <button 
-            onClick={() => setActiveTab('themes')}
-            className={`tab-btn ${activeTab === 'themes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('matrix')}
+            className={`tab-btn ${activeTab === 'matrix' ? 'active' : ''}`}
           >
-            <Sparkles size={14} /> Strategic Synthesis
+            <Layers size={14} /> Commercial Matrix
           </button>
           <button 
-            onClick={() => setActiveTab('audit')}
-            className={`tab-btn ${activeTab === 'audit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('ingest')}
+            className={`tab-btn ${activeTab === 'ingest' ? 'active' : ''}`}
           >
-            <History size={14} /> Audit Logs
+            <Database size={14} /> Ingestion Factory
           </button>
         </nav>
       </header>
 
-      {/* COMPONENT A: PIPELINE STEPPER */}
-      <section className="stepper-section">
-        <div className="section-header">
-          <h2 className="section-title">
-            <Settings className="animate-spin-slow" size={14} /> Real-time Ingestion & Synthesis Pipeline
-          </h2>
-          <span className="session-badge">Session: {ingestionSession}</span>
-        </div>
-        
-        <div className="stepper-container">
-          {[
-            { idx: 1, name: "Upload", desc: "File Ingestion" },
-            { idx: 2, name: "Ingestion", desc: "PixelRAG Tiles" },
-            { idx: 3, name: "Functional Draft", desc: "ITACS Framing" },
-            { idx: 4, name: "Compliance Check", desc: "White Line Review" },
-            { idx: 5, name: "Cross-Functional", desc: "Thematic Clustering" },
-            { idx: 6, name: "SME Validation", desc: "Human Approval" },
-            { idx: 7, name: "Final Alignment", desc: "Enterprise Memory" }
-          ].map(step => {
-            const isCompleted = step.idx < activeStep;
-            const isActive = step.idx === activeStep;
-            const isReview = step.idx === 6 && isActive;
-            
-            let stateClass = "";
-            if (isCompleted) stateClass = "completed";
-            if (isActive) stateClass = "active";
-            if (isReview) stateClass = "active active-review";
-
-            return (
-              <div key={step.idx} className={`step-node ${stateClass}`}>
-                <div className="step-circle">
-                  {isCompleted ? <Check size={12} /> : step.idx}
-                </div>
-                <h3>{step.name}</h3>
-                <p>{step.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* DASHBOARD BODY */}
-      <main className="dashboard-grid">
-        
-        {/* LEFT COLUMN: UPLOADER & QUEUE */}
-        <div className="sidebar-panel">
+      {/* =====================================================================
+         TAB 1: LAUNCH COCKPIT (THE EXECUTIVE LANDING HOMEPAGE)
+         ===================================================================== */}
+      {activeTab === 'cockpit' && (
+        <main className="cockpit-layout animate-fade-in">
           
-          {/* Uploader Card */}
-          <div className="glass-card">
-            <div className="section-header" style={{ marginBottom: '12px' }}>
-              <h3 className="glass-card-title" style={{ marginBottom: 0 }}>
-                <Upload size={16} /> Ingest Strategic Assets
-              </h3>
-              <button 
-                onClick={handleTriggerDemo}
-                disabled={isUploading}
-                className="btn btn-primary"
-                style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)', fontSize: '9px', padding: '4px 8px' }}
-              >
-                <Play size={10} /> Prefill Demo
-              </button>
-            </div>
+          {/* Left Column: Scorecard & Themes */}
+          <div className="cockpit-left">
             
-            <div className="meta-inputs">
-              <div className="form-group">
-                <label>Function</label>
-                <select 
-                  value={uploadLane} 
-                  onChange={(e) => setUploadLane(e.target.value)}
-                  className="form-select"
+            {/* Launch Alignment Scorecard */}
+            <div className="scorecard-grid">
+              <div className="metric-card">
+                <span className="metric-val blue">{insights.filter(i => i.is_validated).length}</span>
+                <span className="metric-label">Validated Memory</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-val amber">{insights.filter(i => !i.is_validated).length}</span>
+                <span className="metric-label">Active Drafts</span>
+              </div>
+              <div className="metric-card">
+                <span className="metric-val red">{conflicts.filter(c => c.status === "Flagged").length}</span>
+                <span className="metric-label">Open Conflicts</span>
+              </div>
+            </div>
+
+            {/* Strategic Themes Card */}
+            <div className="glass-card">
+              <h3 className="glass-card-title">
+                <Sparkles size={16} style={{ color: '#60a5fa' }} /> Launch Themes & Strategic Risks
+              </h3>
+              <div className="themes-scroller">
+                {themes.map((theme, idx) => (
+                  <div key={idx} className="theme-item">
+                    <div className="theme-item-header">
+                      <h4>{theme.theme_name}</h4>
+                      <span className="theme-score">Weight: {theme.theme_score}</span>
+                    </div>
+                    <p>{theme.executive_synthesis}</p>
+                    <div className="theme-meta-chips">
+                      {theme.contributing_functions.map((fn, fIdx) => (
+                        <span key={fIdx} className="meta-chip">{fn}</span>
+                      ))}
+                      <span className="meta-chip" style={{ color: '#818cf8', background: 'rgba(129, 140, 248, 0.1)' }}>
+                        {theme.opportunity_spaces[0]}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Conflict Workshops Queue */}
+            <div className="glass-card">
+              <h3 className="glass-card-title">
+                <AlertTriangle size={16} style={{ color: '#ef4444' }} /> Active Alignments (Conflicts Room)
+              </h3>
+              <div className="themes-scroller" style={{ maxHeight: '220px' }}>
+                {conflicts.map(conf => (
+                  <div key={conf.id} className="theme-item" style={{ borderLeft: '3px solid #ef4444' }}>
+                    <div className="theme-item-header">
+                      <h4 style={{ color: '#fca5a5', fontSize: '11px' }}>{conf.conflict_type}</h4>
+                      <span className="theme-score" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>FLAGGED</span>
+                    </div>
+                    <p style={{ fontSize: '10px' }}>{conf.description}</p>
+                    <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '6px' }}>
+                      <button 
+                        onClick={async () => {
+                          const notes = prompt("Enter workshop alignment notes:");
+                          if (!notes) return;
+                          try {
+                            const body = new URLSearchParams();
+                            body.append("resolution_notes", notes);
+                            await fetch(`${API_URL}/api/conflicts/${conf.id}/resolve`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                              body: body.toString()
+                            });
+                            fetchData();
+                          } catch (err) {
+                            setConflicts(prev => prev.filter(c => c.id !== conf.id));
+                          }
+                        }}
+                        className="btn btn-primary"
+                        style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '4px 10px', fontSize: '9px' }}
+                      >
+                        Resolve Alignment
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {conflicts.length === 0 && (
+                  <div style={{ textAlign: 'center', padding: '24px', fontSize: '11px', color: '#64748b' }}>
+                    No outstanding alignment conflicts. Full consensus achieved!
+                  </div>
+                )}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Grounded Strategic Chat Advisor */}
+          <div className="cockpit-right">
+            <div className="glass-card chat-container">
+              <div className="drawer-header">
+                <div className="drawer-header-title">
+                  <h3>Strategic Launch Advisor</h3>
+                  <p>Grounded strictly in validated OKF Memory. Powered by Gemini 1.5 Pro.</p>
+                </div>
+                <div className="chat-header-status">
+                  <div className="chat-dot" />
+                  <span>Interactive Memory</span>
+                </div>
+              </div>
+
+              {/* Messages Viewport */}
+              <div className="chat-viewport">
+                {chatMessages.map((msg, index) => {
+                  const isUser = msg.role === 'user';
+                  return (
+                    <div 
+                      key={index}
+                      className={`chat-bubble-row ${isUser ? 'user' : 'assistant'}`}
+                    >
+                      <div className={`chat-bubble-avatar ${isUser ? 'user' : 'assistant'}`}>
+                        {isUser ? 'ME' : '🤖'}
+                      </div>
+                      
+                      <div className="chat-speech-bubble">
+                        {/* Simple custom renderer for mock strategic markdown */}
+                        {msg.content.split('\n\n').map((para, pIdx) => {
+                          if (para.startsWith('###')) {
+                            return <h3 key={pIdx}>{para.replace('###', '')}</h3>;
+                          }
+                          if (para.startsWith('####')) {
+                            return <h4 key={pIdx}>{para.replace('####', '')}</h4>;
+                          }
+                          if (para.startsWith('-')) {
+                            return (
+                              <ul key={pIdx}>
+                                {para.split('\n').map((li, liIdx) => (
+                                  <li key={liIdx}>{li.replace('-', '').trim()}</li>
+                                ))}
+                              </ul>
+                            );
+                          }
+                          return <p key={pIdx} style={{ marginBottom: '8px' }}>{para}</p>;
+                        })}
+
+                        {!isUser && msg.content.includes("Strategy Refinement Options") && (
+                          <div className="prompt-chips-wrapper">
+                            <span className="prompt-chips-header font-bold">Suggested Refinements</span>
+                            <button 
+                              onClick={() => setChatInput("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
+                              className="prompt-suggestion-btn"
+                            >
+                              → Analyze community operational delivery hubs
+                            </button>
+                            <button 
+                              onClick={() => setChatInput("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
+                              className="prompt-suggestion-btn"
+                            >
+                              → Simulate payer prior authorization friction
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                {chatLoading && (
+                  <div style={{ fontSize: '10px', color: '#64748b', display: 'flex', gap: '6px', alignItems: 'center', margin: '8px 0' }}>
+                    <RefreshCw className="animate-spin" size={12} style={{ color: '#3b82f6' }} />
+                    Grounded advisor synthesizing oncology plans...
+                  </div>
+                )}
+                <div ref={chatEndRef} />
+              </div>
+
+              {/* Grounding Context */}
+              {retrievedContext.length > 0 && (
+                <div className="chat-grounding-chips">
+                  <div className="grounding-header">
+                    <Database size={12} /> Grounded Source Cards ({retrievedContext.length})
+                  </div>
+                  <div className="grounding-scroller">
+                    {retrievedContext.map((c, i) => (
+                      <span key={i} className="grounding-pill">
+                        {c.metadata.asset} {c.metadata.tumor} ({c.metadata.function_lane})
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Chat Input */}
+              <div className="chat-input-row">
+                <input 
+                  type="text" 
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Ask about clinical adoption, access barriers, or competitive timeline alignment..."
+                  className="chat-text-input"
+                />
+                <button 
+                  onClick={handleSendMessage}
+                  disabled={chatLoading}
+                  className="chat-send-icon-btn"
                 >
+                  <Send size={14} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      )}
+
+      {/* =====================================================================
+         TAB 2: COMMERCIAL MATRIX (GRID OF ITACS STRATEGIC CARDS)
+         ===================================================================== */}
+      {activeTab === 'matrix' && selectedInsight && (
+        <main className="matrix-layout animate-fade-in">
+          
+          {/* Left Column: Search, Filters & Grid */}
+          <div className="matrix-left">
+            <div className="matrix-toolbar">
+              <input 
+                type="text" 
+                placeholder="Search Opportunity Spaces, Insights, or Tumors..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="matrix-search"
+              />
+
+              <div className="matrix-filters">
+                <select 
+                  value={filterLane} 
+                  onChange={(e) => setFilterLane(e.target.value)}
+                  className="matrix-select-filter"
+                >
+                  <option>All Functions</option>
                   <option>Market Research</option>
                   <option>Medical Affairs</option>
                   <option>Market Access</option>
                   <option>Competitive Intelligence</option>
                 </select>
-              </div>
-              <div className="form-group">
-                <label>Asset</label>
+
                 <select 
-                  value={uploadAsset} 
-                  onChange={(e) => setUploadAsset(e.target.value)}
-                  className="form-select"
+                  value={filterAsset} 
+                  onChange={(e) => setFilterAsset(e.target.value)}
+                  className="matrix-select-filter"
                 >
+                  <option>All Assets</option>
                   <option>V940</option>
                   <option>MK-1084</option>
                   <option>Keytruda</option>
                 </select>
               </div>
-              <div className="form-group">
-                <label>Tumor</label>
-                <input 
-                  type="text" 
-                  value={uploadTumor}
-                  onChange={(e) => setUploadTumor(e.target.value)}
-                  className="form-input"
-                />
-              </div>
-              <div className="form-group">
-                <label>Indication</label>
-                <input 
-                  type="text" 
-                  value={uploadSubTumor}
-                  onChange={(e) => setUploadSubTumor(e.target.value)}
-                  className="form-input"
-                />
-              </div>
             </div>
 
-            <div className="upload-dropzone">
-              <input 
-                type="file" 
-                onChange={handleFileUpload} 
-                disabled={isUploading}
-              />
-              <Upload size={24} style={{ color: '#818cf8', margin: '0 auto' }} />
-              <p>Select presentation or document</p>
-              <span>Supports PPTX, PDF, PNG (PixelRAG Ingestion)</span>
-            </div>
-
-            {isUploading && (
-              <div className="progress-container">
-                <div className="progress-header">
-                  <span>Extracting ITACS Hierarchy...</span>
-                  <span>{uploadProgress}%</span>
-                </div>
-                <div className="progress-track">
-                  <div className="progress-fill" style={{ width: `${uploadProgress}%` }} />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Queue List Card */}
-          <div className="glass-card queue-container">
-            <h3 className="glass-card-title">
-              <FileText size={16} /> Intelligence Queue
-            </h3>
-            
-            <div className="queue-list">
-              {insights.map(ins => {
-                const isSelected = selectedInsight && selectedInsight.id === ins.id;
+            <div className="matrix-grid">
+              {filteredInsights.map(ins => {
+                const isSelected = selectedInsight.id === ins.id;
                 const laneClass = getFunctionBadgeClass(ins.metadata.function_lane);
                 
                 let statusClass = "draft";
@@ -750,422 +878,350 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
                   <div 
                     key={ins.id}
                     onClick={() => setSelectedInsight(ins)}
-                    className={`queue-item ${isSelected ? 'selected' : ''}`}
+                    className={`matrix-card ${isSelected ? 'selected' : ''}`}
                   >
-                    <div className="queue-item-header">
-                      <span className={`lane-tag ${laneClass}`}>{ins.metadata.function_lane}</span>
-                      <span className={`status-badge ${statusClass}`}>{statusText}</span>
+                    <div className="matrix-card-header">
+                      <span className={`matrix-lane-tag ${laneClass}`}>{ins.metadata.function_lane}</span>
+                      <span className={`matrix-status-badge ${statusClass}`}>{statusText}</span>
                     </div>
-                    
-                    <div className="queue-item-body">
+
+                    <div className="matrix-card-body">
                       <h4>{ins.opportunity_space}</h4>
                       <p>{ins.insight}</p>
                     </div>
 
-                    <div className="queue-item-footer">
+                    <div className="matrix-card-footer">
                       <span>Asset: <strong>{ins.metadata.asset}</strong> ({ins.metadata.tumor})</span>
-                      <span>Compliance: <strong style={{ color: ins.compliance_score >= 0.8 ? '#34d399' : '#f43f5e' }}>{Math.round(ins.compliance_score * 100)}%</strong></span>
+                      <span>Compliance: <strong style={{ color: ins.compliance_score >= 0.8 ? '#34d399' : '#ef4444' }}>{Math.round(ins.compliance_score * 100)}%</strong></span>
                     </div>
                   </div>
                 );
               })}
+              {filteredInsights.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '40px', gridColumn: '1/-1', color: '#64748b', fontSize: '12px' }}>
+                  No strategic cards match your search criteria.
+                </div>
+              )}
             </div>
           </div>
-        </div>
 
-        {/* RIGHT COLUMN: TAB-CONTENT PANELS */}
-        <div className="content-panel">
-
-          {/* TAB 1: SME WORKSPACE */}
-          {activeTab === 'workspace' && selectedInsight && (
-            <div className="workspace-split animate-fade-in">
-              
-              {/* Form card */}
-              <div className="glass-card workspace-form-card">
-                <div className="workspace-header">
-                  <div className="workspace-header-title">
-                    <h3>SME Validation Workspace</h3>
-                    <p>Refine, align, and validate oncology insights for Merck ITACS compliance.</p>
-                  </div>
-
-                  <div className="action-group">
-                    <button onClick={() => setShowConflictForm(true)} className="btn btn-warn">
-                      <AlertTriangle size={12} /> Flag Contradiction
-                    </button>
-                    <button onClick={handleApprove} className="btn btn-primary">
-                      <Check size={12} /> Approve to Memory
-                    </button>
-                  </div>
+          {/* Right Column: Source Verification & Details Drawer */}
+          <div className="matrix-right-drawer">
+            <div className="glass-card" style={{ height: '100%' }}>
+              <div className="drawer-header">
+                <div className="drawer-header-title">
+                  <h3>ITACS Card Validation</h3>
+                  <p>Validate the extracted fields and review compliance gating.</p>
                 </div>
-
-                <div className="itacs-form-fields">
-                  <div className="form-group">
-                    <label className="label-os">1. Opportunity Space</label>
-                    <input 
-                      type="text" 
-                      value={editOpportunity}
-                      onChange={(e) => setEditOpportunity(e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label-csf">2. Critical Success Factor (CSF)</label>
-                    <input 
-                      type="text" 
-                      value={editCSF}
-                      onChange={(e) => setEditCSF(e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label-insight">3. What (Insight)</label>
-                    <textarea 
-                      rows={3}
-                      value={editInsight}
-                      onChange={(e) => setEditInsight(e.target.value)}
-                      className="form-textarea"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label-rationale">4. Why (Rationale)</label>
-                    <textarea 
-                      rows={3}
-                      value={editRationale}
-                      onChange={(e) => setEditRationale(e.target.value)}
-                      className="form-textarea"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="label-implication">5. Implication</label>
-                    <textarea 
-                      rows={3}
-                      value={editImplication}
-                      onChange={(e) => setEditImplication(e.target.value)}
-                      className="form-textarea"
-                    />
-                  </div>
-                </div>
-
-                {showConflictForm && (
-                  <div className="conflict-flag-box">
-                    <h4 className="conflict-flag-title">
-                      <AlertTriangle size={14} /> Flag Analytical Disagreement
-                    </h4>
-                    <div className="form-group">
-                      <label>Conflict Type</label>
-                      <select 
-                        value={conflictType} 
-                        onChange={(e) => setConflictType(e.target.value)}
-                        className="form-select"
-                      >
-                        <option>Inter-Functional Divergence</option>
-                        <option>Timeline Contradiction</option>
-                        <option>Decay Discrepancy</option>
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label>Conflict Details (Explain why this conflicts)</label>
-                      <textarea 
-                        rows={2}
-                        value={conflictDesc}
-                        onChange={(e) => setConflictDesc(e.target.value)}
-                        placeholder="Describe the opposing timelines or research discrepancies..."
-                        className="form-textarea"
-                      />
-                    </div>
-                    <div className="action-group" style={{ justifyContent: 'flex-end', marginTop: '4px' }}>
-                      <button onClick={() => setShowConflictForm(false)} className="btn btn-subtle">Cancel</button>
-                      <button onClick={handleFlagContradiction} className="btn btn-primary" style={{ background: '#f43f5e', boxShadow: 'none' }}>Flag Dispute</button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Spatial Canvas side */}
-              <div className="canvas-panel">
                 
-                {/* Canvas card */}
-                <div className="glass-card">
-                  <h3 className="glass-card-title">
-                    <Eye size={16} /> PixelRAG Ingestion Grounding
-                  </h3>
-                  <p style={{ fontSize: '10px', color: '#9ca3af', marginBottom: '12px' }}>
-                    OCR spatial bounding boxes and extracted text tiles coordinates mapped from source.
-                  </p>
-                  
-                  <div className="mock-slide-canvas">
-                    <div className="canvas-header">
-                      <div className="canvas-header-title" />
-                      <div style={{ height: '6px', width: '20px', background: '#374151', borderRadius: '2px' }} />
-                    </div>
-                    
-                    <div className="canvas-tile-box-cyan">
-                      <div style={{ background: '#22d3ee', color: '#070a10', fontSize: '6px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '4px' }}>OCR TILE BLOCK</div>
-                      <p>"{selectedInsight.quotes[0]?.text || "Personalized vaccine logistics are complex."}"</p>
-                    </div>
-
-                    <div className="canvas-tile-box-purple">
-                      <div style={{ background: '#c084fc', color: 'white', fontSize: '6px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '4px' }}>CHART CAPTION TILE</div>
-                      <p style={{ color: '#c084fc' }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
-                    </div>
-
-                    <div className="canvas-footer">
-                      <span>SOURCE: {selectedInsight.slide_reference}</span>
-                      <span>COORDS: [x: 104, y: 342, w: 590, h: 120]</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Audit & Compliance summary */}
-                <div className="glass-card compliance-summary-box">
-                  <h3 className="glass-card-title">Compliance Audit Summary</h3>
-                  
-                  <div className="compliance-gauge-wrapper">
-                    <div className="compliance-circle">
-                      <div 
-                        className={`compliance-fill-height ${selectedInsight.compliance_score >= 0.8 ? '' : 'low'}`} 
-                        style={{ height: `${selectedInsight.compliance_score * 100}%` }}
-                      />
-                      <span>{Math.round(selectedInsight.compliance_score * 100)}%</span>
-                    </div>
-
-                    <div className="compliance-text">
-                      <h5>Compliance Verification Rating</h5>
-                      <p>
-                        {selectedInsight.compliance_score >= 0.80 
-                          ? "Compliant. Exceeds the 80% baseline. Approved for scientific exchange."
-                          : "Non-Compliant. Quarantined due to commercial jargon or missing clinical endpoints."}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="verbatim-quotes-title">Verbatim Source Grounding</div>
-                  {selectedInsight.quotes.map((q, i) => (
-                    <div key={i} className="verbatim-quote-box">
-                      <p className="italic">"{q.text}"</p>
-                      <span>— Bounding Area: {q.location}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: SYNTHESIS & THOUGHT PARTNER */}
-          {activeTab === 'themes' && (
-            <div className="synthesis-split animate-fade-in">
-              
-              {/* Left pane: Themes & Conflicts */}
-              <div className="synthesis-left-panel">
-                
-                {/* Themes card */}
-                <div className="glass-card">
-                  <div className="section-header" style={{ marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
-                    <h3 className="glass-card-title" style={{ marginBottom: 0 }}>
-                      <Sparkles size={16} /> Cross-Functional Themes
-                    </h3>
-                    <button 
-                      onClick={triggerSynthesisAPI}
-                      className="tab-btn" 
-                      style={{ padding: '4px', border: '1px solid rgba(255,255,255,0.05)', background: 'transparent' }}
-                      title="Force Recalculate Themes"
-                    >
-                      <RefreshCw size={12} />
-                    </button>
-                  </div>
-
-                  <div className="themes-list">
-                    {themes.map((theme, idx) => (
-                      <div key={idx} className="theme-card">
-                        <div className="theme-card-header">
-                          <h4>{theme.theme_name}</h4>
-                          <span className="theme-rank-badge">Rank: {theme.theme_score}</span>
-                        </div>
-                        <p>{theme.executive_synthesis}</p>
-                        <div className="theme-tags">
-                          {theme.contributing_functions.map((fn, fIdx) => (
-                            <span key={fIdx} className="theme-tag-chip">{fn}</span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Conflicts queue card */}
-                <div className="glass-card">
-                  <h3 className="glass-card-title">
-                    <AlertTriangle size={16} /> Conflict Workshop Queue
-                  </h3>
-                  
-                  <div className="conflicts-queue">
-                    {conflicts.map(conf => (
-                      <div key={conf.id} className="conflict-card">
-                        <div className="conflict-card-header">
-                          <span className="conflict-tag">{conf.conflict_type}</span>
-                          <span className="conflict-status">FLAGGED</span>
-                        </div>
-                        <p>{conf.description}</p>
-                        <div className="conflict-card-footer">
-                          <button 
-                            onClick={async () => {
-                              const notes = prompt("Enter resolution notes from the workshop:");
-                              if (!notes) return;
-                              try {
-                                const body = new URLSearchParams();
-                                body.append("resolution_notes", notes);
-                                await fetch(`${API_URL}/api/conflicts/${conf.id}/resolve`, {
-                                  method: 'POST',
-                                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                  body: body.toString()
-                                });
-                                fetchData();
-                              } catch (err) {
-                                setConflicts(prev => prev.filter(c => c.id !== conf.id));
-                              }
-                            }}
-                            className="btn btn-primary"
-                            style={{ background: 'rgba(244, 63, 94, 0.15)', color: '#f43f5e', boxShadow: 'none', padding: '4px 10px' }}
-                          >
-                            Mark Resolved
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    {conflicts.length === 0 && (
-                      <div style={{ textAlign: 'center', padding: '24px', fontSize: '11px', color: '#6b7280' }}>
-                        No active contradictions detected. Consensus achieved!
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right pane: Chat Terminal */}
-              <div className="glass-card chat-terminal-card">
-                <div className="workspace-header" style={{ marginBottom: '12px' }}>
-                  <div className="workspace-header-title">
-                    <h3>Strategic Thought Partner</h3>
-                    <p>Powered by Gemini 1.5 Pro • Grounded strictly in validated memory.</p>
-                  </div>
-                  <div className="chat-header-status">
-                    <div className="chat-dot" />
-                    <span>Grounded (OKF Pool)</span>
-                  </div>
-                </div>
-
-                {/* Messages Viewport */}
-                <div className="chat-messages-viewport">
-                  {chatMessages.map((msg, index) => {
-                    const isUser = msg.role === 'user';
-                    return (
-                      <div 
-                        key={index}
-                        className={`chat-bubble-wrapper ${isUser ? 'user' : 'assistant'}`}
-                      >
-                        <div className={`chat-avatar ${isUser ? 'user' : 'assistant'}`}>
-                          {isUser ? 'ME' : '🤖'}
-                        </div>
-                        
-                        <div className="chat-bubble">
-                          {msg.content}
-                          
-                          {!isUser && msg.content.includes("Strategy Refinement Options") && (
-                            <div className="chat-refinement-options">
-                              <span className="refinement-header">Refinement Pathways</span>
-                              <button 
-                                onClick={() => setChatInput("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
-                                className="refinement-btn"
-                              >
-                                → Analyze operational delivery hub flowchart
-                              </button>
-                              <button 
-                                onClick={() => setChatInput("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
-                                className="refinement-btn"
-                              >
-                                → Simulate payer prior authorization friction
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {chatLoading && (
-                    <div style={{ fontSize: '10px', color: '#9ca3af', display: 'flex', gap: '6px', alignItems: 'center', margin: '8px 0' }}>
-                      <RefreshCw className="animate-spin" size={12} style={{ color: '#22d3ee' }} />
-                      Gemini 1.5 Pro pressure-testing perspectives...
-                    </div>
-                  )}
-                  <div ref={chatEndRef} />
-                </div>
-
-                {/* Grounding Context */}
-                {retrievedContext.length > 0 && (
-                  <div className="chat-grounding-context">
-                    <div className="grounding-title">
-                      <Database size={12} /> Grounded Source Nodes ({retrievedContext.length})
-                    </div>
-                    <div className="grounding-scroller">
-                      {retrievedContext.map((c, i) => (
-                        <span key={i} className="grounding-tag">
-                          {c.asset} - {c.tumor} ({c.function_lane})
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Chat Input */}
-                <div className="chat-input-area">
-                  <input 
-                    type="text" 
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ask about clinical adoption, access barriers, or competitive timeline alignment..."
-                    className="chat-input-field"
-                  />
-                  <button 
-                    onClick={handleSendMessage}
-                    disabled={chatLoading}
-                    className="chat-send-btn"
-                  >
-                    <Send size={14} />
+                <div className="drawer-actions">
+                  <button onClick={() => setShowConflictForm(true)} className="btn btn-warn">
+                    <AlertTriangle size={12} /> Flag Contradiction
+                  </button>
+                  <button onClick={handleApprove} className="btn btn-primary">
+                    <Check size={12} /> Approve to Memory
                   </button>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* TAB 3: AUDIT TRAIL */}
-          {activeTab === 'audit' && (
-            <div className="glass-card animate-fade-in">
-              <div className="workspace-header" style={{ marginBottom: '20px' }}>
-                <div className="workspace-header-title">
-                  <h3>Immutable Compliance Audit Trail</h3>
-                  <p>Verifiable logging of every agent decision, tool execution, and LLM reasoning step for compliance auditing.</p>
+              {/* Structured Fields */}
+              <div className="itacs-fields-scroll">
+                <div className="itacs-field-block">
+                  <label className="label-os">1. Opportunity Space</label>
+                  <textarea 
+                    rows={1}
+                    value={editOpportunity}
+                    onChange={(e) => setEditOpportunity(e.target.value)}
+                  />
+                </div>
+                <div className="itacs-field-block">
+                  <label className="label-csf">2. Critical Success Factor (CSF)</label>
+                  <textarea 
+                    rows={2}
+                    value={editCSF}
+                    onChange={(e) => setEditCSF(e.target.value)}
+                  />
+                </div>
+                <div className="itacs-field-block">
+                  <label className="label-insight">3. What (Strategic Insight)</label>
+                  <textarea 
+                    rows={3}
+                    value={editInsight}
+                    onChange={(e) => setEditInsight(e.target.value)}
+                  />
+                </div>
+                <div className="itacs-field-block">
+                  <label className="label-rationale">4. Why (Rationale & Evidence)</label>
+                  <textarea 
+                    rows={3}
+                    value={editRationale}
+                    onChange={(e) => setEditRationale(e.target.value)}
+                  />
+                </div>
+                <div className="itacs-field-block">
+                  <label className="label-implication">5. Implication & Recommendation</label>
+                  <textarea 
+                    rows={3}
+                    value={editImplication}
+                    onChange={(e) => setEditImplication(e.target.value)}
+                  />
                 </div>
               </div>
 
-              <div className="audit-list">
-                {auditLogs.map((log, lIdx) => (
-                  <div key={lIdx} className="audit-card">
-                    <div className="audit-card-header">
-                      <div className="audit-step-badge">
-                        <div className="audit-step-number">{log.step_index}</div>
-                        <span className="audit-step-name">{log.step_name}</span>
+              {showConflictForm && (
+                <div className="conflict-flag-box" style={{ marginBottom: '16px' }}>
+                  <h4 className="conflict-flag-title" style={{ color: '#ef4444', fontWeight: 700 }}>
+                    <AlertTriangle size={14} /> Flag Analytical Disagreement
+                  </h4>
+                  <div className="form-group" style={{ marginBottom: '8px' }}>
+                    <label style={{ fontSize: '9px', fontWeight: 600 }}>Conflict Type</label>
+                    <select 
+                      value={conflictType} 
+                      onChange={(e) => setConflictType(e.target.value)}
+                      className="form-select"
+                      style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '10px', width: '100%' }}
+                    >
+                      <option>Inter-Functional Divergence</option>
+                      <option>Timeline Contradiction</option>
+                      <option>Decay Discrepancy</option>
+                    </select>
+                  </div>
+                  <div className="form-group" style={{ marginBottom: '8px' }}>
+                    <label style={{ fontSize: '9px', fontWeight: 600 }}>Disagreement Details</label>
+                    <textarea 
+                      rows={2}
+                      value={conflictDesc}
+                      onChange={(e) => setConflictDesc(e.target.value)}
+                      placeholder="Describe the opposing timelines or research discrepancies..."
+                      className="form-textarea"
+                      style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '4px', fontSize: '10px', width: '100%', resize: 'none' }}
+                    />
+                  </div>
+                  <div className="drawer-actions" style={{ justifyContent: 'flex-end' }}>
+                    <button onClick={() => setShowConflictForm(false)} className="btn btn-subtle" style={{ padding: '4px 8px' }}>Cancel</button>
+                    <button onClick={handleFlagContradiction} className="btn btn-primary" style={{ background: '#ef4444', padding: '4px 8px', boxShadow: 'none' }}>Flag Dispute</button>
+                  </div>
+                </div>
+              )}
+
+              {/* Source verification area */}
+              <div className="verification-tabs-box">
+                <span className="verification-heading">Source Slide Verification & Grounding</span>
+                
+                <div className="mock-slide-box">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="slide-headline-indicator" />
+                    <div style={{ height: '5px', width: '20px', background: '#1e293b', borderRadius: '2px' }} />
+                  </div>
+
+                  <div className="slide-bounding-tile-cyan">
+                    <span style={{ background: '#22d3ee', color: '#06080d', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>OCR COORDINATES BLOCK</span>
+                    <p style={{ fontSize: '7px' }}>"{selectedInsight.quotes[0]?.text || "Logistics are complex."}"</p>
+                  </div>
+
+                  <div className="slide-bounding-tile-purple">
+                    <span style={{ background: '#c084fc', color: 'white', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>CHART TEXT FIELD</span>
+                    <p style={{ fontSize: '7px', color: '#c084fc' }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
+                  </div>
+
+                  <div className="slide-footer-coords">
+                    <span>SOURCE: {selectedInsight.slide_reference}</span>
+                    <span>COORDS: [x: 104, y: 342, w: 590, h: 120]</span>
+                  </div>
+                </div>
+
+                {/* Compliance donut row */}
+                <div className="compliance-metric-row">
+                  <div className="compliance-donut">
+                    <div 
+                      className={`donut-fill ${selectedInsight.compliance_score >= 0.8 ? '' : 'low'}`}
+                      style={{ height: `${selectedInsight.compliance_score * 100}%` }}
+                    />
+                    <span>{Math.round(selectedInsight.compliance_score * 100)}%</span>
+                  </div>
+                  <div className="compliance-donut-text">
+                    <h5>Compliance Gating Verification</h5>
+                    <p>
+                      {selectedInsight.compliance_score >= 0.8
+                        ? "PASSED: Compliant for scientific exchanges."
+                        : "WARNING: Contains forbidden commercial terminology."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Verbatim quote */}
+                {selectedInsight.quotes.map((q, i) => (
+                  <div key={i} className="verbatim-container">
+                    <p className="italic">"{q.text}"</p>
+                    <span>— Grounded Area: {q.location}</span>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+
+        </main>
+      )}
+
+      {/* =====================================================================
+         TAB 3: INGESTION FACTORY (THE UNDER-THE-HOOD PIPELINE ENGINE)
+         ===================================================================== */}
+      {activeTab === 'ingest' && (
+        <main className="ingest-layout animate-fade-in">
+          
+          {/* Left Column: Upload Controls & Pipeline Stepper */}
+          <div className="ingest-left-controls">
+            
+            {/* The automated ingestion zone */}
+            <div className="glass-card">
+              <div className="drawer-header" style={{ marginBottom: '14px' }}>
+                <h3 className="drawer-header-title" style={{ margin: 0 }}>
+                  <Upload size={16} /> Asset Ingestion Port
+                </h3>
+                <button 
+                  onClick={handleTriggerDemo}
+                  disabled={isUploading}
+                  className="btn btn-primary"
+                  style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)', fontSize: '9px', padding: '4px 8px' }}
+                >
+                  <Play size={10} /> Trigger Ingestion Demo
+                </button>
+              </div>
+
+              <div className="metadata-selectors-grid">
+                <div className="select-box-group">
+                  <label>Function Lane</label>
+                  <select 
+                    value={uploadLane} 
+                    onChange={(e) => setUploadLane(e.target.value)}
+                    className="select-box-input"
+                  >
+                    <option>Market Research</option>
+                    <option>Medical Affairs</option>
+                    <option>Market Access</option>
+                    <option>Competitive Intelligence</option>
+                  </select>
+                </div>
+                <div className="select-box-group">
+                  <label>Oncology Asset</label>
+                  <select 
+                    value={uploadAsset} 
+                    onChange={(e) => setUploadAsset(e.target.value)}
+                    className="select-box-input"
+                  >
+                    <option>V940</option>
+                    <option>MK-1084</option>
+                    <option>Keytruda</option>
+                  </select>
+                </div>
+                <div className="select-box-group">
+                  <label>Tumor Type</label>
+                  <input 
+                    type="text" 
+                    value={uploadTumor}
+                    onChange={(e) => setUploadTumor(e.target.value)}
+                    className="select-box-input"
+                  />
+                </div>
+                <div className="select-box-group">
+                  <label>Sub-Indication</label>
+                  <input 
+                    type="text" 
+                    value={uploadSubTumor}
+                    onChange={(e) => setUploadSubTumor(e.target.value)}
+                    className="select-box-input"
+                  />
+                </div>
+              </div>
+
+              <div className="dropzone-box">
+                <input 
+                  type="file" 
+                  onChange={handleFileUpload} 
+                  disabled={isUploading}
+                />
+                <Upload size={24} style={{ color: '#818cf8', margin: '0 auto' }} />
+                <p>Drag & drop strategic presentations</p>
+                <span>Supports PPTX, PDF, PNG (Vision PixelRAG)</span>
+              </div>
+
+              {isUploading && (
+                <div className="bar-box">
+                  <div className="bar-header">
+                    <span>Multi-Agent Parsing In Progress...</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="bar-track">
+                    <div className="bar-fill" style={{ width: `${uploadProgress}%` }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Stepper Pipeline Indicators */}
+            <div className="ingest-stepper-box">
+              <span className="ingest-stepper-title">Agent Processing Sequence</span>
+              
+              <div className="ingest-stepper-row">
+                {[
+                  { idx: 1, name: "Upload", desc: "File Ingress" },
+                  { idx: 2, name: "Ingest", desc: "PixelRAG Tiles" },
+                  { idx: 3, name: "Drafting", desc: "ITACS Map" },
+                  { idx: 4, name: "Auditing", desc: "White Line" },
+                  { idx: 5, name: "Synthesis", desc: "Cross-Clustering" },
+                  { idx: 6, name: "Validation", desc: "SME Approval" },
+                  { idx: 7, name: "Memory", desc: "Grounded RAG" }
+                ].map(step => {
+                  const isCompleted = step.idx < activeStep;
+                  const isActive = step.idx === activeStep;
+                  const isReview = step.idx === 6 && isActive;
+
+                  let stateClass = "";
+                  if (isCompleted) stateClass = "completed";
+                  if (isActive) stateClass = "active";
+                  if (isReview) stateClass = "active review-state";
+
+                  return (
+                    <div key={step.idx} className={`stepper-pill ${stateClass}`}>
+                      <div className="stepper-pill-circle">
+                        {isCompleted ? <Check size={10} /> : step.idx}
                       </div>
-                      <span className="audit-agent-tag">Agent: <strong>{log.agent_name}</strong></span>
+                      <h4>{step.name}</h4>
+                      <p>{step.desc}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Immutable Compliance Audit Trail */}
+          <div className="ingest-right-audit">
+            <div className="glass-card" style={{ height: '100%' }}>
+              <h3 className="glass-card-title">
+                <History size={16} /> Verifiable Compliance Audit Log
+              </h3>
+              
+              <div className="audit-scroller">
+                {auditLogs.map((log, lIdx) => (
+                  <div key={lIdx} className="audit-node">
+                    <div className="audit-node-header">
+                      <div className="audit-badge">
+                        <div className="audit-num">{log.step_index}</div>
+                        <span className="audit-name">{log.step_name}</span>
+                      </div>
+                      <span className="audit-agent">Agent: <strong>{log.agent_name}</strong></span>
                     </div>
 
-                    <div className="audit-payloads-grid">
-                      <div className="audit-payload-box">
-                        <span>Input Payload / Trigger</span>
+                    <div className="audit-payload-row">
+                      <div className="audit-payload-cell">
+                        <span>Input Trigger</span>
                         <pre>{log.user_input}</pre>
                       </div>
-                      <div className="audit-payload-box">
-                        <span>Model Output / Decision</span>
+                      <div className="audit-payload-cell">
+                        <span>Agent Output / Decision</span>
                         <pre>{log.model_output}</pre>
                       </div>
                     </div>
@@ -1173,10 +1229,11 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
                 ))}
               </div>
             </div>
-          )}
+          </div>
 
-        </div>
-      </main>
+        </main>
+      )}
+
     </div>
   );
 }
