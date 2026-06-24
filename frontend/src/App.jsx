@@ -4032,9 +4032,9 @@ export default function App() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px', marginTop: '10px' }}>
                 {/* Slider 1: Competitor Timeline */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', marginBottom: '4px' }}>
                     <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Competitor X FDA Approval</span>
-                    <strong style={{ color: 'white' }}>{warTimeline} Months</strong>
+                    <strong style={{ color: 'var(--brand-cyan)' }}>{warTimeline} Months</strong>
                   </div>
                   <input
                     type="range"
@@ -4042,9 +4042,9 @@ export default function App() {
                     max="12"
                     value={warTimeline}
                     onChange={(e) => setWarTimeline(parseInt(e.target.value))}
-                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)', cursor: 'pointer' }}
                   />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
                     <span>Immediate (1m)</span>
                     <span>Delayed (12m)</span>
                   </div>
@@ -4052,9 +4052,9 @@ export default function App() {
 
                 {/* Slider 2: Payer Rebates */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', marginBottom: '4px' }}>
                     <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Competitor Rebate Pressure</span>
-                    <strong style={{ color: 'white' }}>{warRebate}% Discount</strong>
+                    <strong style={{ color: 'var(--brand-cyan)' }}>{warRebate}% Discount</strong>
                   </div>
                   <input
                     type="range"
@@ -4062,9 +4062,9 @@ export default function App() {
                     max="50"
                     value={warRebate}
                     onChange={(e) => setWarRebate(parseInt(e.target.value))}
-                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)', cursor: 'pointer' }}
                   />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
                     <span>0% rebate</span>
                     <span>Aggressive (50%)</span>
                   </div>
@@ -4072,9 +4072,9 @@ export default function App() {
 
                 {/* Slider 3: Clinical OS Margin */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', marginBottom: '4px' }}>
                     <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Trial OS (Overall Survival) Margin</span>
-                    <strong style={{ color: 'white' }}>+{warOSMargin}% Margin</strong>
+                    <strong style={{ color: 'var(--brand-cyan)' }}>+{warOSMargin}% Margin</strong>
                   </div>
                   <input
                     type="range"
@@ -4082,9 +4082,9 @@ export default function App() {
                     max="30"
                     value={warOSMargin}
                     onChange={(e) => setWarOSMargin(parseInt(e.target.value))}
-                    style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                    style={{ width: '100%', accentColor: 'var(--brand-purple)', cursor: 'pointer' }}
                   />
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
                     <span>Unblinded (0%)</span>
                     <span>Superior (+30%)</span>
                   </div>
@@ -4100,7 +4100,7 @@ export default function App() {
               gap: '16px'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'white' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Imperative Strategic Impact Heatmap
                 </h3>
                 {/* Flash Warning Badge */}
@@ -4163,21 +4163,21 @@ export default function App() {
                     >
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                          <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 800, color: 'white' }}>
+                          <h4 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
                             {csf.title}
                           </h4>
-                          <span style={{ fontSize: '9px', fontWeight: 'bold', color: rating.color }}>
+                          <span style={{ fontSize: '11px', fontWeight: 'bold', color: rating.color }}>
                             {rating.status}
                           </span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                        <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
                           {csf.desc}
                         </p>
                       </div>
                       
                       {/* Metric readout */}
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
-                        Current Threshold: <strong style={{ color: 'white' }}>
+                      <div style={{ borderTop: '1px solid var(--glass-border)', paddingTop: '10px', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                        Current Threshold: <strong style={{ color: 'var(--text-primary)' }}>
                           {csf.id === 1 && `+${warOSMargin}% OS Margin`}
                           {csf.id === 2 && `${warRebate}% rebate`}
                           {csf.id === 3 && `${warTimeline}m competitor lead`}
@@ -5159,7 +5159,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: 'var(--brand-cyan)',
                         fontWeight: 'bold'
                       }}>
@@ -5176,7 +5176,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: 'var(--brand-indigo)',
                         fontWeight: 'bold'
                       }}>
@@ -5193,7 +5193,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: 'var(--brand-purple)',
                         fontWeight: 'bold'
                       }}>
@@ -5223,7 +5223,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: '#f59e0b',
                         fontWeight: 'bold'
                       }}>
@@ -5240,7 +5240,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: 'var(--brand-indigo)',
                         fontWeight: 'bold'
                       }}>
@@ -5257,7 +5257,7 @@ export default function App() {
                         display: 'flex',
                         alignItems: 'center',
                         paddingLeft: '10px',
-                        fontSize: '9px',
+                        fontSize: '11.5px',
                         color: 'var(--brand-purple)',
                         fontWeight: 'bold'
                       }}>
@@ -5269,7 +5269,7 @@ export default function App() {
               </div>
 
               {/* Timeline calibration grid scale */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px', fontSize: '9px', color: 'var(--text-muted)', textAlign: 'center' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', borderTop: '1px solid var(--glass-border)', paddingTop: '10px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>
                 <span>Q1 2026</span>
                 <span>Q2 2026</span>
                 <span>Q3 2026</span>
