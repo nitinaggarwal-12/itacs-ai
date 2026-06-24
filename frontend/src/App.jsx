@@ -2414,14 +2414,18 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'framework' ? 'var(--brand-cyan)' : 'transparent',
+                          backgroundColor: detailTab === 'framework' ? 'var(--brand-cyan)' : 'transparent',
                           color: detailTab === 'framework' ? '#ffffff' : 'var(--text-secondary)',
-                          border: 'none',
+                          border: '0',
+                          outline: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
                           display: 'flex',
                           alignItems: 'center',
-                          boxShadow: detailTab === 'framework' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none'
+                          boxShadow: detailTab === 'framework' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none',
+                          appearance: 'none',
+                          WebkitAppearance: 'none'
                         }}
                       >
                         ITACS Framework
@@ -2435,14 +2439,18 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'grounding' ? 'var(--brand-cyan)' : 'transparent',
+                          backgroundColor: detailTab === 'grounding' ? 'var(--brand-cyan)' : 'transparent',
                           color: detailTab === 'grounding' ? '#ffffff' : 'var(--text-secondary)',
-                          border: 'none',
+                          border: '0',
+                          outline: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
                           display: 'flex',
                           alignItems: 'center',
-                          boxShadow: detailTab === 'grounding' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none'
+                          boxShadow: detailTab === 'grounding' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none',
+                          appearance: 'none',
+                          WebkitAppearance: 'none'
                         }}
                       >
                         Slide Grounding
@@ -2456,14 +2464,18 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'audit' ? 'var(--brand-cyan)' : 'transparent',
+                          backgroundColor: detailTab === 'audit' ? 'var(--brand-cyan)' : 'transparent',
                           color: detailTab === 'audit' ? '#ffffff' : 'var(--text-secondary)',
-                          border: 'none',
+                          border: '0',
+                          outline: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
                           transition: 'all 0.2s ease',
                           display: 'flex',
                           alignItems: 'center',
-                          boxShadow: detailTab === 'audit' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none'
+                          boxShadow: detailTab === 'audit' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none',
+                          appearance: 'none',
+                          WebkitAppearance: 'none'
                         }}
                       >
                         Compliance & History
