@@ -888,6 +888,33 @@ export default function App() {
     }
   };
 
+  // Delete strategic pillar and relocate all its sorted implications back to Unassigned Inbox
+  const handleDeletePillar = async (pillarId, keyName) => {
+    if (!window.confirm("Are you sure you want to delete this Strategic Pillar column? Any launch implications inside it will be moved back to the Unassigned Inbox so no data is lost.")) {
+      return;
+    }
+    
+    // 1. Relocate cards back to Unassigned Inbox
+    setInsights(prev => prev.map(ins => {
+      if (ins.strategic_pillar === keyName) {
+        return { ...ins, strategic_pillar: '' };
+      }
+      return ins;
+    }));
+    
+    // 2. Filter out column from state
+    setPillars(prev => prev.filter(p => p.id !== pillarId));
+    
+    // 3. Persist deletion in PostgreSQL!
+    try {
+      await fetch(`${API_URL}/api/pillars/${pillarId}`, {
+        method: 'DELETE'
+      });
+    } catch (err) {
+      console.error("Failed to delete strategic pillar from database:", err);
+    }
+  };
+
   const handleExportPptx = () => {
     // Direct stream download trigger - standard for PPTX streaming downloads
     window.open(`${API_URL}/api/insights/export-pptx`, '_blank');
@@ -2705,9 +2732,40 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 
                 return (
                   <div key={col.key_name} className="kanban-column">
-                    <div className={`kanban-column-header ${col.class_name}`}>
+                    <div className={`kanban-column-header ${col.class_name}`} style={{ position: 'relative', paddingRight: '36px' }}>
                       <h3>{col.display_name}</h3>
                       <span className="kanban-card-count">{colCards.length} Cards</span>
+                      
+                      {/* Delete column button (Red cross on hover, highly premium!) */}
+                      <button
+                        onClick={() => handleDeletePillar(col.id, col.key_name)}
+                        style={{
+                          position: 'absolute',
+                          top: '12px',
+                          right: '12px',
+                          background: 'transparent',
+                          border: 'none',
+                          color: 'var(--text-muted)',
+                          cursor: 'pointer',
+                          padding: '4px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderRadius: '4px',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => { 
+                          e.currentTarget.style.color = '#ef4444'; 
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'; 
+                        }}
+                        onMouseLeave={(e) => { 
+                          e.currentTarget.style.color = 'var(--text-muted)'; 
+                          e.currentTarget.style.background = 'transparent'; 
+                        }}
+                        title="Delete strategic pillar column"
+                      >
+                        <X size={13} />
+                      </button>
                     </div>
 
                     <div className="kanban-cards-container">
