@@ -170,12 +170,15 @@ export default function App() {
   const [evalResults, setEvalResults] = useState(DEFAULT_EVAL);
   const [tacticalTasks, setTacticalTasks] = useState(DEFAULT_TASKS);
   
-  // Kanban Imperative Board state mapping
-  const [imperatives, setImperatives] = useState({
-    differentiation: ["e39f3792-7489-4e7c-86c8-f80e722a2789"],
-    payer_value: ["c98a1834-4321-8765-cba9-abcdef987654"],
-    diagnostics: []
-  });
+  // Dynamic Strategic Pillars & Kanban State (Interconnected strategic database!)
+  const [pillars, setPillars] = useState([
+    { id: "1", key_name: "differentiation", display_name: "1. Sharpen Clinical Differentiation", class_name: "diff" },
+    { id: "2", key_name: "payer_value", display_name: "2. Demonstrate Payer Value", class_name: "value" },
+    { id: "3", key_name: "diagnostics", display_name: "3. Optimize Diagnostic Channels", class_name: "diag" }
+  ]);
+  const [isSorting, setIsSorting] = useState(false);
+  const [selectedBuilderCard, setSelectedBuilderCard] = useState(null);
+  const [isBuilderDrawerOpen, setIsBuilderDrawerOpen] = useState(false);
 
   // Workshop Voting States
   const [workshopVotes, setWorkshopVotes] = useState({
@@ -291,10 +294,104 @@ export default function App() {
         }
       }
       
+      // Fetch dynamic pillars from PostgreSQL!
+      try {
+        const pilRes = await fetch(`${API_URL}/api/pillars`);
+        if (pilRes.ok) {
+          const pilData = await pilRes.json();
+          if (pilData && pilData.length > 0) {
+            setPillars(pilData);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load strategic pillars:", e);
+      }
+      
       triggerSynthesisAPI();
     } catch (err) {
       console.error("API Fetch failed, running on mock data mode.", err);
     }
+  };
+
+  const handleMoveCard = async (cardId, targetPillar) => {
+    // 1. Optimistic UI update for instantaneous responsiveness
+    setInsights(prev => prev.map(ins => {
+      if (ins.id === cardId) {
+        return { ...ins, strategic_pillar: targetPillar === 'unassigned' ? null : targetPillar };
+      }
+      return ins;
+    }));
+    
+    // 2. Persist to PostgreSQL database in background
+    try {
+      await fetch(`${API_URL}/api/insights/${cardId}/pillar`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ strategic_pillar: targetPillar === 'unassigned' ? null : targetPillar })
+      });
+    } catch (err) {
+      console.error("Error persisting card move to database:", err);
+    }
+  };
+
+  const handleAutoSort = async () => {
+    setIsSorting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/insights/auto-sort`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        // Refresh insights list to fetch new AI assignments
+        const insRes = await fetch(`${API_URL}/api/insights`);
+        if (insRes.ok) {
+          const data = await insRes.json();
+          if (data && data.length > 0) {
+            setInsights(data);
+          }
+        }
+        alert("✨ Gemini AI has successfully classified and auto-sorted all unassigned clinical implications into their most appropriate strategic macro-pillars!");
+      } else {
+        alert("Failed to auto-sort implications.");
+      }
+    } catch (err) {
+      console.error("AI auto-sort error:", err);
+      alert("AI Auto-sort endpoint failed.");
+    } finally {
+      setIsSorting(false);
+    }
+  };
+
+  const handleAddPillar = async () => {
+    const name = prompt("Enter the title for the new dynamic Strategic Pillar column:");
+    if (!name) return;
+    
+    try {
+      const res = await fetch(`${API_URL}/api/pillars`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ display_name: name })
+      });
+      if (res.ok) {
+        const newPillar = await res.json();
+        setPillars(prev => [...prev, newPillar]);
+      } else {
+        // Local simulation fallback
+        const key = name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        setPillars(prev => [...prev, {
+          id: Math.random().toString(),
+          key_name: key,
+          display_name: name,
+          class_name: 'diag'
+        }]);
+      }
+    } catch (err) {
+      console.error("Error creating strategic pillar:", err);
+    }
+  };
+
+  const handleExportPptx = () => {
+    // Direct stream download trigger - standard for PPTX streaming downloads
+    window.open(`${API_URL}/api/insights/export-pptx`, '_blank');
   };
 
   const fetchMcpServers = async () => {
@@ -1655,73 +1752,159 @@ export default function App() {
 
         {/* MISSING MODULE 1: THE IMPERATIVE BUILDER (STRATEGIC KANBAN BOARD) */}
         {activeTab === 'builder' && (
-          <main className="kanban-board animate-fade-in">
-            {[
-              { colKey: "differentiation", title: "1. Sharpen Clinical Differentiation", class: "diff" },
-              { colKey: "payer_value", title: "2. Demonstrate Payer Value", class: "value" },
-              { colKey: "diagnostics", title: "3. Optimize Diagnostic Channels", class: "diag" }
-            ].map(col => {
-              const colCards = insights.filter(ins => imperatives[col.colKey].includes(ins.id));
+          <div style={{ padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', boxSizing: 'border-box' }}>
+            
+            {/* Dynamic Controls Header Bar */}
+            <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', width: '100%', boxSizing: 'border-box', flexShrink: 0 }}>
+              <div>
+                <h3 style={{ fontSize: '15px', margin: 0, fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ClipboardList size={16} style={{ color: 'var(--brand-indigo)' }} /> Strategic Imperative Builder
+                </h3>
+                <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Organize tactical launch implications into strategic macro-pillars. Auto-sort with Gemini AI or export slides.
+                </p>
+              </div>
               
-              return (
-                <div key={col.colKey} className="kanban-column">
-                  <div className={`kanban-column-header ${col.class}`}>
-                    <h3>{col.title}</h3>
-                    <span className="kanban-card-count">{colCards.length} Cards</span>
-                  </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button 
+                  onClick={handleAutoSort} 
+                  className="btn" 
+                  disabled={isSorting}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', color: '#a5b4fc', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
+                >
+                  {isSorting ? <RefreshCw className="animate-spin" size={13} /> : '✨ Auto-Sort with Gemini'}
+                </button>
+                <button 
+                  onClick={handleAddPillar} 
+                  className="btn" 
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
+                >
+                  <Plus size={13} /> Add Strategic Pillar
+                </button>
+                <button 
+                  onClick={handleExportPptx} 
+                  className="btn btn-primary" 
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
+                >
+                  <FileText size={13} /> Export GOLT Presentation (PPTX)
+                </button>
+              </div>
+            </div>
 
-                  <div className="kanban-cards-container">
-                    {colCards.map(card => (
-                      <div key={card.id} className="kanban-card">
-                        <h4>{card.opportunity_space}</h4>
-                        <p style={{ fontSize: '12.5px', fontStyle: 'italic', color: 'var(--brand-cyan)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
-                          "Implication: {card.implication}"
-                        </p>
-                        
-                        <div className="kanban-card-footer">
-                          <span>Asset: {card.metadata.asset}</span>
-                          <div style={{ display: 'flex', gap: '6px' }}>
-                            {col.colKey !== "differentiation" && (
-                              <button 
-                                onClick={() => moveImperativeCard(card.id, "differentiation")} 
-                                className="kanban-move-btn"
-                                title="Move to Differentiation"
-                              >
-                                🎯
-                              </button>
-                            )}
-                            {col.colKey !== "payer_value" && (
-                              <button 
-                                onClick={() => moveImperativeCard(card.id, "payer_value")} 
-                                className="kanban-move-btn"
-                                title="Move to Payer Value"
-                              >
-                                💳
-                              </button>
-                            )}
-                            {col.colKey !== "diagnostics" && (
-                              <button 
-                                onClick={() => moveImperativeCard(card.id, "diagnostics")} 
-                                className="kanban-move-btn"
-                                title="Move to Diagnostics"
-                              >
-                                🧬
-                              </button>
-                            )}
-                          </div>
+            {/* 4-Column Board Wrapper */}
+            <main className="kanban-board" style={{ gridTemplateColumns: `repeat(${pillars.length + 1}, 1fr)`, height: 'calc(100vh - 230px)', padding: 0 }}>
+              
+              {/* Column 0: Unassigned Inbox */}
+              <div className="kanban-column" style={{ background: 'rgba(11, 15, 25, 0.4)', borderStyle: 'dashed' }}>
+                <div className="kanban-column-header" style={{ borderBottomColor: 'rgba(255, 255, 255, 0.08)' }}>
+                  <h3 style={{ color: 'var(--text-muted)' }}>Unassigned Implications Inbox</h3>
+                  <span className="kanban-card-count" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                    {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).length} Cards
+                  </span>
+                </div>
+                
+                <div className="kanban-cards-container">
+                  {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).map(card => (
+                    <div 
+                      key={card.id} 
+                      className="kanban-card animate-fade-in" 
+                      onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
+                      style={{ cursor: 'pointer', borderLeft: '3px solid #64748b' }}
+                      title="Click to explore Clinical Grounding and slide lineage"
+                    >
+                      <h4 style={{ fontSize: '12px', fontWeight: 'bold' }}>{card.opportunity_space}</h4>
+                      <p style={{ fontSize: '10.5px', fontStyle: 'italic', color: 'var(--text-secondary)', margin: '6px 0 10px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
+                        "Implication: {card.implication}"
+                      </p>
+                      
+                      <div className="kanban-card-footer">
+                        <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          {pillars.map(p => (
+                            <button
+                              key={p.key_name}
+                              onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
+                              className="kanban-move-btn"
+                              style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                              title={`Move to ${p.display_name}`}
+                            >
+                              {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
+                            </button>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                    {colCards.length === 0 && (
-                      <div style={{ textAlign: 'center', padding: '30px 10px', fontSize: '10px', color: '#64748b', border: '1px dashed rgba(255,255,255,0.02)', borderRadius: '8px' }}>
-                        Drag/Move implications here to formulate macro-strategy
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ))}
+                  {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '40px 10px', fontSize: '10.5px', color: '#475569' }}>
+                      ✨ All implications sorted into pillars!consensus achieved.
+                    </div>
+                  )}
                 </div>
-              );
-            })}
-          </main>
+              </div>
+
+              {/* Dynamic Columns */}
+              {pillars.map(col => {
+                const colCards = insights.filter(ins => ins.strategic_pillar === col.key_name && ins.is_validated);
+                
+                return (
+                  <div key={col.key_name} className="kanban-column">
+                    <div className={`kanban-column-header ${col.class_name}`}>
+                      <h3>{col.display_name}</h3>
+                      <span className="kanban-card-count">{colCards.length} Cards</span>
+                    </div>
+
+                    <div className="kanban-cards-container">
+                      {colCards.map(card => (
+                        <div 
+                          key={card.id} 
+                          className="kanban-card animate-fade-in"
+                          onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
+                          style={{ cursor: 'pointer' }}
+                          title="Click to explore Clinical Grounding and slide lineage"
+                        >
+                          <h4 style={{ fontSize: '12px', fontWeight: 'bold' }}>{card.opportunity_space}</h4>
+                          <p style={{ fontSize: '10.5px', fontStyle: 'italic', color: 'var(--brand-cyan)', margin: '6px 0 10px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
+                            "Implication: {card.implication}"
+                          </p>
+                          
+                          <div className="kanban-card-footer">
+                            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
+                            <div style={{ display: 'flex', gap: '4px' }}>
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, 'unassigned'); }}
+                                className="kanban-move-btn"
+                                style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                                title="Move back to Unassigned Inbox"
+                              >
+                                📥
+                              </button>
+                              {pillars.filter(p => p.key_name !== col.key_name).map(p => (
+                                <button
+                                  key={p.key_name}
+                                  onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
+                                  className="kanban-move-btn"
+                                  style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                                  title={`Move to ${p.display_name}`}
+                                >
+                                  {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {colCards.length === 0 && (
+                        <div style={{ textAlign: 'center', padding: '40px 10px', fontSize: '10.5px', color: '#475569', border: '1px dashed rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+                          Drag/Move implications here to formulate macro-strategy
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </main>
+          </div>
         )}
 
         {/* MISSING MODULE 2: TACTICAL WORKSTREAM TRACKER (PROJECT MANAGER) */}
@@ -2223,6 +2406,103 @@ export default function App() {
               </div>
             </div>
 
+          </div>
+        )}
+      </div>
+
+      {/* CONTEXTUAL DRILL-DOWN: STRATEGIC LINEAGE DRAWER */}
+      <div className={`drawer-overlay ${isBuilderDrawerOpen ? 'open' : ''}`} onClick={() => setIsBuilderDrawerOpen(false)} />
+      <div className={`slide-out-drawer ${isBuilderDrawerOpen ? 'open' : ''}`}>
+        <div className="truth-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: 'var(--bg-tertiary)' }}>
+          <div className="truth-modal-header-title">
+            <h3 style={{ margin: 0, fontSize: '13.5px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontWeight: 800 }}>
+              <Database size={14} style={{ color: 'var(--brand-cyan)' }} /> Strategic Lineage & Grounding
+            </h3>
+            <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>
+              Explore the clinical grounding and PixelRAG source lineage for this launch implication.
+            </p>
+          </div>
+          <button 
+            onClick={() => setIsBuilderDrawerOpen(false)} 
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+        
+        {selectedBuilderCard && (
+          <div className="drawer-inner-padding animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            
+            {/* Visual Indented Cascade Hierarchy */}
+            <div className="glass-card" style={{ padding: '16px', background: 'var(--bg-tertiary)' }}>
+              <span style={{ fontSize: '8px', color: 'var(--brand-indigo)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px', display: 'block', marginBottom: '12px' }}>
+                🔗 Strategic Lineage (Opportunity Space → CSF → What → Why)
+              </span>
+              
+              <div className="cascade-flow-matrix">
+                {/* Node 1: Opportunity Space */}
+                <div className="cascade-flow-node">
+                  <div className="cascade-node-content">
+                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-indigo)' }}>OPPORTUNITY SPACE</span>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', fontWeight: 600, color: 'white' }}>{selectedBuilderCard.opportunity_space}</p>
+                  </div>
+                </div>
+
+                {/* Node 2: CSF */}
+                <div className="cascade-flow-node">
+                  <div className="cascade-node-content">
+                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-blue)' }}>CRITICAL SUCCESS FACTOR (CSF)</span>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.csf}</p>
+                  </div>
+                </div>
+
+                {/* Node 3: Insight */}
+                <div className="cascade-flow-node">
+                  <div className="cascade-node-content">
+                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>WHAT (INFERRED CLINICAL INSIGHT)</span>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.insight}</p>
+                  </div>
+                </div>
+
+                {/* Node 4: Rationale */}
+                <div className="cascade-flow-node">
+                  <div className="cascade-node-content">
+                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-purple)' }}>WHY (COMMERCIAL/LAUNCH RATIONALE)</span>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-secondary)' }}>{selectedBuilderCard.rationale}</p>
+                  </div>
+                </div>
+
+                {/* Node 5: Implication */}
+                <div className="cascade-flow-node">
+                  <div className="cascade-node-content" style={{ background: 'rgba(6, 182, 212, 0.03)', border: '1px solid rgba(6, 182, 212, 0.15)' }}>
+                    <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)' }}>HOW (IMPLICATION FOR ACTION)</span>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '12px', fontWeight: 700, color: 'var(--brand-cyan)' }}>{selectedBuilderCard.implication}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Source Grounding References */}
+            <div className="glass-card" style={{ padding: '14px', background: 'var(--bg-tertiary)' }}>
+              <span style={{ fontSize: '8px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                📁 PixelRAG Source Document Grounding
+              </span>
+              <div style={{ marginTop: '10px', fontSize: '11px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9px' }}>Source File & Slide Citation</span>
+                  <strong style={{ color: 'var(--text-primary)' }}>{selectedBuilderCard.slide_reference || "Veeva Vault Ingest, slide 1"}</strong>
+                </div>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
+                  <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '9px', marginBottom: '4px' }}>Immutable SME Bounding Quotes</span>
+                  {selectedBuilderCard.quotes && selectedBuilderCard.quotes.map((q, qIdx) => (
+                    <div key={qIdx} style={{ background: 'var(--bg-primary)', padding: '10px', borderRadius: '6px', border: '1px solid var(--glass-border)', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: '1.4', marginBottom: '6px' }}>
+                      "{q.text}" <span style={{ display: 'block', fontSize: '8.5px', color: 'var(--brand-cyan)', marginTop: '4px', fontWeight: 'bold' }}>— Area: {q.location}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
           </div>
         )}
       </div>
