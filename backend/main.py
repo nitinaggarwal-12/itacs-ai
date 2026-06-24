@@ -1521,7 +1521,7 @@ def list_audit_trail(session_id: Optional[str] = None, db: Session = Depends(get
     return res
 
 # =====================================================================
-// SECURITY: SPIFFE AGENT CONTROL GATEWAY
+# SECURITY: SPIFFE AGENT CONTROL GATEWAY
 # =====================================================================
 def verify_spiffe_identity(request: Request) -> str:
     """
@@ -1534,7 +1534,7 @@ def verify_spiffe_identity(request: Request) -> str:
     return identity
 
 # =====================================================================
-// ENTERPRISE SERVICES: MCP REGISTER & MEMORY BANK
+# ENTERPRISE SERVICES: MCP REGISTER & MEMORY BANK
 # =====================================================================
 
 class McpRegisterPayload(BaseModel):
@@ -1636,7 +1636,7 @@ def get_memory_bank_revisions(insight_id: str, db: Session = Depends(get_db)):
     ]
 
 # =====================================================================
-// CONTINUOUS QA: AGENT SIMULATION & EVALUATION SUITE
+# CONTINUOUS QA: AGENT SIMULATION & EVALUATION SUITE
 # =====================================================================
 
 @app.get("/api/evaluation/results")
