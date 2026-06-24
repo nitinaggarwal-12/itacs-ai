@@ -185,6 +185,80 @@ const DEFAULT_INSIGHTS = [
     is_stale: false,
     is_validated: true,
     created_at: new Date(Date.now() - 3600000 * 24 * 2).toISOString()
+  },
+  {
+    id: "f8888888-2222-3333-4444-555555555555",
+    opportunity_space: "Ultra-Cold Chain Logistics and Practice Support",
+    csf: "Mitigating community practice storage barriers for customized mRNA vaccine deliveries",
+    insight: "Clinic audits reveal that 35% of community oncology practices lack the -70°C ultra-low temperature refrigeration required to store customized mRNA vaccine vials locally.",
+    rationale: "If clinics cannot store vials safely, they will cancel appointments or refuse shipments, leading to 12% treatment drop-offs and significant waste of patient-specific custom batches.",
+    implication: "Deploy leased ultra-deep freeze refrigeration units to tier-1 community practices, and establish a 'just-in-time' 24-hour shipping loop from regional hubs.",
+    quotes: [
+      { text: "We don't have deep freezers for custom gene therapies. We need just-in-time delivery or practices won't participate.", location: "Slide 16, Logistics Advisory" }
+    ],
+    slide_reference: "SupplyChain_Melanoma_2026.pptx, slide 16",
+    metadata: {
+      function_lane: "Supply Chain & Logistics",
+      asset: "V940",
+      tumor: "Melanoma",
+      sub_tumor: "Cold-Chain"
+    },
+    compliance_score: 0.97,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    strategic_pillar: "value",
+    created_at: new Date(Date.now() - 3600000 * 24 * 6).toISOString()
+  },
+  {
+    id: "f9999999-3333-4444-5555-666666666666",
+    opportunity_space: "PD-L1 Expression Diagnostic Gating",
+    csf: "Accelerating PD-L1 companion testing turnaround in regional hospital networks",
+    insight: "Southern regional hospital networks report a 3-week backlog for IHC 22C3 companion diagnostic testing, delaying treatment starts for high-risk HPV-negative head and neck cancer patients.",
+    rationale: "Payer coverage requires documented PD-L1 expression score before combination therapy reimbursement; delayed testing forces physicians to default to standard chemotherapy.",
+    implication: "Co-partner with Quest and Labcorp to launch a rapid 48-hour priority biopsy diagnostic routing protocol, covering co-pays for PD-L1 testing.",
+    quotes: [
+      { text: "Biopsy backlogs mean we wait weeks for PD-L1 confirmation. We need immediate routing to start combinations on time.", location: "Slide 24, Diagnostic Advisory" }
+    ],
+    slide_reference: "DiagnosticTesting_HNSCC_2026.pptx, slide 24",
+    metadata: {
+      function_lane: "Diagnostic Excellence",
+      asset: "Keytruda",
+      tumor: "Head & Neck",
+      sub_tumor: "Companion Test"
+    },
+    compliance_score: 0.93,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    strategic_pillar: "diag",
+    created_at: new Date(Date.now() - 3600000 * 24 * 4).toISOString()
+  },
+  {
+    id: "f1010101-4444-5555-6666-777777777777",
+    opportunity_space: "Patient Journey Retention & Navigation",
+    csf: "Reducing combination therapy discontinuation rates in adjuvant NSCLC outpatient settings",
+    insight: "Patient registry data shows that 22% of stage II/III lung cancer patients discontinue combination therapy before cycle 4 due to administrative prior-authorization friction and lack of side-effect counseling.",
+    rationale: "Discontinuations directly degrade real-world overall survival (OS) metrics and reduce lifetime patient therapy duration by an average of 3.5 months.",
+    implication: "Sponsor a dedicated 'Oncology Patient Navigator' program to guide patients through reimbursement appeals and provide nurse-led side-effect management.",
+    quotes: [
+      { text: "The prior-auth appeals process is exhausting. Many patients drop off when they hit friction, unless they have a navigator.", location: "Slide 19, Patient Advocacy Board" }
+    ],
+    slide_reference: "PatientAdherence_NSCLC_2026.pptx, slide 19",
+    metadata: {
+      function_lane: "Patient Advocacy",
+      asset: "MK-1084",
+      tumor: "Lung",
+      sub_tumor: "Support App"
+    },
+    compliance_score: 0.95,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    created_at: new Date(Date.now() - 3600000 * 24 * 1).toISOString()
   }
 ];
 
@@ -4385,7 +4459,7 @@ export default function App() {
                   Active Region Filter: <strong style={{ color: 'var(--brand-cyan)' }}>{selectedRegionFilter === 'ALL' ? 'All Global Markets' : selectedRegionFilter}</strong>
                 </span>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                  Showing {selectedRegionFilter === 'ALL' ? insights.length : insights.filter(ins => ins.tumor === selectedRegionFilter || (selectedRegionFilter === 'US' && ins.tumor === 'Melanoma') || (selectedRegionFilter === 'EU' && ins.tumor === 'Neoadjuvant')).length} strategic records
+                  Showing {selectedRegionFilter === 'ALL' ? insights.length : insights.filter(ins => (selectedRegionFilter === 'US' && ins.metadata?.tumor === 'Melanoma') || (selectedRegionFilter === 'EU' && ins.metadata?.tumor === 'Head & Neck') || (selectedRegionFilter === 'APAC' && ins.metadata?.tumor === 'Lung')).length} strategic records
                 </span>
               </div>
 
@@ -4402,9 +4476,9 @@ export default function App() {
                 {insights
                   .filter(ins => {
                     if (selectedRegionFilter === 'ALL') return true;
-                    if (selectedRegionFilter === 'US') return ins.tumor === 'Melanoma' || ins.owner === 'Dr. Sarah Patel';
-                    if (selectedRegionFilter === 'EU') return ins.tumor === 'Neoadjuvant' || ins.owner === 'Dr. Marcus Vance';
-                    if (selectedRegionFilter === 'APAC') return ins.tumor === 'Diagnostic' || ins.owner === 'Global Market Access';
+                    if (selectedRegionFilter === 'US') return ins.metadata?.tumor === 'Melanoma';
+                    if (selectedRegionFilter === 'EU') return ins.metadata?.tumor === 'Head & Neck';
+                    if (selectedRegionFilter === 'APAC') return ins.metadata?.tumor === 'Lung';
                     return true;
                   })
                   .map(ins => (
@@ -4430,7 +4504,7 @@ export default function App() {
                           <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>ID: {ins.id.substring(0, 8)}</span>
                         </div>
                         <h4 style={{ margin: '6px 0 0 0', fontSize: '14.5px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
-                          {ins.title}
+                          {ins.title || ins.opportunity_space}
                         </h4>
                         <p style={{ margin: '8px 0 0 0', fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
                           {ins.implication}
@@ -4438,8 +4512,8 @@ export default function App() {
                       </div>
                       
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--glass-border)', paddingTop: '10px', fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px' }}>
-                        <span>Asset: <strong style={{ color: 'var(--text-secondary)' }}>{ins.asset}</strong></span>
-                        <span>Owner: <strong style={{ color: 'var(--text-secondary)' }}>{ins.owner}</strong></span>
+                        <span>Asset: <strong style={{ color: 'var(--text-secondary)' }}>{ins.metadata?.asset || ins.asset || 'Oncology Asset'}</strong></span>
+                        <span>Owner: <strong style={{ color: 'var(--text-secondary)' }}>{ins.metadata?.function_lane || ins.owner || 'Global Lead'}</strong></span>
                       </div>
                     </div>
                   ))}
