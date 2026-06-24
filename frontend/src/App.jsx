@@ -5428,10 +5428,6 @@ export default function App() {
       </div>
 
       {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
-
-      </div>
-
-      {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
       <div className={`drawer-overlay ${isAuditDrawerOpen ? 'open' : ''}`} onClick={() => setIsAuditDrawerOpen(false)} />
       <div className={`slide-out-drawer ${isAuditDrawerOpen ? 'open' : ''}`}>
         <div className="truth-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: 'var(--bg-tertiary)' }}>
