@@ -180,6 +180,13 @@ export default function App() {
   const [selectedBuilderCard, setSelectedBuilderCard] = useState(null);
   const [isBuilderDrawerOpen, setIsBuilderDrawerOpen] = useState(false);
 
+  // Dynamic Tasks State (Fully interactive project board!)
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [newTaskOwner, setNewTaskOwner] = useState("");
+  const [newTaskFunction, setNewTaskFunction] = useState("Market Access");
+
   // Workshop Voting States
   const [workshopVotes, setWorkshopVotes] = useState({
     "Personalized mRNA Logistics": 12,
@@ -306,10 +313,75 @@ export default function App() {
       } catch (e) {
         console.error("Failed to load strategic pillars:", e);
       }
+
+      // Fetch dynamic tasks from PostgreSQL!
+      try {
+        const tasksRes = await fetch(`${API_URL}/api/tasks`);
+        if (tasksRes.ok) {
+          const tasksData = await tasksRes.json();
+          if (tasksData && tasksData.length > 0) {
+            setTacticalTasks(tasksData);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to load tactical tasks:", e);
+      }
       
       triggerSynthesisAPI();
     } catch (err) {
       console.error("API Fetch failed, running on mock data mode.", err);
+    }
+  };
+
+  const handleUpdateTask = async (taskId, updates) => {
+    // 1. Optimistic UI update for buttery responsiveness
+    setTacticalTasks(prev => prev.map(task => {
+      if (task.id === taskId) {
+        let updated = { ...task, ...updates };
+        if (updates.progress !== undefined) {
+          if (updates.progress >= 100) updated.status = "Completed";
+          else if (updates.progress > 0 && task.status === "Not Started") updated.status = "In Progress";
+        }
+        return updated;
+      }
+      return task;
+    }));
+    
+    // 2. Commit to database in background
+    try {
+      await fetch(`${API_URL}/api/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+    } catch (err) {
+      console.error("Failed to persist task update:", err);
+    }
+  };
+
+  const handleCreateTask = async (e) => {
+    e.preventDefault();
+    if (!newTaskTitle.trim()) return;
+    
+    try {
+      const res = await fetch(`${API_URL}/api/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newTaskTitle,
+          owner: newTaskOwner || "GOLT Member",
+          function: newTaskFunction
+        })
+      });
+      if (res.ok) {
+        const newTask = await res.json();
+        setTacticalTasks(prev => [...prev, newTask]);
+        setNewTaskTitle("");
+        setNewTaskOwner("");
+        setIsTaskModalOpen(false);
+      }
+    } catch (err) {
+      console.error("Failed to create task:", err);
     }
   };
 
@@ -1159,7 +1231,13 @@ export default function App() {
                 </h3>
                 <div className="themes-scroller">
                   {themes.map((theme, idx) => (
-                    <div key={idx} className="theme-item">
+                    <div 
+                      key={idx} 
+                      className="theme-item"
+                      onClick={() => handleSendMessage(`Analyze the launch implications and strategic risks of theme: "${theme.theme_name}"`)}
+                      style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+                      title="Click to ask the Strategic Advisor to analyze this launch theme"
+                    >
                       <div className="theme-item-header">
                         <h4>{theme.theme_name}</h4>
                         <span className="theme-score">Weight: {theme.theme_score}</span>
@@ -1184,7 +1262,16 @@ export default function App() {
                 </h3>
                 <div className="themes-scroller" style={{ maxHeight: '220px' }}>
                   {conflicts.map(conf => (
-                    <div key={conf.id} className="theme-item" style={{ borderLeft: '3px solid #ef4444' }}>
+                    <div 
+                      key={conf.id} 
+                      className="theme-item" 
+                      style={{ borderLeft: '3px solid #ef4444', cursor: 'pointer' }}
+                      onClick={() => {
+                        setActiveTab('workshop');
+                        alert(`Consensus Hub: Directing you to the Live Workshop to resolve conflict: "${conf.conflict_type}". Cast your anonymous team vote to lock consensus!`);
+                      }}
+                      title="Click to resolve this disagreement inside the Live Workshop Consensus board"
+                    >
                       <div className="theme-item-header">
                         <h4 style={{ color: '#fca5a5', fontSize: '11px' }}>{conf.conflict_type}</h4>
                         <span className="theme-score" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>FLAGGED</span>
@@ -1192,26 +1279,10 @@ export default function App() {
                       <p style={{ fontSize: '10px' }}>{conf.description}</p>
                       <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '6px' }}>
                         <button 
-                          onClick={async () => {
-                            const notes = prompt("Enter workshop alignment notes:");
-                            if (!notes) return;
-                            try {
-                              const body = new URLSearchParams();
-                              body.append("resolution_notes", notes);
-                              await fetch(`${API_URL}/api/conflicts/${conf.id}/resolve`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: body.toString()
-                              });
-                              fetchData();
-                            } catch (err) {
-                              setConflicts(prev => prev.filter(c => c.id !== conf.id));
-                            }
-                          }}
                           className="btn btn-primary"
-                          style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '4px 10px', fontSize: '9px' }}
+                          style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '4px 10px', fontSize: '9px', pointerEvents: 'none' }}
                         >
-                          Resolve Alignment
+                          Resolve in Workshop
                         </button>
                       </div>
                     </div>
@@ -1911,43 +1982,116 @@ export default function App() {
         {activeTab === 'tracker' && (
           <main className="workstream-layout animate-fade-in">
             <div className="glass-card">
-              <h3 className="glass-card-title">
-                <ClipboardList size={16} style={{ color: '#06b6d4' }} /> Tactical Launch Readiness Workstreams
-              </h3>
-              <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '-12px', marginBottom: '24px' }}>
-                Track execution and operational readiness milestones derived from validated ITACS implications.
-              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+                <div>
+                  <h3 className="glass-card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <ClipboardList size={16} style={{ color: '#06b6d4' }} /> Tactical Launch Readiness Workstreams
+                  </h3>
+                  <p style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '4px', margin: '4px 0 0 0' }}>
+                    Track and update execution milestones derived from validated strategic implications. Click a row to edit progress.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setIsTaskModalOpen(true)}
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', padding: '8px 14px', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  <Plus size={13} /> Add Tactical Task
+                </button>
+              </div>
 
               <div className="workstream-grid">
                 {tacticalTasks.map(task => (
-                  <div key={task.id} className="workstream-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', gap: '20px' }}>
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flex: 1 }}>
-                      <span className="workstream-task-id" style={{ marginTop: '2px' }}>{task.id}</span>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                          <h4 style={{ margin: 0, fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{task.title}</h4>
-                          <span className={`matrix-status-badge ${task.status === 'Completed' ? 'validated' : 'draft'}`} style={{ padding: '3px 6px', fontSize: '9.5px', display: 'inline-block' }}>
-                            {task.status}
-                          </span>
-                        </div>
+                  <div 
+                    key={task.id} 
+                    className="workstream-row" 
+                    onClick={() => setEditingTaskId(editingTaskId === task.id ? null : task.id)}
+                    style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      padding: '16px 20px', 
+                      gap: '12px',
+                      cursor: 'pointer',
+                      borderLeft: editingTaskId === task.id ? '3px solid var(--brand-cyan)' : '1px solid var(--glass-border)',
+                      background: editingTaskId === task.id ? 'rgba(255,255,255,0.01)' : 'var(--glass-bg)',
+                      transition: 'all 0.2s ease'
+                    }}
+                    title="Click to expand inline progress & status controls"
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                      <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flex: 1 }}>
+                        <span className="workstream-task-id" style={{ marginTop: '2px' }}>{task.id}</span>
                         
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
-                          <span>Focus: <strong>{task.function}</strong></span>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, maxWidth: '200px' }}>
-                            <div className="progress-track" style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden', flex: 1 }}>
-                              <div className="progress-fill" style={{ width: `${task.progress}%`, height: '100%', background: 'var(--brand-cyan)' }} />
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                            <h4 style={{ margin: 0, fontSize: '14.5px', fontWeight: 700, color: 'var(--text-primary)' }}>{task.title}</h4>
+                            <span className={`matrix-status-badge ${task.status === 'Completed' ? 'validated' : 'draft'}`} style={{ padding: '3px 6px', fontSize: '9.5px', display: 'inline-block' }}>
+                              {task.status}
+                            </span>
+                          </div>
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+                            <span>Focus: <strong>{task.function}</strong></span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, maxWidth: '200px' }}>
+                              <div className="progress-track" style={{ height: '4px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden', flex: 1 }}>
+                                <div className="progress-fill" style={{ width: `${task.progress}%`, height: '100%', background: 'var(--brand-cyan)' }} />
+                              </div>
+                              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{task.progress}%</span>
                             </div>
-                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{task.progress}%</span>
                           </div>
                         </div>
                       </div>
+
+                      <div className="workstream-owner" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                        <div className="owner-avatar">{task.owner.split(' ').map(n=>n[0]).join('')}</div>
+                        <span className="owner-name" style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>{task.owner}</span>
+                      </div>
                     </div>
 
-                    <div className="workstream-owner" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                      <div className="owner-avatar">{task.owner.split(' ').map(n=>n[0]).join('')}</div>
-                      <span className="owner-name" style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>{task.owner}</span>
-                    </div>
+                    {/* Collapsible Inline Progress & Status Editor */}
+                    {editingTaskId === task.id && (
+                      <div className="animate-fade-in" style={{ 
+                        width: '100%',
+                        marginTop: '10px', 
+                        paddingTop: '14px', 
+                        borderTop: '1px dashed rgba(255, 255, 255, 0.05)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '20px',
+                        background: 'rgba(0,0,0,0.15)',
+                        padding: '10px 14px',
+                        borderRadius: '6px',
+                        boxSizing: 'border-box'
+                      }} onClick={(e) => e.stopPropagation()}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Adjust Progress:</span>
+                          <input 
+                            type="range" 
+                            min="0" 
+                            max="100" 
+                            value={task.progress} 
+                            onChange={(e) => handleUpdateTask(task.id, { progress: parseInt(e.target.value) })}
+                            style={{ flex: 1, accentColor: 'var(--brand-cyan)', cursor: 'pointer' }}
+                          />
+                          <strong style={{ fontSize: '12px', color: 'var(--brand-cyan)', minWidth: '36px' }}>{task.progress}%</strong>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Status:</span>
+                          <select
+                            value={task.status}
+                            onChange={(e) => handleUpdateTask(task.id, { status: e.target.value })}
+                            className="form-select"
+                            style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', outline: 'none', cursor: 'pointer' }}
+                          >
+                            <option>Not Started</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -2589,6 +2733,68 @@ export default function App() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* DIALOG/MODAL: CREATE NEW TACTICAL TASK */}
+      {isTaskModalOpen && (
+        <div className="truth-modal-overlay animate-fade-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setIsTaskModalOpen(false)}>
+          <div className="truth-modal-card glass-card" style={{ width: '450px', padding: '24px', background: 'var(--bg-tertiary)' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800 }}>
+              <Plus size={16} style={{ color: 'var(--brand-cyan)' }} /> Add Tactical Readiness Task
+            </h3>
+            <p style={{ margin: '0 0 20px 0', fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              Create a new launch readiness milestone. This task will be written to the Postgres database and synced with functional leads.
+            </p>
+            
+            <form onSubmit={handleCreateTask} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div className="form-group">
+                <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Task Description / Title</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newTaskTitle} 
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  placeholder="e.g. Conduct payer advisory board on MK-1084 co-pay card"
+                  className="form-input"
+                  style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px 12px', borderRadius: '8px', fontSize: '12.5px', width: '100%', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Milestone Owner</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newTaskOwner} 
+                  onChange={(e) => setNewTaskOwner(e.target.value)}
+                  placeholder="e.g. Patient Access Manager"
+                  className="form-input"
+                  style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px 12px', borderRadius: '8px', fontSize: '12.5px', width: '100%', outline: 'none', boxSizing: 'border-box' }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Focus Functional Lane</label>
+                <select 
+                  value={newTaskFunction} 
+                  onChange={(e) => setNewTaskFunction(e.target.value)}
+                  className="form-select"
+                  style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px 12px', borderRadius: '8px', fontSize: '12px', width: '100%', outline: 'none', cursor: 'pointer' }}
+                >
+                  <option>Market Access</option>
+                  <option>Medical Affairs</option>
+                  <option>Market Research</option>
+                  <option>Competitive Intelligence</option>
+                </select>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '14px' }}>
+                <button type="button" onClick={() => setIsTaskModalOpen(false)} className="btn btn-subtle" style={{ padding: '8px 14px', fontSize: '12px' }}>Cancel</button>
+                <button type="submit" className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>Create Milestone</button>
+              </div>
+            </form>
           </div>
         </div>
       )}

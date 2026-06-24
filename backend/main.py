@@ -139,6 +139,16 @@ class StrategicPillar(Base):
     class_name = Column(String(100), nullable=False, default="diff")
     created_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
 
+class TacticalTask(Base):
+    __tablename__ = "tactical_tasks"
+
+    id = Column(String(50), primary_key=True)
+    title = Column(String(255), nullable=False)
+    owner = Column(String(100), nullable=False)
+    status = Column(String(50), nullable=False)
+    progress = Column(Integer, default=0)
+    function_lane = Column(String(100), nullable=False)
+
 class AgentAuditTrail(Base):
     """
     Immutable, cryptographically chained compliance audit trail.
@@ -1101,6 +1111,94 @@ def list_insights(validated_only: bool = False, db: Session = Depends(get_db)):
         })
     return res
 
+@app.get("/api/tasks")
+def list_tasks():
+    db = SessionLocal()
+    try:
+        tasks = db.query(TacticalTask).order_by(TacticalTask.id).all()
+        return [
+            {
+                "id": t.id,
+                "title": t.title,
+                "owner": t.owner,
+                "status": t.status,
+                "progress": t.progress,
+                "function": t.function_lane
+            }
+            for t in tasks
+        ]
+    finally:
+        db.close()
+
+@app.post("/api/tasks")
+def create_task(payload: dict):
+    title = payload.get("title")
+    owner = payload.get("owner", "GOLT Member")
+    function_lane = payload.get("function", "Market Access")
+    
+    if not title:
+        raise HTTPException(status_code=400, detail="Task title is required")
+        
+    db = SessionLocal()
+    try:
+        count = db.query(TacticalTask).count()
+        new_id = f"T-{count + 1}"
+        
+        task = TacticalTask(
+            id=new_id,
+            title=title,
+            owner=owner,
+            status="Not Started",
+            progress=0,
+            function_lane=function_lane
+        )
+        db.add(task)
+        db.commit()
+        db.refresh(task)
+        return {
+            "id": task.id,
+            "title": task.title,
+            "owner": task.owner,
+            "status": task.status,
+            "progress": task.progress,
+            "function": task.function_lane
+        }
+    finally:
+        db.close()
+
+@app.put("/api/tasks/{task_id}")
+def update_task(task_id: str, payload: dict):
+    db = SessionLocal()
+    try:
+        task = db.query(TacticalTask).filter(TacticalTask.id == task_id).first()
+        if not task:
+            raise HTTPException(status_code=404, detail="Task not found")
+            
+        if "status" in payload:
+            task.status = payload["status"]
+        if "progress" in payload:
+            try:
+                prog = int(payload["progress"])
+                task.progress = prog
+                if prog >= 100:
+                    task.status = "Completed"
+                elif prog > 0 and task.status == "Not Started":
+                    task.status = "In Progress"
+            except ValueError:
+                pass
+                
+        db.commit()
+        return {
+            "id": task.id,
+            "title": task.title,
+            "owner": task.owner,
+            "status": task.status,
+            "progress": task.progress,
+            "function": task.function_lane
+        }
+    finally:
+        db.close()
+
 @app.get("/api/pillars")
 def get_pillars():
     db = SessionLocal()
@@ -1758,6 +1856,30 @@ def startup_db_init():
                     ('diagnostics', '3. Optimize Diagnostic Channels', 'diag');
                 """))
                 logger.info("Pre-seeded default strategic pillars into the database.")
+                
+            # Self-healing migrations for dynamic tactical tasks
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS tactical_tasks (
+                    id VARCHAR(50) PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    owner VARCHAR(100) NOT NULL,
+                    status VARCHAR(50) NOT NULL,
+                    progress INTEGER NOT NULL DEFAULT 0,
+                    function_lane VARCHAR(100) NOT NULL
+                );
+            """))
+            
+            # Pre-seed default tasks if dynamic tasks table is empty
+            res_tasks = conn.execute(text("SELECT COUNT(*) FROM tactical_tasks")).fetchone()
+            if res_tasks[0] == 0:
+                conn.execute(text("""
+                    INSERT INTO tactical_tasks (id, title, owner, status, progress, function_lane) VALUES
+                    ('T-1', 'Run HEOR surrogate validation models', 'HEOR Strategy Lead', 'In Progress', 65, 'Market Access'),
+                    ('T-2', 'Deploy rapid single-gene molecular PCR test kits', 'Diag Excellence Mgr', 'Completed', 100, 'Medical Affairs'),
+                    ('T-3', 'Formulate proactive volume-based pricing models', 'Pricing Strategy Dir', 'Not Started', 10, 'Market Access'),
+                    ('T-4', 'Train MSLs on KRAS G12C clinical data packs', 'MSL Scientific Mgr', 'In Progress', 40, 'Medical Affairs');
+                """))
+                logger.info("Pre-seeded default tactical tasks into the database.")
                 
             conn.commit()
             logger.info("Enterprise Productization SQL schemas and tables provisioned successfully.")
