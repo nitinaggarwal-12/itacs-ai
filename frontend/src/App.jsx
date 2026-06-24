@@ -86,6 +86,105 @@ const DEFAULT_INSIGHTS = [
     is_stale: false,
     is_validated: true,
     created_at: new Date(Date.now() - 3600000 * 24 * 10).toISOString()
+  },
+  {
+    id: "c1234567-89ab-cdef-0123-456789abcdef",
+    opportunity_space: "Oral KRAS Ingestion Scheduling Compliance",
+    csf: "Maximizing treatment adherence for MK-1084 in KRAS G12C NSCLC outpatient settings",
+    insight: "Clinical trial telemetry indicates an 18% drop in dose compliance after cycle 3 due to mild, manageable gastrointestinal side effects when taken on an empty stomach.",
+    rationale: "Poor patient compliance directly correlates with reduced progression-free survival (PFS) outcomes, threatening the overall clinical differentiation profile against competitors.",
+    implication: "Deploy a digital patient support app containing automated food-coupling reminders, and launch nurse-led counseling sessions during cycle 2 clinic visits.",
+    quotes: [
+      { text: "Compliance declines as patients experience mild nausea when taking their daily G12C dose without food guidance.", location: "Slide 15, Patient Adherence Study" }
+    ],
+    slide_reference: "PatientEngagement_NSCLC_2026.pptx, slide 15",
+    metadata: {
+      function_lane: "Medical Affairs",
+      asset: "MK-1084",
+      tumor: "Lung",
+      sub_tumor: "KRAS G12C"
+    },
+    compliance_score: 0.92,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    strategic_pillar: "diag",
+    created_at: new Date(Date.now() - 3600000 * 24 * 3).toISOString()
+  },
+  {
+    id: "a9876543-2109-8765-4321-fedcba987654",
+    opportunity_space: "Adjuvant Biomarker Screening Acceleration",
+    csf: "Accelerating stage III melanoma biomarker screening turnaround to initiate V940 sequencing within the optimal 12-week post-surgery window",
+    insight: "Diagnostic lab audits reveal an average turnaround time of 14.5 days for NGS panel results, causing 8% of eligible high-risk patients to miss the optimal clinical window.",
+    rationale: "Delayed therapy initiation negatively impacts recurrence-free survival rates, leading to treatment drop-offs and lost commercial opportunities in early-stage settings.",
+    implication: "Partner with major diagnostic networks to establish a fast-track reflex testing protocol for stage III melanoma surgical specimens, cutting NGS turnaround to 7 days.",
+    quotes: [
+      { text: "Turnaround time for mutational profiling is too slow, meaning we frequently miss the 12-week post-resection window.", location: "Slide 22, Melanoma Lab Audits" }
+    ],
+    slide_reference: "MelanomaDiagnosticAudit_2026.pptx, slide 22",
+    metadata: {
+      function_lane: "Market Access",
+      asset: "V940",
+      tumor: "Melanoma",
+      sub_tumor: "Stage III/IV"
+    },
+    compliance_score: 0.96,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    strategic_pillar: "diff",
+    created_at: new Date(Date.now() - 3600000 * 24 * 8).toISOString()
+  },
+  {
+    id: "b5555555-1111-2222-3333-444444444444",
+    opportunity_space: "Subcutaneous Administration Payer Value",
+    csf: "Securing favorable formulary placement for subcutaneous pembrolizumab based on clinic operational efficiency and chair-time savings",
+    insight: "Time-and-motion studies show subcutaneous pembrolizumab reduces clinic administration time from 30 minutes (IV) to 5 minutes, boosting daily clinic capacity by 20%.",
+    rationale: "Outpatient infusion clinics are operating at peak capacity; demonstrating administrative cost savings and throughput gains will justify premium subcutaneous pricing to health systems.",
+    implication: "Develop an interactive budget-impact model highlighting chair-time capacity gains, and launch a targeted commercial campaign focusing on community clinic administrators.",
+    quotes: [
+      { text: "Moving to a 5-minute injection frees up chair capacity, which payors recognize as a key driver of clinic operating efficiency.", location: "Slide 31, Clinic Time-and-Motion Study" }
+    ],
+    slide_reference: "Subcutpembro_NSCLC_Efficiency.pptx, slide 31",
+    metadata: {
+      function_lane: "Market Access",
+      asset: "Keytruda",
+      tumor: "Lung",
+      sub_tumor: "Subcutaneous"
+    },
+    compliance_score: 0.91,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    strategic_pillar: "value",
+    created_at: new Date(Date.now() - 3600000 * 24 * 12).toISOString()
+  },
+  {
+    id: "d9999999-8888-7777-6666-555555555555",
+    opportunity_space: "Companion Diagnostic Co-Development",
+    csf: "Broadening KRAS G12C testing rates via co-developed rapid IHC companion assays",
+    insight: "Community oncology clinics report that tissue-sample exhaustion in NGS panels prevents G12C biomarker identification in 12% of advanced NSCLC cases.",
+    rationale: "Without rapid, tissue-sparing IHC diagnostic options, patients with G12C mutations are misrouted to chemotherapy, delaying targeted therapeutic initiation.",
+    implication: "Co-develop and co-promote a tissue-sparing IHC companion diagnostic kit with a major pathology provider to ensure rapid, front-line biomarker identification.",
+    quotes: [
+      { text: "By the time we run standard NGS, the biopsy tissue is often exhausted. A rapid IHC test would solve this front-line.", location: "Slide 18, Pathology Consortium Panel" }
+    ],
+    slide_reference: "BiomarkerTesting_Pathology_NSCLC.pptx, slide 18",
+    metadata: {
+      function_lane: "Medical Affairs",
+      asset: "MK-1084",
+      tumor: "Lung",
+      sub_tumor: "First-Line NSCLC"
+    },
+    compliance_score: 0.94,
+    requires_human_review: false,
+    is_quarantined: false,
+    is_stale: false,
+    is_validated: true,
+    created_at: new Date(Date.now() - 3600000 * 24 * 2).toISOString()
   }
 ];
 

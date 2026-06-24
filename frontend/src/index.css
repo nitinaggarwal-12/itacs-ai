@@ -943,7 +943,7 @@ body {
 }
 
 .matrix-lane-tag {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -958,7 +958,7 @@ body {
 .matrix-lane-tag.ci { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: var(--color-warning); }
 
 .matrix-status-badge {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -973,18 +973,18 @@ body {
 
 .matrix-card-body h4 {
   font-family: 'Outfit', sans-serif;
-  font-size: 14.5px;
-  font-weight: 700;
-  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 .matrix-card-body p {
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: var(--text-secondary);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .matrix-card-footer {
@@ -994,8 +994,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11.5px;
+  font-size: 12.5px;
   color: var(--text-muted);
+}
+
+.light-theme .matrix-card-footer {
+  border-top-color: #e2e8f0;
 }
 
 /* =====================================================================
@@ -1110,12 +1114,19 @@ body {
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 10px;
-  padding: 12px 14px;
+  padding: 14px 16px;
+  flex: 1;
+}
+
+.light-theme .cascade-node-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
 
 .cascade-node-content label {
   font-family: 'Outfit', sans-serif;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1135,7 +1146,7 @@ body {
   border: none;
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
-  font-size: 10.5px;
+  font-size: 14px;
   line-height: 1.5;
   outline: none;
   resize: none;
