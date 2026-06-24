@@ -310,8 +310,43 @@ const DEFAULT_TASKS = [
 ];
 
 export default function App() {
-  // Navigation: 'cockpit' | 'matrix' | 'ingest' | 'builder' | 'tracker' | 'workshop'
-  const [activeTab, setActiveTab] = useState('cockpit'); 
+  // Zero-Dependency URL Hash Router for Bookmarkable Tabs and Refresh Resilience!
+  const getInitialTab = () => {
+    const hash = window.location.hash.replace('#', '');
+    const validTabs = [
+      'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
+      'matrix', 'builder', 'workshop', 'kol', 'deck', 
+      'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
+    ];
+    return validTabs.includes(hash) ? hash : 'cockpit';
+  };
+
+  const [activeTab, setActiveTab] = useState(getInitialTab());
+
+  // Effect 1: Handle browser back/forward and hash changes reactively updating the state
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      const validTabs = [
+        'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
+        'matrix', 'builder', 'workshop', 'kol', 'deck', 
+        'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
+      ];
+      if (validTabs.includes(hash)) {
+        setActiveTab(hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Effect 2: Synchronize state changes back to the URL hash
+  useEffect(() => {
+    if (window.location.hash !== `#${activeTab}`) {
+      window.location.hash = activeTab;
+    }
+  }, [activeTab]); 
 
   // Theme: 'dark' or 'light'
   const [theme, setTheme] = useState('light');
