@@ -2907,7 +2907,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             padding: '24px 32px',
             height: 'calc(100vh - 80px)',
             boxSizing: 'border-box',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            maxWidth: '1400px',
+            width: '100%',
+            margin: '0 auto'
           }}>
             {/* Left Column: Workstream List */}
             <div className="glass-card" style={{
