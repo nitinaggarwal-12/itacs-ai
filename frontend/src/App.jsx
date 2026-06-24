@@ -5806,7 +5806,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
               {/* Indication Filters */}
               <div style={{ display: 'flex', gap: '8px' }}>
-                {['ALL', 'MELANOMA', 'NSCLC'].map(ind => (
+                {['ALL', 'MELANOMA', 'NSCLC', 'RCC', 'HNSCC', 'BLADDER'].map(ind => (
                   <button
                     key={ind}
                     onClick={() => setSelectedIndicationFilter(ind)}
@@ -6019,6 +6019,261 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
                   </div>
                 )}
+
+                {/* RCC Lane */}
+                {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'RCC') && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <strong style={{ color: '#10b981' }}>3. RCC (ADJUVANT POST-NEPHRECTOMY)</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>Phase 3 Accrual: Active Patient Screening</span>
+                    </div>
+                    
+                    {/* Visual Gantt Bar */}
+                    <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                      {/* Clinical Readout Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('rcc_readout')}
+                        style={{
+                          position: 'absolute',
+                          left: '40%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'rcc_readout' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.12)',
+                          borderRight: '2px solid #10b981',
+                          outline: selectedRoadmapMilestone === 'rcc_readout' ? '2px solid #10b981' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'rcc_readout' ? 'inset 0 0 12px rgba(16, 185, 129, 0.3), 0 0 15px rgba(16, 185, 129, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: '#10b981',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'rcc_readout' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Clinical Trial details"
+                      >
+                        Trial Readout (Q3 '27)
+                      </div>
+                      
+                      {/* FDA Action PDUFA Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('rcc_pdufa')}
+                        style={{
+                          position: 'absolute',
+                          left: '65%', width: '20%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'rcc_pdufa' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(99, 102, 241, 0.12)',
+                          borderRight: '2px solid var(--brand-indigo)',
+                          outline: selectedRoadmapMilestone === 'rcc_pdufa' ? '2px solid var(--brand-indigo)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'rcc_pdufa' ? 'inset 0 0 12px rgba(99, 102, 241, 0.3), 0 0 15px rgba(99, 102, 241, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-indigo)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'rcc_pdufa' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore FDA Review details"
+                      >
+                        FDA PDUFA (Q1 '28)
+                      </div>
+ 
+                      {/* Commercial Launch Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('rcc_launch')}
+                        style={{
+                          position: 'absolute',
+                          left: '85%', width: '15%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'rcc_launch' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.15)',
+                          borderRight: '2px solid var(--brand-purple)',
+                          outline: selectedRoadmapMilestone === 'rcc_launch' ? '2px solid var(--brand-purple)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'rcc_launch' ? 'inset 0 0 12px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-purple)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'rcc_launch' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Launch Readiness details"
+                      >
+                        🚀 Launch (Q2 '28)
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* HNSCC Lane */}
+                {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'HNSCC') && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <strong style={{ color: '#ec4899' }}>4. HNSCC (RESECTED HEAD & NECK CANCER)</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>Phase 2 Cohort: High Pathological Response Met</span>
+                    </div>
+                    
+                    {/* Visual Gantt Bar */}
+                    <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                      {/* Clinical Readout Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('hnscc_readout')}
+                        style={{
+                          position: 'absolute',
+                          left: '5%', width: '20%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'hnscc_readout' ? 'rgba(236, 72, 153, 0.25)' : 'rgba(236, 72, 153, 0.12)',
+                          borderRight: '2px solid #ec4899',
+                          outline: selectedRoadmapMilestone === 'hnscc_readout' ? '2px solid #ec4899' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'hnscc_readout' ? 'inset 0 0 12px rgba(236, 72, 153, 0.3), 0 0 15px rgba(236, 72, 153, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: '#ec4899',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'hnscc_readout' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Clinical Trial details"
+                      >
+                        Trial Readout (Q1 '26)
+                      </div>
+                      
+                      {/* FDA Action PDUFA Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('hnscc_pdufa')}
+                        style={{
+                          position: 'absolute',
+                          left: '25%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'hnscc_pdufa' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(99, 102, 241, 0.12)',
+                          borderRight: '2px solid var(--brand-indigo)',
+                          outline: selectedRoadmapMilestone === 'hnscc_pdufa' ? '2px solid var(--brand-indigo)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'hnscc_pdufa' ? 'inset 0 0 12px rgba(99, 102, 241, 0.3), 0 0 15px rgba(99, 102, 241, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-indigo)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'hnscc_pdufa' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore FDA Review details"
+                      >
+                        FDA PDUFA (Q3 '26)
+                      </div>
+ 
+                      {/* Commercial Launch Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('hnscc_launch')}
+                        style={{
+                          position: 'absolute',
+                          left: '50%', width: '20%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'hnscc_launch' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.15)',
+                          borderRight: '2px solid var(--brand-purple)',
+                          outline: selectedRoadmapMilestone === 'hnscc_launch' ? '2px solid var(--brand-purple)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'hnscc_launch' ? 'inset 0 0 12px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-purple)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'hnscc_launch' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Launch Readiness details"
+                      >
+                        🚀 Launch (Q4 '26)
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Bladder Lane */}
+                {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'BLADDER') && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
+                      <strong style={{ color: 'var(--brand-cyan)' }}>5. UROTHELIAL CARCINOMA (BLADDER CANCER)</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>IND Phase: Trial Protocol Activated</span>
+                    </div>
+                    
+                    {/* Visual Gantt Bar */}
+                    <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
+                      {/* Clinical Readout Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('bladder_readout')}
+                        style={{
+                          position: 'absolute',
+                          left: '60%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'bladder_readout' ? 'rgba(6, 182, 212, 0.25)' : 'rgba(6, 182, 212, 0.12)',
+                          borderRight: '2px solid var(--brand-cyan)',
+                          outline: selectedRoadmapMilestone === 'bladder_readout' ? '2px solid var(--brand-cyan)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'bladder_readout' ? 'inset 0 0 12px rgba(6, 182, 212, 0.3), 0 0 15px rgba(6, 182, 212, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-cyan)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'bladder_readout' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Clinical Trial details"
+                      >
+                        Trial Readout (Q4 '27)
+                      </div>
+                      
+                      {/* FDA Action PDUFA Phase */}
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('bladder_pdufa')}
+                        style={{
+                          position: 'absolute',
+                          left: '85%', width: '15%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'bladder_pdufa' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(99, 102, 241, 0.12)',
+                          borderRight: '2px solid var(--brand-indigo)',
+                          outline: selectedRoadmapMilestone === 'bladder_pdufa' ? '2px solid var(--brand-indigo)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'bladder_pdufa' ? 'inset 0 0 12px rgba(99, 102, 241, 0.3), 0 0 15px rgba(99, 102, 241, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-indigo)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'bladder_pdufa' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore FDA Review details"
+                      >
+                        FDA PDUFA (Q2 '28)
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
  
               {/* Timeline calibration grid scale */}
@@ -6088,6 +6343,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         {selectedRoadmapMilestone === 'nsclc_readout' && "Patient Accrual Active"}
                         {selectedRoadmapMilestone === 'nsclc_pdufa' && "Preparation Phase"}
                         {selectedRoadmapMilestone === 'nsclc_launch' && "Planning Stage"}
+                        {selectedRoadmapMilestone === 'rcc_readout' && "Patient Accrual Active"}
+                        {selectedRoadmapMilestone === 'rcc_pdufa' && "Preparation Phase"}
+                        {selectedRoadmapMilestone === 'rcc_launch' && "Planning Stage"}
+                        {selectedRoadmapMilestone === 'hnscc_readout' && "Completed"}
+                        {selectedRoadmapMilestone === 'hnscc_pdufa' && "Active Review"}
+                        {selectedRoadmapMilestone === 'hnscc_launch' && "Readiness Active"}
+                        {selectedRoadmapMilestone === 'bladder_readout' && "Planning Stage"}
+                        {selectedRoadmapMilestone === 'bladder_pdufa' && "Planning Stage"}
                       </strong>
                     </div>
  
@@ -6099,6 +6362,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         {selectedRoadmapMilestone === 'nsclc_readout' && "Phase 3 KEYNOTE-A18 EFS & pCR Accrual Readout"}
                         {selectedRoadmapMilestone === 'nsclc_pdufa' && "FDA BLA Regulatory Label Expansion Action Date"}
                         {selectedRoadmapMilestone === 'nsclc_launch' && "Lung Oncology Commercial Launch Ingress Readiness"}
+                        {selectedRoadmapMilestone === 'rcc_readout' && "Phase 3 KEYNOTE-B24 Renal Cell Trial Readout"}
+                        {selectedRoadmapMilestone === 'rcc_pdufa' && "FDA BLA Submission & Priority Action Date"}
+                        {selectedRoadmapMilestone === 'rcc_launch' && "Adjuvant RCC Commercial Go-To-Market Integration"}
+                        {selectedRoadmapMilestone === 'hnscc_readout' && "Phase 2 KEYNOTE-C08 Pathological Response Efficacy"}
+                        {selectedRoadmapMilestone === 'hnscc_pdufa' && "FDA Breakthrough Accelerated Approval Review"}
+                        {selectedRoadmapMilestone === 'hnscc_launch' && "Head & Neck Commercial Ingress & Companion Assay Setup"}
+                        {selectedRoadmapMilestone === 'bladder_readout' && "Phase 3 Urothelial Carcinoma Trial Protocol Readout"}
+                        {selectedRoadmapMilestone === 'bladder_pdufa' && "FDA BLA Submission Gating (Urothelial)"}
                       </h4>
                       <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--text-muted)' }}>
                         {selectedRoadmapMilestone === 'melanoma_readout' && "Q2 2026 Target Readout • Primary Cohorts"}
@@ -6107,6 +6378,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         {selectedRoadmapMilestone === 'nsclc_readout' && "Q1 2027 Target Readout • Pathological Response"}
                         {selectedRoadmapMilestone === 'nsclc_pdufa' && "Q3 2027 Target Label Decision • Companion Dx"}
                         {selectedRoadmapMilestone === 'nsclc_launch' && "Q4 2027 Target Ingress • Reflex Testing"}
+                        {selectedRoadmapMilestone === 'rcc_readout' && "Q3 2027 Target Readout • Disease-Free Survival"}
+                        {selectedRoadmapMilestone === 'rcc_pdufa' && "Q1 2028 Target Action • Priority Label Submission"}
+                        {selectedRoadmapMilestone === 'rcc_launch' && "Q2 2028 Target Launch • Post-Nephrectomy Ingress"}
+                        {selectedRoadmapMilestone === 'hnscc_readout' && "Q1 2026 Readout (Completed) • 38% MPR Achieved"}
+                        {selectedRoadmapMilestone === 'hnscc_pdufa' && "Q3 2026 Target Action • Accelerated Path"}
+                        {selectedRoadmapMilestone === 'hnscc_launch' && "Q4 2026 Target Ingress • Companion Diagnostic Installation"}
+                        {selectedRoadmapMilestone === 'bladder_readout' && "Q4 2027 Target Readout • Event-Free Survival"}
+                        {selectedRoadmapMilestone === 'bladder_pdufa' && "Q2 2028 Target Action • Diagnostic Screening Setup"}
                       </p>
                     </div>
  
@@ -6117,6 +6396,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       {selectedRoadmapMilestone === 'nsclc_readout' && "Evaluating neoadjuvant mRNA-940 + pembrolizumab followed by adjuvant monotherapy. High strategic importance to secure early pathological Complete Response (pCR) data to challenge chemotherapy monotherapy."}
                       {selectedRoadmapMilestone === 'nsclc_pdufa' && "Regulatory filing covering resectable stage II, IIIA, or IIIB NSCLC. Companion diagnostic PD-L1 expression gating protocols are being aligned with global pathology labs to streamline screening."}
                       {selectedRoadmapMilestone === 'nsclc_launch' && "Standardizing surgical reflex testing protocols at primary resection. Deploying rapid IHC companion diagnostic kits to 250+ community hospital pathology labs by Q4 to guarantee turnaround times under 7 days."}
+                      {selectedRoadmapMilestone === 'rcc_readout' && "Primary Endpoint: Disease-Free Survival (DFS). Evaluating adjuvant combotherapy in patients post-nephrectomy at intermediate-to-high risk. Positive results will extend personalized vaccines to urological oncology hubs."}
+                      {selectedRoadmapMilestone === 'rcc_pdufa' && "Targeting first-line adjuvant label extension. Priority review pathway submission scheduled to bypass traditional tyrosine kinase inhibitor (TKI) combinations and establish vaccination standards."}
+                      {selectedRoadmapMilestone === 'rcc_launch' && "Partnering with global urology networks to align referral pathways. Integrating clinical education into nephrectomy post-operative protocols to identify eligible vaccine candidates within 14 days."}
+                      {selectedRoadmapMilestone === 'hnscc_readout' && "Primary Endpoint: Major Pathological Response (MPR). Phase 2 signal-finding study met its key endpoints with a highly statistically significant 38% MPR, establishing robust clinical validation in resectable Head & Neck cancer."}
+                      {selectedRoadmapMilestone === 'hnscc_pdufa' && "Breakthrough Therapy Designation granted by the FDA. Accelerated approval filing pathway initiated to fast-track BLA review and deliver neoadjuvant therapies to patients with high unmet medical need."}
+                      {selectedRoadmapMilestone === 'hnscc_launch' && "Deploying targeted companion diagnostic assay installation campaigns to 150+ academic medical centers. Training surgical and pathology staff on pre-operative tissue collection protocols to secure high-yield RNA extraction."}
+                      {selectedRoadmapMilestone === 'bladder_readout' && "Phase 3 clinical protocol finalized. Target trial covers adjuvant urothelial carcinoma post-cystectomy. Screening protocols focus on high-risk muscle-invasive disease states."}
+                      {selectedRoadmapMilestone === 'bladder_pdufa' && "Regulatory timeline tracks companion diagnostic assays. Aligning companion diagnostic immunohistochemistry (IHC) markers to support patient identification at the time of surgical cystectomy."}
                     </p>
                   </div>
                 </div>
