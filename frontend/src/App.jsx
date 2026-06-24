@@ -3813,7 +3813,7 @@ export default function App() {
                       <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>
                         SLIDE {slide.index} • {slide.type}
                       </span>
-                      <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 700 }}>
+                      <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 700 }}>
                         {slide.title.substring(0, 32)}...
                       </h4>
                     </div>
@@ -3890,8 +3890,8 @@ export default function App() {
               {/* PPTX slide mockup container */}
               <div className="glass-card" style={{
                 flex: 1,
-                background: '#0b0f19',
-                border: '1px solid rgba(255,255,255,0.06)',
+                background: 'var(--bg-canvas)',
+                border: '1px solid var(--glass-border)',
                 borderRadius: '16px',
                 padding: '40px',
                 display: 'flex',
@@ -3932,7 +3932,7 @@ export default function App() {
 
                 {/* Slide content area */}
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
-                  <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'white', letterSpacing: '-0.5px' }}>
+                  <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
                     MK-940 Adjuvant Recurrence Risk Reduction Plan
                   </h1>
                   
@@ -4586,7 +4586,7 @@ export default function App() {
             {/* Left: Force-Directed Network Graph Mockup */}
             <div className="glass-card" style={{
               position: 'relative',
-              background: 'rgba(5, 7, 12, 0.6)',
+              background: 'var(--bg-canvas)',
               border: '1px solid var(--glass-border)',
               borderRadius: '16px',
               padding: '24px',
@@ -4601,7 +4601,7 @@ export default function App() {
                 <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   CLINICAL ADVOCACY NETWORK
                 </span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'white' }}>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Key Opinion Leader (KOL) Network Graph
                 </h3>
                 <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
@@ -4613,14 +4613,14 @@ export default function App() {
               <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center' }}>
                 {/* SVG Connections */}
                 <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-                  <line x1="50%" y1="50%" x2="25%" y2="30%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
-                  <line x1="50%" y1="50%" x2="75%" y2="30%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
-                  <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
-                  <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="25%" y2="30%" stroke="var(--glass-border)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="75%" y2="30%" stroke="var(--glass-border)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="var(--glass-border)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="var(--glass-border)" strokeWidth="1.5" />
                   
                   {/* Outer connections */}
-                  <line x1="25%" y1="30%" x2="75%" y2="30%" stroke="rgba(255,255,255,0.02)" strokeWidth="1" strokeDasharray="4" />
-                  <line x1="30%" y1="75%" x2="70%" y2="75%" stroke="rgba(255,255,255,0.02)" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="25%" y1="30%" x2="75%" y2="30%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="30%" y1="75%" x2="70%" y2="75%" stroke="var(--glass-border)" strokeWidth="1" strokeDasharray="4" />
                 </svg>
 
                 {/* Center Asset Node */}
@@ -4650,7 +4650,7 @@ export default function App() {
                     top: '30%', left: '25%',
                     width: '56px', height: '56px',
                     borderRadius: '50%',
-                    background: '#0b0f19',
+                    background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Sarah Patel' ? 'var(--brand-cyan)' : '#10b981'}`,
                     boxShadow: selectedKol === 'Dr. Sarah Patel' ? '0 0 15px var(--brand-cyan)' : 'none',
                     display: 'flex',
@@ -4663,7 +4663,7 @@ export default function App() {
                 >
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
-                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Patel</strong>
+                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Patel</strong>
                   </div>
                 </div>
 
@@ -4675,7 +4675,7 @@ export default function App() {
                     top: '30%', right: '25%',
                     width: '56px', height: '56px',
                     borderRadius: '50%',
-                    background: '#0b0f19',
+                    background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Marcus Vance' ? 'var(--brand-cyan)' : '#10b981'}`,
                     boxShadow: selectedKol === 'Dr. Marcus Vance' ? '0 0 15px var(--brand-cyan)' : 'none',
                     display: 'flex',
@@ -4688,7 +4688,7 @@ export default function App() {
                 >
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
-                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Vance</strong>
+                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Vance</strong>
                   </div>
                 </div>
 
@@ -4700,7 +4700,7 @@ export default function App() {
                     bottom: '25%', left: '30%',
                     width: '56px', height: '56px',
                     borderRadius: '50%',
-                    background: '#0b0f19',
+                    background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Aris Thorne' ? 'var(--brand-cyan)' : '#f59e0b'}`,
                     boxShadow: selectedKol === 'Dr. Aris Thorne' ? '0 0 15px var(--brand-cyan)' : 'none',
                     display: 'flex',
@@ -4713,7 +4713,7 @@ export default function App() {
                 >
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
-                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Thorne</strong>
+                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Thorne</strong>
                   </div>
                 </div>
 
@@ -4725,7 +4725,7 @@ export default function App() {
                     bottom: '25%', right: '30%',
                     width: '56px', height: '56px',
                     borderRadius: '50%',
-                    background: '#0b0f19',
+                    background: 'var(--bg-secondary)',
                     border: `2px solid ${selectedKol === 'Dr. Evelyn Chen' ? 'var(--brand-cyan)' : '#10b981'}`,
                     boxShadow: selectedKol === 'Dr. Evelyn Chen' ? '0 0 15px var(--brand-cyan)' : 'none',
                     display: 'flex',
@@ -4738,7 +4738,7 @@ export default function App() {
                 >
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
-                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Chen</strong>
+                    <strong style={{ fontSize: '9.5px', color: 'var(--text-primary)', display: 'block' }}>Chen</strong>
                   </div>
                 </div>
               </div>
@@ -4765,7 +4765,7 @@ export default function App() {
                     <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       STAKEHOLDER PROFILE
                     </span>
-                    <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', color: 'white', fontWeight: 800 }}>
+                    <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', color: 'var(--text-primary)', fontWeight: 800 }}>
                       {selectedKol}
                     </h3>
                     <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>
@@ -4778,7 +4778,7 @@ export default function App() {
 
                   {/* Sentiment Metric Grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px', borderRadius: '8px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px' }}>
                       <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>AI SENTIMENT</span>
                       <strong style={{ fontSize: '16px', color: selectedKol === 'Dr. Aris Thorne' ? '#f59e0b' : '#10b981' }}>
                         {selectedKol === 'Dr. Sarah Patel' && '95% Positive'}
@@ -4787,9 +4787,9 @@ export default function App() {
                         {selectedKol === 'Dr. Evelyn Chen' && '90% Positive'}
                       </strong>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px', borderRadius: '8px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px' }}>
                       <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ADVOCACY ALIGNMENT</span>
-                      <strong style={{ fontSize: '12px', color: 'white' }}>
+                      <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>
                         {selectedKol === 'Dr. Sarah Patel' && 'Clinical Efficacy'}
                         {selectedKol === 'Dr. Marcus Vance' && 'HEOR Evidence'}
                         {selectedKol === 'Dr. Aris Thorne' && 'Prior-Auth Cost'}
@@ -4816,8 +4816,8 @@ export default function App() {
                         sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Moderate HEOR Friction' : 'Positive'
                       }
                     ].map((pub, pubIdx) => (
-                      <div key={pubIdx} style={{ background: 'rgba(0,0,0,0.2)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                        <h6 style={{ margin: '0 0 4px 0', fontSize: '10px', color: 'white', fontWeight: 'bold', lineHeight: '1.4' }}>
+                      <div key={pubIdx} style={{ background: 'var(--bg-primary)', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                        <h6 style={{ margin: '0 0 4px 0', fontSize: '11px', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: '1.4' }}>
                           {pub.title}
                         </h6>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '8.5px', color: 'var(--text-muted)' }}>
@@ -4910,7 +4910,7 @@ export default function App() {
               
               {/* Left: Pipeline Diagram Flow */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center' }}>
-                <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'white' }}>
+                <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Vein-to-Vein Pipeline Flow Chart
                 </h3>
                 
@@ -4919,38 +4919,38 @@ export default function App() {
                   
                   {/* Node 1: Biopsy */}
                   <div style={{
-                    background: 'rgba(255,255,255,0.01)',
-                    border: `1px solid ${logisticsBiopsy >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    background: 'var(--bg-primary)',
+                    border: `1px solid ${logisticsBiopsy >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
                     padding: '16px',
                     borderRadius: '12px',
                     textAlign: 'center'
                   }}>
                     <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🩸</span>
-                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>1. Biopsy Extraction</strong>
-                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Clinic Capacity: {logisticsBiopsy}%</span>
+                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>1. Biopsy Extraction</strong>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Clinic Capacity: {logisticsBiopsy}%</span>
                   </div>
 
                   <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
 
                   {/* Node 2: Sequencing */}
                   <div style={{
-                    background: 'rgba(255,255,255,0.01)',
-                    border: `1px solid ${logisticsSequencing >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    background: 'var(--bg-primary)',
+                    border: `1px solid ${logisticsSequencing >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
                     padding: '16px',
                     borderRadius: '12px',
                     textAlign: 'center'
                   }}>
                     <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🧬</span>
-                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>2. Tumor Sequencing</strong>
-                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Lab Capacity: {logisticsSequencing}%</span>
+                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>2. Tumor Sequencing</strong>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Lab Capacity: {logisticsSequencing}%</span>
                   </div>
 
                   <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
 
                   {/* Node 3: Manufacturing */}
                   <div style={{
-                    background: logisticsManufacturing >= 95 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.01)',
-                    border: `2px solid ${logisticsManufacturing >= 95 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    background: logisticsManufacturing >= 95 ? 'rgba(239, 68, 68, 0.05)' : 'var(--bg-primary)',
+                    border: `2px solid ${logisticsManufacturing >= 95 ? '#ef4444' : 'var(--glass-border)'}`,
                     boxShadow: logisticsManufacturing >= 95 ? '0 0 15px rgba(239,68,68,0.2)' : 'none',
                     padding: '16px',
                     borderRadius: '12px',
@@ -4958,29 +4958,29 @@ export default function App() {
                     transition: 'all 0.3s ease'
                   }}>
                     <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🏭</span>
-                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>3. Manufacturing</strong>
-                    <span style={{ fontSize: '8.5px', color: logisticsManufacturing >= 95 ? '#fca5a5' : 'var(--text-muted)' }}>Slot Capacity: {logisticsManufacturing}%</span>
+                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>3. Manufacturing</strong>
+                    <span style={{ fontSize: '10px', color: logisticsManufacturing >= 95 ? '#fca5a5' : 'var(--text-muted)' }}>Slot Capacity: {logisticsManufacturing}%</span>
                   </div>
 
                   <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
 
                   {/* Node 4: Infusion */}
                   <div style={{
-                    background: 'rgba(255,255,255,0.01)',
-                    border: `1px solid ${logisticsInfusion >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    background: 'var(--bg-primary)',
+                    border: `1px solid ${logisticsInfusion >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
                     padding: '16px',
                     borderRadius: '12px',
                     textAlign: 'center'
                   }}>
                     <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>💉</span>
-                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>4. Infusion Clinic</strong>
-                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Slot Capacity: {logisticsInfusion}%</span>
+                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>4. Infusion Clinic</strong>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Slot Capacity: {logisticsInfusion}%</span>
                   </div>
                 </div>
               </div>
 
               {/* Right: Simulated capacity controls */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: '1px solid rgba(255,255,255,0.04)', paddingLeft: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: '1px solid var(--glass-border)', paddingLeft: '24px' }}>
                 <h4 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
                   Simulate Capacity Loads
                 </h4>
@@ -4994,7 +4994,7 @@ export default function App() {
                   <div key={ctrlIdx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px' }}>
                       <span style={{ color: 'var(--text-secondary)' }}>{ctrl.label}</span>
-                      <strong style={{ color: 'white' }}>{ctrl.state}%</strong>
+                      <strong style={{ color: 'var(--text-primary)' }}>{ctrl.state}%</strong>
                     </div>
                     <input
                       type="range"
@@ -5063,7 +5063,7 @@ export default function App() {
               flexDirection: 'column',
               gap: '20px'
             }}>
-              <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'white' }}>
+              <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
                 Regulatory & Commercial Indication Roadmap (Q1 2026 - Q4 2027)
               </h3>
 
@@ -5072,13 +5072,13 @@ export default function App() {
                 {/* Melanoma Lane */}
                 {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'MELANOMA') && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                       <strong style={{ color: 'var(--brand-cyan)' }}>1. MELANOMA (ADJUVANT COMBO V940)</strong>
                       <span style={{ color: 'var(--text-muted)' }}>Phase 3 Efficacy: Primary Endpoints Met</span>
                     </div>
                     
                     {/* Visual Gantt Bar */}
-                    <div style={{ position: 'relative', height: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                    <div style={{ position: 'relative', height: '32px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
                       {/* Clinical Readout Phase */}
                       <div style={{
                         position: 'absolute',
@@ -5136,13 +5136,13 @@ export default function App() {
                 {/* NSCLC Lane */}
                 {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'NSCLC') && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px' }}>
                       <strong style={{ color: '#f59e0b' }}>2. NON-SMALL CELL LUNG CANCER (NSCLC NEOADJUVANT)</strong>
                       <span style={{ color: 'var(--text-muted)' }}>Phase 3 Accrual: Enrolling Active Patients</span>
                     </div>
                     
                     {/* Visual Gantt Bar */}
-                    <div style={{ position: 'relative', height: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                    <div style={{ position: 'relative', height: '32px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
                       {/* Clinical Readout Phase */}
                       <div style={{
                         position: 'absolute',
@@ -5238,8 +5238,8 @@ export default function App() {
                 <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Strategic Resource Allocation (Budget Strategy)
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
-                  Total Brand Launch Budget: <strong style={{ color: 'white' }}>$50.0M USD</strong>. Maps financial allocations directly to the pillars created in the Imperative Builder.
+                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                  Total Brand Launch Budget: <strong style={{ color: 'var(--text-primary)' }}>$50.0M USD</strong>. Maps financial allocations directly to the pillars created in the Imperative Builder.
                 </p>
               </div>
 
@@ -5313,7 +5313,7 @@ export default function App() {
               flexDirection: 'column',
               gap: '16px'
             }}>
-              <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'white' }}>
+              <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
                 $50.0M Budget Distribution Map
               </h3>
 
@@ -5332,12 +5332,12 @@ export default function App() {
                   transition: 'all 0.4s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Sharpen Clinical Differentiation
                     </h4>
-                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #2</span>
+                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #2</span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
                     {budgetAllocations["Sharpen Clinical Differentiation"]}% (${(50 * budgetAllocations["Sharpen Clinical Differentiation"] / 100).toFixed(1)}M)
                   </strong>
                 </div>
@@ -5355,12 +5355,12 @@ export default function App() {
                   transition: 'all 0.4s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Demonstrate Payer Value
                     </h4>
-                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #3</span>
+                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #3</span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
                     {budgetAllocations["Demonstrate Payer Value"]}% (${(50 * budgetAllocations["Demonstrate Payer Value"] / 100).toFixed(1)}M)
                   </strong>
                 </div>
@@ -5378,12 +5378,12 @@ export default function App() {
                   transition: 'all 0.4s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Accelerate Diagnostic Speed
                     </h4>
-                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #1</span>
+                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #1</span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
                     {budgetAllocations["Accelerate Diagnostic Speed"]}% (${(50 * budgetAllocations["Accelerate Diagnostic Speed"] / 100).toFixed(1)}M)
                   </strong>
                 </div>
@@ -5440,10 +5440,10 @@ export default function App() {
                 <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   FIELD FORCE ROLEPLAY TERMINAL
                 </span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'white' }}>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Execution Readiness Sandbox (MSL Coach)
                 </h3>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10.5px', color: 'var(--text-muted)' }}>
                   Simulate clinical details with skeptical oncology stakeholders. Pitch our approved strategic insights and receive real-time messaging grades.
                 </p>
               </div>
@@ -5451,8 +5451,8 @@ export default function App() {
               {/* Active Chat Window */}
               <div style={{
                 flex: 1,
-                background: '#04060b',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--bg-canvas)',
+                border: '1px solid var(--glass-border)',
                 borderRadius: '12px',
                 padding: '16px',
                 overflowY: 'auto',
@@ -5474,11 +5474,11 @@ export default function App() {
                     <div style={{
                       padding: '10px 14px',
                       borderRadius: '12px',
-                      fontSize: '11px',
+                      fontSize: '12.5px',
                       lineHeight: '1.5',
-                      background: msg.sender === 'msl' ? 'var(--brand-indigo)' : 'rgba(255,255,255,0.03)',
-                      color: 'white',
-                      border: msg.sender === 'msl' ? 'none' : '1px solid rgba(255,255,255,0.04)'
+                      background: msg.sender === 'msl' ? 'var(--brand-indigo)' : 'var(--bg-secondary)',
+                      color: msg.sender === 'msl' ? 'white' : 'var(--text-primary)',
+                      border: msg.sender === 'msl' ? 'none' : '1px solid var(--glass-border)'
                     }}>
                       {msg.text}
                     </div>
@@ -5568,7 +5568,7 @@ export default function App() {
                 <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   PITCH PERFORMANCE EVALUATION
                 </span>
-                <h3 style={{ margin: '4px 0 0 0', fontSize: '14px', color: 'white', fontWeight: 800 }}>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 800 }}>
                   Strategic Message Scorecard
                 </h3>
               </div>
