@@ -193,6 +193,22 @@ export default function App() {
     "KRAS Payer Prior Authorization": 8,
     "Diagnostic Screening Speed": 5
   });
+
+  // Simulation Theater States (Showcase Simulator)
+  const [simActiveScene, setSimActiveScene] = useState('pixelrag');
+  const [simStatus, setSimStatus] = useState('idle');
+  const [simStep, setSimStep] = useState(0);
+  const [simLogs, setSimLogs] = useState([]);
+  const [simText, setSimText] = useState('');
+  const [simVoteSelected, setSimVoteSelected] = useState(null);
+  const [simVoteCounts, setSimVoteCounts] = useState({ optionA: 14, optionB: 8 });
+  const simIntervalRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (simIntervalRef.current) clearInterval(simIntervalRef.current);
+    };
+  }, []);
   
   // Selection
   const [selectedInsight, setSelectedInsight] = useState(DEFAULT_INSIGHTS[0]);
@@ -382,6 +398,170 @@ export default function App() {
       }
     } catch (err) {
       console.error("Failed to create task:", err);
+    }
+  };
+
+  const runSimulation = (sceneName) => {
+    if (simIntervalRef.current) clearInterval(simIntervalRef.current);
+    
+    setSimStatus('running');
+    setSimStep(0);
+    setSimLogs([`[System] Initializing ${sceneName.toUpperCase()} Agent Simulation...`]);
+    setSimText('');
+    setSimVoteSelected(null);
+    
+    if (sceneName === 'pixelrag') {
+      let step = 0;
+      const logs = [
+        "[System] Deploying Ingestion Pipeline...",
+        "[PixelRAG] Fetching source document 'Melanoma_V940_Late_Phase.pptx'...",
+        "[PixelRAG] Slicing pages into high-resolution visual tiles...",
+        "[PixelRAG] Initializing Vision-Language Model understanding..."
+      ];
+      setSimLogs(logs);
+      
+      simIntervalRef.current = setInterval(() => {
+        step++;
+        setSimStep(step);
+        if (step === 1) {
+          setSimLogs(prev => [...prev, 
+            "[PixelRAG] Drawing green bounding box over Quad-1 (Survival Table coords: [104, 342, 590, 120])",
+            "[VLM Extraction] Extracting Inferred Clinical Insight (WHAT)..."
+          ]);
+          setSimText("WHAT: Personalized vaccine MK-940 shows a stunning 44% reduction in recurrence risk in adjuvant setting.");
+        } else if (step === 2) {
+          setSimLogs(prev => [...prev, 
+            "[PixelRAG] Drawing cyan bounding box over Quad-2 (Operational Callout coords: [80, 120, 400, 80])",
+            "[VLM Extraction] Extracting Commercial/Launch Rationale (WHY)..."
+          ]);
+          setSimText(prev => prev + "\n\nWHY: Payer prior-authorization timelines require HEOR survival evidence packages immediately at launch.");
+        } else if (step === 3) {
+          setSimLogs(prev => [...prev, 
+            "[PixelRAG] Drawing purple bounding box over Quad-3 (Recommendation coords: [500, 200, 300, 150])",
+            "[VLM Extraction] Formulating Strategic Implication (HOW)..."
+          ]);
+          setSimText(prev => prev + "\n\nHOW: Deploy HEOR surrogate validation models to Global Access teams by Q3.");
+        } else if (step === 4) {
+          setSimLogs(prev => [...prev, 
+            "[System] Extracting Metadata parameters: Tumor='Melanoma', Asset='MK-940', Function='Market Access'",
+            "[Compliance] Running pre-ingress 'White Line' safety validation...",
+            "[Compliance] 0 safety regressions detected. Hash anchor generated.",
+            "[Ledger Verify] Cryptographic Block committed: sha256:0x8a92f0c7e2a91b41"
+          ]);
+          setSimStatus('completed');
+          clearInterval(simIntervalRef.current);
+        }
+      }, 2500);
+    }
+    
+    else if (sceneName === 'compliance') {
+      let step = 0;
+      const draftText = "Medical Affairs expectations: Strong clinical adoption in community oncology clinics, which will drive rapid market share gains and guarantee a high ROI on our investments.";
+      let charIdx = 0;
+      
+      simIntervalRef.current = setInterval(() => {
+        charIdx += 6;
+        if (charIdx < 110) {
+          setSimText(draftText.substring(0, charIdx));
+        } else {
+          clearInterval(simIntervalRef.current);
+          setSimText(draftText.substring(0, 110)); 
+          setSimStep(1);
+          setSimLogs(prev => [...prev, 
+            "[Supervisor] Compliance audit scanning active...",
+            "[Supervisor] WARNING: Intercepted text contains prohibited lane vocabulary!"
+          ]);
+          
+          setTimeout(() => {
+            setSimStep(2); 
+            setSimLogs(prev => [...prev, 
+              "⚠️ COMPLIANCE BREACH: Prohibited commercial terminology detected in Medical Affairs lane.",
+              "⚠️ DETECTED TOKEN: 'market share'",
+              "⚠️ DETECTED TOKEN: 'ROI'",
+              "[Supervisor] ACTION: Immediate quarantine initiated. Ingress BLOCKED."
+            ]);
+            
+            setTimeout(() => {
+              setSimStep(3); 
+              setSimLogs(prev => [...prev, 
+                "[Quarantine] Card quarantined successfully.",
+                "[Ledger] Compliance Audit Block committed: sha256:7f92b42ca1a0b98",
+                "[Ledger] Alert dispatched to Merck Oncology Compliance Lead."
+              ]);
+              setSimStatus('completed');
+            }, 2500);
+          }, 2000);
+        }
+      }, 100);
+    }
+    
+    else if (sceneName === 'collision') {
+      let step = 0;
+      simIntervalRef.current = setInterval(() => {
+        step++;
+        setSimStep(step);
+        if (step === 1) {
+          setSimLogs(prev => [...prev, 
+            "[Synthesis] Loading Medical Affairs draft insight...",
+            "[Synthesis] Card loaded: Ready for rapid community launch of customized mRNA vaccine in Q3."
+          ]);
+        } else if (step === 2) {
+          setSimLogs(prev => [...prev, 
+            "[Synthesis] Loading Market Access draft insight...",
+            "[Synthesis] Card loaded: Payer prior-authorization step-edits will delay community access until Q1."
+          ]);
+        } else if (step === 3) {
+          setSimLogs(prev => [...prev, 
+            "[Synthesis] Running Cross-Functional Divergence Check...",
+            "⚠️ DIVERGENCE DETECTED: Chronological timeline mismatch.",
+            "[Synthesis] Drawing structural link between clinical launch (Q3) and Access delay (Q1).",
+            "[System] Locking workspace. Launching Human-in-the-Loop Consensus Voting..."
+          ]);
+          setSimStatus('completed');
+          clearInterval(simIntervalRef.current);
+        }
+      }, 2000);
+    }
+    
+    else if (sceneName === 'research') {
+      let step = 0;
+      setSimLogs(prev => [...prev, 
+        "[System] Gap Detection module active.",
+        "[Gap Analyzer] Pulse scan: Identifying knowledge vacancies...",
+        "⚠️ KNOWLEDGE GAP IDENTIFIED: Competitor X's Q3 Pricing Strategy is Unknown."
+      ]);
+      
+      simIntervalRef.current = setInterval(() => {
+        step++;
+        setSimStep(step);
+        if (step === 1) {
+          setSimLogs(prev => [...prev, 
+            "[Research Agent] Initializing search crawlers...",
+            "[Research Agent] Requesting external MCP access tokens...",
+            "[Web Scraper] Querying oncology secondary intelligence databases..."
+          ]);
+        } else if (step === 2) {
+          setSimLogs(prev => [...prev, 
+            "[Web Scraper] PubMed Oncology articles searched... 200 OK",
+            "[Web Scraper] ClinicalTrials.gov (NCT0654321) clinical registry scraped...",
+            "[Web Scraper] European Access & HEOR reimbursement reports parsed..."
+          ]);
+        } else if (step === 3) {
+          setSimLogs(prev => [...prev, 
+            "[Research Agent] Gathering pricing signals and competitor discount matrices...",
+            "[VLM Synthesizer] Running generative signal synthesis...",
+            "[VLM Synthesizer] Extracting strategic focus: Competitor X plans 5% discount on monotherapy in Q3, but HEOR evidence will offset access friction."
+          ]);
+        } else if (step === 4) {
+          setSimLogs(prev => [...prev, 
+            "[System] Knowledge Gap filled successfully!",
+            "[System] New validated insight card spawned: 'Competitor X Q3 Pricing Strategy'",
+            "[Workspace] Synchronizing strategic imperatives board..."
+          ]);
+          setSimStatus('completed');
+          clearInterval(simIntervalRef.current);
+        }
+      }, 2500);
     }
   };
 
@@ -1124,6 +1304,20 @@ export default function App() {
             className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
           >
             <Database size={16} /> Ingestion Factory
+          </button>
+        </div>
+
+        <div className="nav-group">
+          <span className="nav-group-title">Demo & Showcase</span>
+          <button 
+            onClick={() => setActiveTab('theater')}
+            className={`sidebar-nav-btn ${activeTab === 'theater' ? 'active' : ''}`}
+            style={{ 
+              background: activeTab === 'theater' ? 'rgba(99, 102, 241, 0.12)' : 'transparent', 
+              border: activeTab === 'theater' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent'
+            }}
+          >
+            <Play size={16} style={{ color: 'var(--brand-purple)' }} fill={activeTab === 'theater' ? 'var(--brand-purple)' : 'none'} /> Simulation Theater
           </button>
         </div>
 
@@ -2478,6 +2672,778 @@ export default function App() {
             </div>
 
           </main>
+        )}
+
+        {/* MISSING MODULE 5: THE SHOWCASE SIMULATION THEATER */}
+        {activeTab === 'theater' && (
+          <div className="theater-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '320px 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            
+            {/* Left Column: Selector Panel */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '16px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  SHOWCASE MULTI-AGENT ARENA
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Simulation Theater
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Run live, animated agentic scenarios showing the platform's eyes, safety guardrails, department clashes, and deep research outbound loops.
+                </p>
+              </div>
+
+              {/* Selector List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px', flex: 1 }}>
+                {[
+                  { id: 'pixelrag', label: '1. PixelRAG X-Ray Ingestion', desc: "Witness the VLM's eyes extract structured clinical frameworks from complex visual slide layouts.", icon: '👁️', color: 'var(--brand-cyan)' },
+                  { id: 'compliance', label: '2. Compliance Guard Intercept', desc: "Watch the Compliance Supervisor quarantine MA drafts containing promotional terminology.", icon: '🛡️', color: '#ef4444' },
+                  { id: 'collision', label: '3. Cross-Functional Collision', desc: "See agent-to-agent timeline contradictions spark automated alerts and GOLT human voting.", icon: '⚔️', color: 'var(--brand-indigo)' },
+                  { id: 'research', label: '4. Deep Research Outbreak', desc: "Deploy the Gap Detection agent to scrape external trials databases and synthesize new insights.", icon: '🛰️', color: '#f59e0b' }
+                ].map(scene => (
+                  <div
+                    key={scene.id}
+                    onClick={() => {
+                      setSimActiveScene(scene.id);
+                      setSimStatus('idle');
+                      setSimStep(0);
+                      setSimText('');
+                      if (simIntervalRef.current) clearInterval(simIntervalRef.current);
+                    }}
+                    style={{
+                      padding: '14px',
+                      borderRadius: '12px',
+                      background: simActiveScene === scene.id ? 'rgba(255,255,255,0.02)' : 'transparent',
+                      border: `1px solid ${simActiveScene === scene.id ? 'rgba(255,255,255,0.08)' : 'transparent'}`,
+                      borderLeft: `3px solid ${simActiveScene === scene.id ? scene.color : 'rgba(255,255,255,0.03)'}`,
+                      cursor: 'pointer',
+                      transition: 'all 0.25s ease'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '14px' }}>{scene.icon}</span>
+                      <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 700, color: simActiveScene === scene.id ? 'white' : 'var(--text-secondary)' }}>
+                        {scene.label}
+                      </h4>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '9.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                      {scene.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Trigger Button */}
+              <button
+                onClick={() => runSimulation(simActiveScene)}
+                disabled={simStatus === 'running'}
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
+                  fontWeight: 'bold',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 15px rgba(99,102,241,0.2)',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                {simStatus === 'running' ? (
+                  <>
+                    <RefreshCw className="animate-spin" size={14} /> Running Live Agent Simulation...
+                  </>
+                ) : (
+                  <>
+                    <Play size={14} fill="white" /> Execute Showcase Simulation
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Right Column: Stage Panel */}
+            <div style={{
+              display: 'grid',
+              gridTemplateRows: '1fr 180px',
+              gap: '20px',
+              height: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}>
+              
+              {/* Top: Animated Stage Canvas */}
+              <div className="glass-card" style={{
+                position: 'relative',
+                background: 'rgba(5, 7, 12, 0.6)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '16px',
+                padding: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}>
+                
+                {/* Visual Watermark grid background */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0, left: 0, right: 0, bottom: 0,
+                  backgroundImage: 'radial-gradient(rgba(255,255,255,0.015) 1px, transparent 0)',
+                  backgroundSize: '16px 16px',
+                  zIndex: 0
+                }} />
+
+                {/* SCENE 1 STAGE: PIXEL-RAG X-RAY */}
+                {simActiveScene === 'pixelrag' && (
+                  <div className="animate-fade-in" style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '24px',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    boxSizing: 'border-box'
+                  }}>
+                    {/* Left: Slide Mockup Image container */}
+                    <div className="glass-card" style={{
+                      position: 'relative',
+                      background: '#0b0f19',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      overflow: 'hidden',
+                      height: '100%',
+                      boxSizing: 'border-box'
+                    }}>
+                      {/* Scanning laser line */}
+                      {simStatus === 'running' && (
+                        <div style={{
+                          position: 'absolute',
+                          left: 0, right: 0,
+                          height: '2px',
+                          background: 'linear-gradient(90deg, rgba(34,211,238,0) 0%, #22d3ee 50%, rgba(34,211,238,0) 100%)',
+                          boxShadow: '0 0 10px #22d3ee',
+                          animation: 'laser-scan 3s linear infinite',
+                          zIndex: 5
+                        }} />
+                      )}
+
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px', marginBottom: '12px' }}>
+                          <span style={{ fontSize: '8px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>FILE INGRESS: MELANOMA_V940_LATE_PHASE.PPTX</span>
+                          <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Slide 12 of 24</span>
+                        </div>
+                        
+                        <h3 style={{ margin: '0 0 14px 0', fontSize: '14px', color: 'white', fontWeight: 800 }}>
+                          V940 + Pembrolizumab Adjuvant Survival Evidence
+                        </h3>
+                      </div>
+
+                      {/* Quadrant 1: HEOR survival table */}
+                      <div style={{
+                        border: simStep >= 1 ? '2px solid var(--brand-cyan)' : '1px solid rgba(255,255,255,0.03)',
+                        boxShadow: simStep >= 1 ? '0 0 15px rgba(6, 182, 212, 0.25)' : 'none',
+                        background: simStep === 1 ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255,255,255,0.01)',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        marginBottom: '10px',
+                        transition: 'all 0.4s ease'
+                      }}>
+                        <span style={{ fontSize: '7px', color: 'var(--brand-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                          QUADRANT 1: ADJUVANT EFFICACY MATRIX
+                        </span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-secondary)' }}>
+                          <span>Adjuvant Combo (V940 + Pembro)</span>
+                          <strong style={{ color: 'white' }}>44% Recurrence Risk Reduction (HR: 0.56)</strong>
+                        </div>
+                      </div>
+
+                      {/* Quadrant 2: Executive Quote */}
+                      <div style={{
+                        border: simStep >= 2 ? '2px solid var(--brand-blue)' : '1px solid rgba(255,255,255,0.03)',
+                        boxShadow: simStep >= 2 ? '0 0 15px rgba(59, 130, 246, 0.25)' : 'none',
+                        background: simStep === 2 ? 'rgba(59, 130, 246, 0.05)' : 'rgba(255,255,255,0.01)',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        marginBottom: '10px',
+                        transition: 'all 0.4s ease',
+                        fontStyle: 'italic'
+                      }}>
+                        <span style={{ fontSize: '7px', color: 'var(--brand-blue)', fontWeight: 'bold', display: 'block', marginBottom: '4px', fontStyle: 'normal' }}>
+                          QUADRANT 2: OPERATIONAL CLINICAL SIGNALS
+                        </span>
+                        <p style={{ margin: 0, fontSize: '9px', lineHeight: '1.4', color: 'var(--text-muted)' }}>
+                          "Reimbursement timelines are highly sensitive to HEOR package submissions immediately following FDA clearance."
+                        </p>
+                      </div>
+
+                      {/* Quadrant 3: Strategic recommendation */}
+                      <div style={{
+                        border: simStep >= 3 ? '2px solid var(--brand-purple)' : '1px solid rgba(255,255,255,0.03)',
+                        boxShadow: simStep >= 3 ? '0 0 15px rgba(139, 92, 246, 0.25)' : 'none',
+                        background: simStep === 3 ? 'rgba(139, 92, 246, 0.05)' : 'rgba(255,255,255,0.01)',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        transition: 'all 0.4s ease'
+                      }}>
+                        <span style={{ fontSize: '7px', color: 'var(--brand-purple)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                          QUADRANT 3: LAUNCH IMPERATIVES RECOMMENDATION
+                        </span>
+                        <p style={{ margin: 0, fontSize: '9px', color: 'white', fontWeight: 600 }}>
+                          Recommendation: Deploy HEOR surrogate models to Access leads by Q3.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Right: Typing Extraction terminal & Final spawned card */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateRows: '1fr auto',
+                      gap: '16px',
+                      height: '100%',
+                      boxSizing: 'border-box',
+                      overflow: 'hidden'
+                    }}>
+                      {/* Ingress Terminal Output */}
+                      <div style={{
+                        background: '#04060b',
+                        border: '1px solid rgba(255,255,255,0.05)',
+                        borderRadius: '12px',
+                        padding: '14px',
+                        fontFamily: 'monospace',
+                        fontSize: '9.5px',
+                        color: 'var(--brand-cyan)',
+                        overflowY: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        lineHeight: '1.4'
+                      }}>
+                        <span style={{ color: '#818cf8', fontWeight: 'bold' }}>[VLM Copilot Visual Extraction Node]</span>
+                        <pre style={{ margin: '8px 0 0 0', fontFamily: 'inherit', color: '#22d3ee', whiteSpace: 'pre-wrap' }}>
+                          {simText || "Awaiting simulation trigger. Click 'Execute' to begin visual extraction..."}
+                        </pre>
+                      </div>
+
+                      {/* Sparkled Insight Card */}
+                      {simStatus === 'completed' && (
+                        <div className="glass-card animate-slide-up" style={{
+                          padding: '14px',
+                          border: '1px solid rgba(34, 211, 238, 0.3)',
+                          boxShadow: '0 0 20px rgba(6, 182, 212, 0.2)',
+                          background: 'rgba(6,182,212,0.02)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6,182,212,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                              SPAWNED OKF MEMORY BLOCK
+                            </span>
+                            <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>ID: V940-012</span>
+                          </div>
+                          <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 'bold' }}>
+                            Personalized mRNA Efficacy & Access Grounding
+                          </h4>
+                          <p style={{ margin: 0, fontSize: '9.5px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                            "Implication: Deploy HEOR surrogate validation models to Access leads by Q3."
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* SCENE 2 STAGE: COMPLIANCE INTERCEPTION */}
+                {simActiveScene === 'compliance' && (
+                  <div className="animate-fade-in" style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '24px',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    boxSizing: 'border-box'
+                  }}>
+                    {/* Left: Live Typing Draft Editor */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center' }}>
+                      <div className="glass-card" style={{
+                        position: 'relative',
+                        background: simStep === 2 ? 'rgba(239, 68, 68, 0.05)' : 'var(--glass-bg)',
+                        border: simStep === 2 ? '2px solid #ef4444' : '1px solid var(--glass-border)',
+                        boxShadow: simStep === 2 ? '0 0 25px rgba(239, 68, 68, 0.3)' : 'none',
+                        padding: '20px',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '12px',
+                        transition: 'all 0.3s ease',
+                        transform: simStep === 3 ? 'translateX(120%) scale(0.6) rotate(5deg)' : 'none',
+                        opacity: simStep === 3 ? 0 : 1
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ width: '8px', height: '8px', background: 'var(--brand-cyan)', borderRadius: '50%' }} />
+                            <strong style={{ fontSize: '9px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>
+                              Draft Editor (Medical Affairs Lane)
+                            </strong>
+                          </div>
+                          <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Status: Active Draft</span>
+                        </div>
+
+                        {/* Input Field with highlighted forbidden words */}
+                        <div style={{
+                          background: 'rgba(0,0,0,0.3)',
+                          border: '1px solid rgba(255,255,255,0.05)',
+                          padding: '14px',
+                          borderRadius: '8px',
+                          minHeight: '100px',
+                          fontSize: '12px',
+                          lineHeight: '1.6',
+                          color: 'var(--text-primary)',
+                          position: 'relative'
+                        }}>
+                          {simStep === 0 ? (
+                            <span>{simText}<span className="animate-pulse" style={{ color: 'var(--brand-cyan)' }}>|</span></span>
+                          ) : (
+                            <span>
+                              Medical Affairs expectations: Strong clinical adoption in community oncology clinics, which will drive rapid {" "}
+                              <span style={{ background: '#ef4444', color: 'white', padding: '0 4px', borderRadius: '4px', fontWeight: 'bold', animation: 'blink 0.8s infinite' }}>market share</span> gains and guarantee a {" "}
+                              <span style={{ background: '#ef4444', color: 'white', padding: '0 4px', borderRadius: '4px', fontWeight: 'bold', animation: 'blink 0.8s infinite' }}>high ROI</span> on our investments.
+                            </span>
+                          )}
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9px', color: 'var(--text-muted)' }}>
+                          <span>Principal ID: spiffe://itacs.merck.com/.../medical-affairs</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right: Quarantine Chamber / Auditor info */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      position: 'relative',
+                      height: '100%',
+                      boxSizing: 'border-box'
+                    }}>
+                      
+                      {/* Quarantine Chamber Container */}
+                      <div className="glass-card" style={{
+                        width: '100%',
+                        maxHeight: '260px',
+                        background: simStep === 3 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.01)',
+                        border: simStep === 3 ? '2px dashed #ef4444' : '1px dashed rgba(255,255,255,0.05)',
+                        borderRadius: '16px',
+                        padding: '24px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        transition: 'all 0.4s ease',
+                        boxSizing: 'border-box'
+                      }}>
+                        {simStep === 3 ? (
+                          <div className="animate-scale-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center' }}>
+                            <ShieldAlert size={48} style={{ color: '#ef4444', animation: 'pulse 1.5s infinite' }} />
+                            <h4 style={{ margin: 0, color: '#ef4444', fontWeight: 800, fontSize: '13.5px' }}>
+                              ⚠️ CARD QUARANTINED
+                            </h4>
+                            <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                              Draft insight #DF-942 intercepted by Compliance Supervisor.<br />
+                              <strong>Reason:</strong> Commercial language ('market share', 'ROI') detected in non-commercial lane.
+                            </p>
+                            <span style={{ fontSize: '8px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+                              BLOCK AUDIT COMMIT: sha256:7f92b42ca1a0b98
+                            </span>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.3, textAlign: 'center' }}>
+                            <ShieldAlert size={40} style={{ color: 'var(--text-muted)' }} />
+                            <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>
+                              Quarantine Chamber
+                            </h4>
+                            <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)' }}>
+                              Compliance Supervisor active. Standing by to intercept lane breaches.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* SCENE 3 STAGE: CROSS-FUNCTIONAL COLLISION */}
+                {simActiveScene === 'collision' && (
+                  <div className="animate-fade-in" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    boxSizing: 'border-box',
+                    gap: '16px'
+                  }}>
+                    
+                    {/* SVG Connector overlay for glowing red tether */}
+                    <svg style={{
+                      position: 'absolute',
+                      top: 0, left: 0, right: 0, bottom: 0,
+                      width: '100%', height: '100%',
+                      pointerEvents: 'none',
+                      zIndex: 2
+                    }}>
+                      {simStep >= 3 && (
+                        <line 
+                          x1="35%" y1="40%" 
+                          x2="65%" y2="40%" 
+                          stroke={simVoteSelected ? "#10b981" : "#ef4444"} 
+                          strokeWidth={simVoteSelected ? "3" : "2"}
+                          style={{
+                            strokeDasharray: simVoteSelected ? "none" : "6",
+                            animation: simVoteSelected ? "none" : "dash 1.2s linear infinite",
+                            filter: simVoteSelected ? 'drop-shadow(0 0 10px #10b981)' : 'drop-shadow(0 0 10px #ef4444)',
+                            transition: 'all 0.4s ease'
+                          }}
+                        />
+                      )}
+                    </svg>
+
+                    {/* Split Row */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '80px',
+                      alignItems: 'center',
+                      flex: 1,
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      zIndex: 3
+                    }}>
+                      
+                      {/* Left: Medical Affairs Card */}
+                      <div className="glass-card animate-slide-right" style={{
+                        padding: '16px',
+                        background: 'var(--bg-tertiary)',
+                        borderLeft: '4px solid var(--brand-cyan)',
+                        opacity: simStep >= 1 ? 1 : 0,
+                        transition: 'opacity 0.5s ease',
+                        height: '100px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                      }}>
+                        <div>
+                          <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                            MEDICAL AFFAIRS STRATEGY
+                          </span>
+                          <h4 style={{ margin: 0, fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                            Clinical Adjuvant Launch
+                          </h4>
+                          <p style={{ margin: '4px 0 0 0', fontSize: '10.5px', color: 'var(--text-secondary)' }}>
+                            "Clinical adoption pathways support a rapid community launch in <strong>Q3 2026</strong>."
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Right: Market Access Card */}
+                      <div className="glass-card animate-slide-left" style={{
+                        padding: '16px',
+                        background: 'var(--bg-tertiary)',
+                        borderLeft: '4px solid var(--brand-indigo)',
+                        opacity: simStep >= 2 ? 1 : 0,
+                        transition: 'opacity 0.5s ease',
+                        height: '100px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                      }}>
+                        <div>
+                          <span style={{ fontSize: '7.5px', color: 'var(--brand-indigo)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                            MARKET ACCESS / REIMBURSEMENT
+                          </span>
+                          <h4 style={{ margin: 0, fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                            Payer Step-Edit Friction
+                          </h4>
+                          <p style={{ margin: '4px 0 0 0', fontSize: '10.5px', color: 'var(--text-secondary)' }}>
+                            "Payer step-authorization requirements will delay community access until <strong>Q1 2027</strong>."
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Divergence warning and voting box */}
+                    {simStep >= 3 && (
+                      <div className="animate-scale-in" style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '12px',
+                        background: 'rgba(15, 23, 42, 0.8)',
+                        border: `1px solid ${simVoteSelected ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
+                        padding: '16px 24px',
+                        borderRadius: '12px',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        zIndex: 4,
+                        textAlign: 'center'
+                      }}>
+                        {simVoteSelected ? (
+                          <div className="animate-fade-in">
+                            <span style={{ fontSize: '9px', fontWeight: 'bold', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                              ✓ CONFLICT RESOLVED
+                            </span>
+                            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: 'white' }}>
+                              Consensus achieved: <strong>{simVoteSelected === 'optionA' ? 'Delay clinical launch to Q1 (Prioritize Access)' : 'Deploy HEOR evidence packages to pull launch forward'}</strong>
+                            </p>
+                            <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>
+                              GOLT Alignment Vote: Option A ({simVoteCounts.optionA}) — Option B ({simVoteCounts.optionB}) • Consensus Committed!
+                            </span>
+                          </div>
+                        ) : (
+                          <>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span className="animate-ping" style={{ width: '8px', height: '8px', background: '#ef4444', borderRadius: '50%' }} />
+                              <strong style={{ fontSize: '11px', color: '#fca5a5', textTransform: 'uppercase' }}>
+                                ⚔️ INTER-FUNCTIONAL TIMELINE COLLISION
+                              </strong>
+                            </div>
+                            <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-secondary)' }}>
+                              Chronological timeline divergence detected. Medical Affairs assumes Q3 launch, Access reports Q1 clearance.
+                            </p>
+                            
+                            <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+                              <button 
+                                onClick={() => {
+                                  setSimVoteSelected('optionA');
+                                  setSimVoteCounts(prev => ({ ...prev, optionA: prev.optionA + 1 }));
+                                  setSimLogs(prev => [...prev, "[Consensus] GOLT Vote registered for Option A. Conflict resolved."]);
+                                }}
+                                className="btn btn-subtle" 
+                                style={{ fontSize: '10px', padding: '6px 12px', border: '1px solid rgba(239,68,68,0.2)', cursor: 'pointer' }}
+                              >
+                                Option A: Align Launch with Access (Q1)
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  setSimVoteSelected('optionB');
+                                  setSimVoteCounts(prev => ({ ...prev, optionB: prev.optionB + 1 }));
+                                  setSimLogs(prev => [...prev, "[Consensus] GOLT Vote registered for Option B. Deploying HEOR to accelerate Access."]);
+                                }}
+                                className="btn btn-primary" 
+                                style={{ fontSize: '10px', padding: '6px 12px', cursor: 'pointer' }}
+                              >
+                                Option B: Accelerate Access with HEOR evidence
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* SCENE 4 STAGE: DEEP RESEARCH OUTBREAK */}
+                {simActiveScene === 'research' && (
+                  <div className="animate-fade-in" style={{
+                    display: 'grid',
+                    gridTemplateColumns: '320px 1fr',
+                    gap: '24px',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    boxSizing: 'border-box'
+                  }}>
+                    {/* Left: Map node showing knowledge gap */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      height: '100%',
+                      boxSizing: 'border-box'
+                    }}>
+                      <div className="glass-card" style={{
+                        background: '#0a0d14',
+                        border: simStep === 0 ? '1px solid rgba(245,158,11,0.25)' : '1px solid rgba(255,255,255,0.03)',
+                        borderRadius: '12px',
+                        padding: '16px',
+                        textAlign: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        flex: 1
+                      }}>
+                        <div style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '50%',
+                          border: '2px solid #f59e0b',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 0 20px rgba(245,158,11,0.3)',
+                          animation: 'pulse 1.5s infinite',
+                          background: 'rgba(245,158,11,0.05)',
+                          fontSize: '20px'
+                        }}>
+                          🛰️
+                        </div>
+                        <h4 style={{ margin: 0, fontSize: '12.5px', color: '#f59e0b', fontWeight: 800 }}>
+                          CRITICAL KNOWLEDGE GAP
+                        </h4>
+                        <p style={{ margin: 0, fontSize: '10px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                          Target: Competitor X's Q3 Oncology Pricing Strategy & Access Thresholds are unknown.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Right: Agent crawler terminal & Spawned competitor card */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateRows: '1fr auto',
+                      gap: '16px',
+                      height: '100%',
+                      boxSizing: 'border-box',
+                      overflow: 'hidden'
+                    }}>
+                      
+                      {/* Scraper Terminal panel */}
+                      <div style={{
+                        background: '#030509',
+                        border: '1px solid rgba(255,255,255,0.05)',
+                        borderRadius: '12px',
+                        padding: '14px',
+                        fontFamily: 'monospace',
+                        fontSize: '9.5px',
+                        color: '#f59e0b',
+                        overflowY: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        lineHeight: '1.4'
+                      }}>
+                        <span style={{ color: '#818cf8', fontWeight: 'bold' }}>[Deep Research Agent Crawler Terminal]</span>
+                        {simStep >= 1 && (
+                          <div style={{ marginTop: '8px', color: '#cbd5e1' }}>
+                            {simStep >= 1 && <div>[Research Agent] Querying PubMed Oncology registries... 200 OK</div>}
+                            {simStep >= 2 && <div>[Web Crawler] Scraping Competitor Investor reports and SEC filing records...</div>}
+                            {simStep >= 2 && <div>[Web Scraper] ClinicalTrials.gov (NCT0654321) scraped. Target pricing discount found (5%).</div>}
+                            {simStep >= 3 && <div>[Synthesizer] Signal parsed successfully. Structuring competitor access matrix.</div>}
+                            {simStep >= 4 && <div style={{ color: '#10b981', fontWeight: 'bold' }}>[Success] Knowledge Gap Filled. Spawned Strategic Competitor Card #CI-102.</div>}
+                          </div>
+                        )}
+                        {simStep === 0 && (
+                          <div style={{ marginTop: '14px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                            Awaiting deployment. Click 'Execute' to deploy the Research crawler agent.
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Spawned competitor card */}
+                      {simStatus === 'completed' && (
+                        <div className="glass-card animate-slide-up" style={{
+                          padding: '14px',
+                          border: '1px solid rgba(245, 158, 11, 0.3)',
+                          boxShadow: '0 0 20px rgba(245, 158, 11, 0.2)',
+                          background: 'rgba(245,158,11,0.02)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '6px'
+                        }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '8px', fontWeight: 'bold', color: '#f59e0b', background: 'rgba(245,158,11,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                              SPAWNED COMPETITOR INTELLIGENCE CARD
+                            </span>
+                            <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>ID: CI-102</span>
+                          </div>
+                          <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 'bold' }}>
+                            Competitor X Q3 Pricing & Access Strategy
+                          </h4>
+                          <p style={{ margin: 0, fontSize: '9.5px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+                            "Implication: Competitor X plans 5% discount on monotherapy, but our HEOR survival packaging offset allows price integrity."
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom: Real-Time Scrolling Telemetry Log */}
+              <div className="glass-card" style={{
+                background: 'rgba(5, 7, 12, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+                borderRadius: '12px',
+                padding: '12px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+                overflow: 'hidden'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '6px', marginBottom: '6px', flexShrink: 0 }}>
+                  <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    📊 Multi-Agent Real-Time Telemetry Log
+                  </span>
+                  <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)' }}>
+                    System Status: {simStatus === 'running' ? 'Active Ingress Pipeline' : 'Idle'}
+                  </span>
+                </div>
+                
+                <div style={{
+                  flex: 1,
+                  overflowY: 'auto',
+                  fontFamily: 'monospace',
+                  fontSize: '9.5px',
+                  lineHeight: '1.4',
+                  color: 'rgba(255,255,255,0.85)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '2px',
+                  paddingRight: '6px'
+                }}>
+                  {simLogs.map((log, logIdx) => (
+                    <div key={logIdx} style={{
+                      color: log.startsWith('⚠️') ? '#ef4444' : (log.startsWith('[System]') ? '#a5b4fc' : (log.includes('[Success]') || log.includes('✓') ? '#10b981' : 'rgba(255,255,255,0.85)'))
+                    }}>
+                      {log}
+                    </div>
+                  ))}
+                  {simLogs.length === 0 && (
+                    <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0' }}>
+                      Terminal Standby. Click 'Execute' to stream live multi-agent communication.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
       </div>
