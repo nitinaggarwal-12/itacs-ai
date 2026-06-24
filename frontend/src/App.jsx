@@ -372,6 +372,9 @@ export default function App() {
     "Risk-Sharing Payer Agreements": 20
   });
 
+  // Executive Deck Studio active slide selection
+  const [activePreviewSlide, setActivePreviewSlide] = useState(1);
+
   // Simulation Theater States (Showcase Simulator)
   const [simActiveScene, setSimActiveScene] = useState('pixelrag');
   const [simStatus, setSimStatus] = useState('idle');
@@ -4136,7 +4139,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </p>
               </div>
 
-              {/* Slide List */}
+              {/* Slide List (Interactive & Clickable!) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1, marginTop: '10px' }}>
                 {[
                   { index: 1, type: 'Title Slide', title: 'ITACS Adjuvant Launch Strategy', pillar: 'Executive Intro' },
@@ -4144,49 +4147,57 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   { index: 3, type: 'Strategic Imperative', title: 'Demonstrate Payer Value & HEOR Evidence', pillar: 'Demonstrate Payer Value' },
                   { index: 4, type: 'Strategic Imperative', title: 'Accelerate Diagnostic Screening Infrastructure', pillar: 'Accelerate Diagnostic Speed' },
                   { index: 5, type: 'Strategic Imperative', title: 'Optimize Operational Launch Readiness Timeline', pillar: 'Optimize Launch Readiness' }
-                ].map(slide => (
-                  <div
-                    key={slide.index}
-                    style={{
-                      padding: '12px',
-                      borderRadius: '10px',
-                      background: 'rgba(255,255,255,0.01)',
-                      border: '1px solid rgba(255,255,255,0.04)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '10px'
-                    }}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>
-                        SLIDE {slide.index} • {slide.type}
-                      </span>
-                      <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 700 }}>
-                        {slide.title.substring(0, 32)}...
-                      </h4>
-                    </div>
-                    
-                    {/* Slide approval checkbox */}
-                    <input
-                      type="checkbox"
-                      checked={deckApprovedSlides.includes(slide.index)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setDeckApprovedSlides(prev => [...prev, slide.index]);
-                        } else {
-                          setDeckApprovedSlides(prev => prev.filter(idx => idx !== slide.index));
-                        }
-                      }}
+                ].map(slide => {
+                  const isActive = activePreviewSlide === slide.index;
+                  return (
+                    <div
+                      key={slide.index}
+                      onClick={() => setActivePreviewSlide(slide.index)}
                       style={{
-                        width: '16px',
-                        height: '16px',
-                        accentColor: 'var(--brand-cyan)',
-                        cursor: 'pointer'
+                        padding: '12px',
+                        borderRadius: '10px',
+                        background: isActive ? 'rgba(99, 102, 241, 0.08)' : 'rgba(255,255,255,0.01)',
+                        border: isActive ? '1.5px solid var(--brand-cyan)' : '1px solid rgba(255,255,255,0.04)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '10px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        boxShadow: isActive ? '0 0 12px rgba(6, 182, 212, 0.15)' : 'none'
                       }}
-                    />
-                  </div>
-                ))}
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span style={{ fontSize: '7.5px', color: isActive ? 'var(--brand-cyan)' : 'var(--text-muted)', fontWeight: 'bold' }}>
+                          SLIDE {slide.index} • {slide.type}
+                        </span>
+                        <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                          {slide.title.substring(0, 32)}...
+                        </h4>
+                      </div>
+                      
+                      {/* Slide approval checkbox */}
+                      <input
+                        type="checkbox"
+                        checked={deckApprovedSlides.includes(slide.index)}
+                        onClick={(e) => e.stopPropagation()} // Prevent triggering slide selection when toggling checkbox
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setDeckApprovedSlides(prev => [...prev, slide.index]);
+                          } else {
+                            setDeckApprovedSlides(prev => prev.filter(idx => idx !== slide.index));
+                          }
+                        }}
+                        style={{
+                          width: '16px',
+                          height: '16px',
+                          accentColor: 'var(--brand-cyan)',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Action Buttons */}
@@ -4281,29 +4292,63 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                 {/* Slide content area */}
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
-                  <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
-                    MK-940 Adjuvant Recurrence Risk Reduction Plan
-                  </h1>
-                  
-                  {/* Grid showing bullets mapping to active Postgres memory */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '10px' }}>
-                    <div style={{ borderLeft: '3px solid var(--brand-indigo)', paddingLeft: '14px' }}>
-                      <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-indigo)', fontWeight: 700 }}>
-                        CLINICAL DIFFERENTIATION STRATEGY
-                      </h4>
-                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                        Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch.
+                  {activePreviewSlide === 1 ? (
+                    /* Slide 1: Premium Title Page Layout */
+                    <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center', height: '100%' }}>
+                      <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: '1.25' }}>
+                        ITACS Adjuvant Oncology Launch Strategy
+                      </h1>
+                      <p style={{ margin: 0, fontSize: '15px', color: 'var(--brand-cyan)', fontWeight: 600 }}>
+                        Cross-Functional Alignment & Strategic Execution Roadmap for V940/MK-940
                       </p>
+                      <div style={{ marginTop: '24px', fontSize: '11.5px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span>Presented by: Global Oncology Leadership Team (GOLT)</span>
+                        <span>Date: March 2026 Presentation Ready</span>
+                      </div>
                     </div>
-                    <div style={{ borderLeft: '3px solid var(--brand-purple)', paddingLeft: '14px' }}>
-                      <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-purple)', fontWeight: 700 }}>
-                        MARKET ACCESS REIMBURSEMENT ROADMAP
-                      </h4>
-                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                        Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance.
-                      </p>
-                    </div>
-                  </div>
+                  ) : (
+                    /* Slides 2, 3, 4, 5: Dynamic Imperative Slide Layout */
+                    <>
+                      <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+                        {activePreviewSlide === 2 && "MK-940 Adjuvant Recurrence Risk Reduction Plan"}
+                        {activePreviewSlide === 3 && "Payer Access Strategy & HEOR Value Realization"}
+                        {activePreviewSlide === 4 && "Companion Diagnostic Scaling & Molecular Screening"}
+                        {activePreviewSlide === 5 && "Vein-to-Vein Logistics & Practice Support Operations"}
+                      </h1>
+                      
+                      {/* Grid showing bullets mapping to active Postgres memory */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '10px' }}>
+                        <div style={{ borderLeft: '3px solid var(--brand-indigo)', paddingLeft: '14px' }}>
+                          <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-indigo)', fontWeight: 700 }}>
+                            {activePreviewSlide === 2 && "CLINICAL DIFFERENTIATION STRATEGY"}
+                            {activePreviewSlide === 3 && "RISK-SHARING AGREEMENTS"}
+                            {activePreviewSlide === 4 && "RAPID IHC TESTING ROLLOUT"}
+                            {activePreviewSlide === 5 && "ULTRA-COLD CHAIN HUBS"}
+                          </h4>
+                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                            {activePreviewSlide === 2 && "Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch."}
+                            {activePreviewSlide === 3 && "Formulate performance milestone-based rebate contracts with commercial insurers to bypass national step-therapy thresholds."}
+                            {activePreviewSlide === 4 && "Deploy rapid IHC companion assay kits to 250+ community hospital pathology labs by Q4 to avoid chemotherapy misrouting."}
+                            {activePreviewSlide === 5 && "Establish leased -70°C deep-freezer placement programs targeting tier-1 community oncology practices to secure storage capacity."}
+                          </p>
+                        </div>
+                        <div style={{ borderLeft: '3px solid var(--brand-purple)', paddingLeft: '14px' }}>
+                          <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-purple)', fontWeight: 700 }}>
+                            {activePreviewSlide === 2 && "MARKET ACCESS REIMBURSEMENT ROADMAP"}
+                            {activePreviewSlide === 3 && "SUBCUTANEOUS VALUE ARGUMENT"}
+                            {activePreviewSlide === 4 && "NGS REFLEX PROTOCOLS"}
+                            {activePreviewSlide === 5 && "ONCOLOGY PATIENT NAVIGATORS"}
+                          </h4>
+                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                            {activePreviewSlide === 2 && "Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance."}
+                            {activePreviewSlide === 3 && "Highlight the 20% clinical throughput gain and nursing chair-time savings of the subcutaneous adjuvant formulation."}
+                            {activePreviewSlide === 4 && "Standardize reflex testing protocols at surgical resection to ensure patient biomarker results are returned within 7 days."}
+                            {activePreviewSlide === 5 && "Deploy dedicated clinical navigators to manage patient scheduling, biopsy routing, and prior-authorization approvals."}
+                          </p>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Footer brand block */}
@@ -4312,7 +4357,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     Author: Global Oncology Leadership Team (GOLT)
                   </span>
                   <span style={{ fontSize: '9.5px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>
-                    Slide 2 of 5 • Approved: {deckApprovedSlides.includes(2) ? '✓ Yes' : '✕ Pending'}
+                    Slide {activePreviewSlide} of 5 • Approved: {deckApprovedSlides.includes(activePreviewSlide) ? '✓ Yes' : '✕ Pending'}
                   </span>
                 </div>
               </div>
