@@ -3,7 +3,8 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
   HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X,
-  Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users, Sun, Moon
+  Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users, Sun, Moon,
+  PieChart, BookOpen
 } from 'lucide-react';
 
 // API Configuration
