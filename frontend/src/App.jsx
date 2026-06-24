@@ -375,6 +375,18 @@ export default function App() {
   // Executive Deck Studio active slide selection
   const [activePreviewSlide, setActivePreviewSlide] = useState(1);
 
+  // Interactive Workshop Node Positions for Drag-and-Drop
+  const [workshopNodes, setWorkshopNodes] = useState({
+    node1: { id: 'node1', name: 'Personalized mRNA Logistics', desc: 'Weight: 16.20 • Operations & Logistics bottleneck in community clinics.', left: 60, top: 90, color: 'var(--brand-indigo)' },
+    node2: { id: 'node2', name: 'KRAS Payer Prior Authorization', desc: 'Weight: 12.45 • Step therapy blocking access to combinations.', left: 270, top: 70, color: 'var(--brand-indigo)' },
+    node3: { id: 'node3', name: 'Diagnostic Screening Speed', desc: 'Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.', left: 60, top: 340, color: 'var(--brand-indigo)' },
+    node4: { id: 'node4', name: 'Subcutaneous Infusion Conversion', desc: 'Weight: 18.40 • Shift 60% of stable adjuvant patients from IV to subcutaneous within 6 months.', left: 360, top: 240, color: 'var(--brand-cyan)' },
+    node5: { id: 'node5', name: 'Companion Diagnostic Kit Scaling', desc: 'Weight: 15.15 • Accelerate rapid IHC companion assay installations at community pathology labs.', left: 440, top: 80, color: '#10b981' },
+    node6: { id: 'node6', name: 'Risk-Sharing Payer Agreements', desc: 'Weight: 19.10 • Formulate performance milestone-based rebate contracts with commercial insurers.', left: 70, top: 210, color: '#ef4444' }
+  });
+  const [activeDragNode, setActiveDragNode] = useState(null);
+  const [dragStartOffset, setDragStartOffset] = useState({ x: 0, y: 0 });
+
   // Simulation Theater States (Showcase Simulator)
   const [simActiveScene, setSimActiveScene] = useState('pixelrag');
   const [simStatus, setSimStatus] = useState('idle');
@@ -1274,6 +1286,65 @@ export default function App() {
       ...prev,
       [theme]: prev[theme] + 1
     }));
+  };
+
+  // Drag-and-Drop mouse event handlers for collaborative workshop nodes
+  const handleNodeMouseDown = (nodeId, e) => {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setActiveDragNode(nodeId);
+    setDragStartOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleCanvasMouseMove = (e) => {
+    if (!activeDragNode) return;
+    e.preventDefault();
+    
+    const canvas = e.currentTarget;
+    const rect = canvas.getBoundingClientRect();
+    
+    let newLeft = e.clientX - rect.left - dragStartOffset.x;
+    let newTop = e.clientY - rect.top - dragStartOffset.y;
+    
+    // Constrain card boundaries inside the canvas grid
+    const cardWidth = 240;
+    const cardHeight = 75;
+    newLeft = Math.max(10, Math.min(newLeft, rect.width - cardWidth - 10));
+    newTop = Math.max(10, Math.min(newTop, rect.height - cardHeight - 10));
+    
+    setWorkshopNodes(prev => ({
+      ...prev,
+      [activeDragNode]: {
+        ...prev[activeDragNode],
+        left: newLeft,
+        top: newTop
+      }
+    }));
+  };
+
+  const handleCanvasMouseUp = () => {
+    setActiveDragNode(null);
+  };
+
+  // Helper to calculate smooth dynamic Bezier connection paths between moving cards
+  const getDynamicLinkPath = (idA, idB) => {
+    const nA = workshopNodes[idA];
+    const nB = workshopNodes[idB];
+    if (!nA || !nB) return "";
+    
+    // Card dimensions: width 240px, height ~75px. Get centers:
+    const x1 = nA.left + 120;
+    const y1 = nA.top + 37;
+    const x2 = nB.left + 120;
+    const y2 = nB.top + 37;
+    
+    // Quadratic Bezier curve pulling control point slightly up for a premium bend
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2 - 20;
+    return `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
   };
 
   const handleSendMessage = async (customText = null) => {
@@ -2938,10 +3009,16 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </p>
               </div>
 
-              <div className="workshop-canvas">
-                <div className="workshop-grid-overlay" />
+              <div 
+                className="workshop-canvas"
+                onMouseMove={handleCanvasMouseMove}
+                onMouseUp={handleCanvasMouseUp}
+                onMouseLeave={handleCanvasMouseUp}
+                style={{ position: 'relative', overflow: 'hidden', cursor: activeDragNode ? 'grabbing' : 'default' }}
+              >
+                <div className="workshop-grid-overlay" style={{ pointerEvents: 'none' }} />
                 
-                {/* Visual Bezier Tethers (Busy, Interconnected Web!) */}
+                {/* Visual Bezier Tethers (Wired dynamically to node coordinates!) */}
                 <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}>
                   <defs>
                     <linearGradient id="tether-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -2953,55 +3030,45 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <stop offset="100%" stopColor="var(--color-success)" stopOpacity="0.6" />
                     </linearGradient>
                   </defs>
-                  {/* Primary roadmap links */}
-                  <path d="M 180 140 Q 280 110 380 120" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d="M 180 140 Q 140 240 180 370" fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
-                  <path d="M 380 120 Q 300 240 180 370" fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  {/* Elastic roadmap links (Updates in real-time on drag!) */}
+                  <path d={getDynamicLinkPath('node1', 'node2')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d={getDynamicLinkPath('node1', 'node3')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
+                  <path d={getDynamicLinkPath('node2', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="2" strokeDasharray="4 4" className="animated-tether" />
                   
-                  {/* Outer strategic clusters (busy web!) */}
-                  <path d="M 380 120 Q 480 200 480 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d="M 480 270 Q 380 350 180 370" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d="M 180 140 Q 90 220 180 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d="M 180 270 Q 280 300 480 270" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d="M 380 120 Q 480 90 540 130" fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
-                  <path d="M 540 130 Q 520 200 480 270" fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  {/* Outer elastic strategic links */}
+                  <path d={getDynamicLinkPath('node2', 'node5')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d={getDynamicLinkPath('node5', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d={getDynamicLinkPath('node6', 'node1')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d={getDynamicLinkPath('node6', 'node4')} fill="none" stroke="url(#tether-grad-1)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d={getDynamicLinkPath('node3', 'node6')} fill="none" stroke="url(#tether-grad-2)" strokeWidth="1.5" strokeDasharray="3 3" />
                 </svg>
                 
-                {/* Node 1: Logistics Theme */}
-                <div className="interactive-theme-node" style={{ left: '60px', top: '90px', zIndex: 2 }}>
-                  <h4>Personalized mRNA Logistics</h4>
-                  <p>Weight: 16.20 • Operations & Logistics bottleneck in community clinics.</p>
-                </div>
-
-                {/* Node 2: Prior Auth Theme */}
-                <div className="interactive-theme-node" style={{ left: '270px', top: '70px', zIndex: 2 }}>
-                  <h4>KRAS Payer Prior Authorization</h4>
-                  <p>Weight: 12.45 • Step therapy blocking access to combinations.</p>
-                </div>
-
-                {/* Node 3: Diagnostics Theme */}
-                <div className="interactive-theme-node" style={{ left: '60px', top: '340px', zIndex: 2 }}>
-                  <h4>Diagnostic Screening Speed</h4>
-                  <p>Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.</p>
-                </div>
-
-                {/* Node 4: Subcutaneous Conversion (NEW!) */}
-                <div className="interactive-theme-node" style={{ left: '360px', top: '240px', zIndex: 2, borderLeft: '3px solid var(--brand-cyan)' }}>
-                  <h4>Subcutaneous Infusion Conversion</h4>
-                  <p>Weight: 18.40 • Shift 60% of stable adjuvant patients from IV to subcutaneous within 6 months.</p>
-                </div>
-
-                {/* Node 5: Companion Diagnostic Kit Scaling (NEW!) */}
-                <div className="interactive-theme-node" style={{ left: '440px', top: '80px', zIndex: 2, borderLeft: '3px solid #10b981' }}>
-                  <h4>Companion Diagnostic Kit Scaling</h4>
-                  <p>Weight: 15.15 • Accelerate rapid IHC companion assay installations at community pathology labs.</p>
-                </div>
-
-                {/* Node 6: Risk-Sharing Payer Agreements (NEW!) */}
-                <div className="interactive-theme-node" style={{ left: '70px', top: '210px', zIndex: 2, borderLeft: '3px solid #ef4444' }}>
-                  <h4>Risk-Sharing Payer Agreements</h4>
-                  <p>Weight: 19.10 • Formulate performance milestone-based rebate contracts with commercial insurers.</p>
-                </div>
+                {/* Dynamically Render Coordinates & Drag Listeners */}
+                {Object.values(workshopNodes).map(node => {
+                  const isBeingDragged = activeDragNode === node.id;
+                  return (
+                    <div 
+                      key={node.id}
+                      className="interactive-theme-node"
+                      onMouseDown={(e) => handleNodeMouseDown(node.id, e)}
+                      style={{ 
+                        position: 'absolute',
+                        left: `${node.left}px`, 
+                        top: `${node.top}px`, 
+                        zIndex: isBeingDragged ? 10 : 2,
+                        userSelect: 'none',
+                        cursor: isBeingDragged ? 'grabbing' : 'grab',
+                        borderLeft: `3px solid ${node.color || 'var(--brand-indigo)'}`,
+                        boxShadow: isBeingDragged ? '0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(6, 182, 212, 0.3)' : 'none',
+                        transition: isBeingDragged ? 'none' : 'box-shadow 0.2s ease, border 0.2s ease',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      <h4>{node.name}</h4>
+                      <p>{node.desc}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
