@@ -348,17 +348,20 @@ export default function App() {
     }
   }, [activeTab]); 
 
-  // Theme: 'dark' or 'light'
-  const [theme, setTheme] = useState('light');
+  // Theme: 'dark' or 'light' (Refresh-persisted!)
+  const [theme, setTheme] = useState(() => localStorage.getItem('itacs_theme') || 'light');
   
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    if (nextTheme === 'light') {
+  useEffect(() => {
+    localStorage.setItem('itacs_theme', theme);
+    if (theme === 'light') {
       document.body.classList.add('light-theme');
     } else {
       document.body.classList.remove('light-theme');
     }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
   
   // Commercial Matrix Detail Sub-Tab: 'framework', 'grounding', 'audit'
@@ -380,12 +383,23 @@ export default function App() {
   const [evalResults, setEvalResults] = useState(DEFAULT_EVAL);
   const [tacticalTasks, setTacticalTasks] = useState(DEFAULT_TASKS);
   
-  // Dynamic Strategic Pillars & Kanban State (Interconnected strategic database!)
-  const [pillars, setPillars] = useState([
-    { id: "1", key_name: "differentiation", display_name: "1. Sharpen Clinical Differentiation", class_name: "diff" },
-    { id: "2", key_name: "payer_value", display_name: "2. Demonstrate Payer Value", class_name: "value" },
-    { id: "3", key_name: "diagnostics", display_name: "3. Optimize Diagnostic Channels", class_name: "diag" }
-  ]);
+  // Dynamic Strategic Pillars & Kanban State (Refresh-persisted!)
+  const [pillars, setPillars] = useState(() => {
+    const saved = localStorage.getItem('itacs_strategic_pillars');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return [
+      { id: "1", key_name: "differentiation", display_name: "1. Sharpen Clinical Differentiation", class_name: "diff" },
+      { id: "2", key_name: "payer_value", display_name: "2. Demonstrate Payer Value", class_name: "value" },
+      { id: "3", key_name: "diagnostics", display_name: "3. Optimize Diagnostic Channels", class_name: "diag" }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('itacs_strategic_pillars', JSON.stringify(pillars));
+  }, [pillars]);
+
   const [isSorting, setIsSorting] = useState(false);
   const [selectedBuilderCard, setSelectedBuilderCard] = useState(null);
   const [isBuilderDrawerOpen, setIsBuilderDrawerOpen] = useState(false);
@@ -397,34 +411,68 @@ export default function App() {
   const [newTaskOwner, setNewTaskOwner] = useState("");
   const [newTaskFunction, setNewTaskFunction] = useState("Market Access");
 
-  // Workshop Voting States
-  const [workshopVotes, setWorkshopVotes] = useState({
-    "Personalized mRNA Logistics": 12,
-    "KRAS Payer Prior Authorization": 8,
-    "Diagnostic Screening Speed": 5,
-    "Subcutaneous Infusion Conversion": 15,
-    "Companion Diagnostic Kit Scaling": 9,
-    "Risk-Sharing Payer Agreements": 20
+  // Workshop Voting States (Refresh-persisted!)
+  const [workshopVotes, setWorkshopVotes] = useState(() => {
+    const saved = localStorage.getItem('itacs_workshop_votes');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return {
+      "Personalized mRNA Logistics": 12,
+      "KRAS Payer Prior Authorization": 8,
+      "Diagnostic Screening Speed": 5,
+      "Subcutaneous Infusion Conversion": 15,
+      "Companion Diagnostic Kit Scaling": 9,
+      "Risk-Sharing Payer Agreements": 20
+    };
   });
 
-  // Executive Deck Studio active slide selection
-  const [activePreviewSlide, setActivePreviewSlide] = useState(1);
+  useEffect(() => {
+    localStorage.setItem('itacs_workshop_votes', JSON.stringify(workshopVotes));
+  }, [workshopVotes]);
 
-  // Active roadmap milestone intelligence selection (Miro Gantt Overhaul!)
-  const [selectedRoadmapMilestone, setSelectedRoadmapMilestone] = useState('melanoma_readout');
+  // Executive Deck Studio active slide selection (Refresh-persisted!)
+  const [activePreviewSlide, setActivePreviewSlide] = useState(() => {
+    const saved = localStorage.getItem('itacs_active_slide');
+    return saved ? parseInt(saved, 10) : 1;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('itacs_active_slide', activePreviewSlide);
+  }, [activePreviewSlide]);
+
+  // Active roadmap milestone intelligence selection (Refresh-persisted!)
+  const [selectedRoadmapMilestone, setSelectedRoadmapMilestone] = useState(() => {
+    return localStorage.getItem('itacs_roadmap_milestone') || 'melanoma_readout';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('itacs_roadmap_milestone', selectedRoadmapMilestone);
+  }, [selectedRoadmapMilestone]);
 
   // Workstream Tracker sync telemetry success notification state
   const [showSyncSuccess, setShowSyncSuccess] = useState(false);
 
-  // Interactive Workshop Node Positions for Drag-and-Drop
-  const [workshopNodes, setWorkshopNodes] = useState({
-    node1: { id: 'node1', name: 'Personalized mRNA Logistics', desc: 'Weight: 16.20 • Operations & Logistics bottleneck in community clinics.', left: 60, top: 90, color: 'var(--brand-indigo)' },
-    node2: { id: 'node2', name: 'KRAS Payer Prior Authorization', desc: 'Weight: 12.45 • Step therapy blocking access to combinations.', left: 270, top: 70, color: 'var(--brand-indigo)' },
-    node3: { id: 'node3', name: 'Diagnostic Screening Speed', desc: 'Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.', left: 60, top: 340, color: 'var(--brand-indigo)' },
-    node4: { id: 'node4', name: 'Subcutaneous Infusion Conversion', desc: 'Weight: 18.40 • Shift 60% of stable adjuvant patients from IV to subcutaneous within 6 months.', left: 360, top: 240, color: 'var(--brand-cyan)' },
-    node5: { id: 'node5', name: 'Companion Diagnostic Kit Scaling', desc: 'Weight: 15.15 • Accelerate rapid IHC companion assay installations at community pathology labs.', left: 440, top: 80, color: '#10b981' },
-    node6: { id: 'node6', name: 'Risk-Sharing Payer Agreements', desc: 'Weight: 19.10 • Formulate performance milestone-based rebate contracts with commercial insurers.', left: 70, top: 210, color: '#ef4444' }
+  // Interactive Workshop Node Positions for Drag-and-Drop (Refresh-persisted!)
+  const [workshopNodes, setWorkshopNodes] = useState(() => {
+    const saved = localStorage.getItem('itacs_workshop_nodes');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return {
+      node1: { id: 'node1', name: 'Personalized mRNA Logistics', desc: 'Weight: 16.20 • Operations & Logistics bottleneck in community clinics.', left: 60, top: 90, color: 'var(--brand-indigo)' },
+      node2: { id: 'node2', name: 'KRAS Payer Prior Authorization', desc: 'Weight: 12.45 • Step therapy blocking access to combinations.', left: 270, top: 70, color: 'var(--brand-indigo)' },
+      node3: { id: 'node3', name: 'Diagnostic Screening Speed', desc: 'Weight: 14.10 • NGS turnaround delays causing early chemotherapy starts.', left: 60, top: 340, color: 'var(--brand-indigo)' },
+      node4: { id: 'node4', name: 'Subcutaneous Infusion Conversion', desc: 'Weight: 18.40 • Shift 60% of stable adjuvant patients from IV to subcutaneous within 6 months.', left: 360, top: 240, color: 'var(--brand-cyan)' },
+      node5: { id: 'node5', name: 'Companion Diagnostic Kit Scaling', desc: 'Weight: 15.15 • Accelerate rapid IHC companion assay installations at community pathology labs.', left: 440, top: 80, color: '#10b981' },
+      node6: { id: 'node6', name: 'Risk-Sharing Payer Agreements', desc: 'Weight: 19.10 • Formulate performance milestone-based rebate contracts with commercial insurers.', left: 70, top: 210, color: '#ef4444' }
+    };
   });
+
+  useEffect(() => {
+    localStorage.setItem('itacs_workshop_nodes', JSON.stringify(workshopNodes));
+  }, [workshopNodes]);
+
   const [activeDragNode, setActiveDragNode] = useState(null);
   const [dragStartOffset, setDragStartOffset] = useState({ x: 0, y: 0 });
 
@@ -439,11 +487,16 @@ export default function App() {
   const simIntervalRef = useRef(null);
 
   useEffect(() => {
-    document.body.classList.add('light-theme');
+    // Synchronize initial body class to respect theme state
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
     return () => {
       if (simIntervalRef.current) clearInterval(simIntervalRef.current);
     };
-  }, []);
+  }, [theme]);
 
   // 1. Competitive Wargaming States
   const [warTimeline, setWarTimeline] = useState(6); // months
