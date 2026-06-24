@@ -1,3 +1,4 @@
+// ITACS Enterprise Insights Platform - Automated Webhook Trigger V1.6.5
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
