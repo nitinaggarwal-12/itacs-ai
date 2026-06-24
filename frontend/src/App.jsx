@@ -5274,6 +5274,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   Select a KOL node on the graph to inspect sentiment and clinical advocacy logs.
                 </div>
               )}
+            </div>
           </div>
         )}
 
