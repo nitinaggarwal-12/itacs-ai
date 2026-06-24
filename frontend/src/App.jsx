@@ -3,7 +3,7 @@ import {
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
   HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X,
-  Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users
+  Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users, Sun, Moon
 } from 'lucide-react';
 
 // API Configuration
@@ -137,6 +137,19 @@ const DEFAULT_TASKS = [
 export default function App() {
   // Navigation: 'cockpit' | 'matrix' | 'ingest' | 'builder' | 'tracker' | 'workshop'
   const [activeTab, setActiveTab] = useState('cockpit'); 
+
+  // Theme: 'dark' or 'light'
+  const [theme, setTheme] = useState('dark');
+  
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    if (nextTheme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+  };
   
   // Commercial Matrix Detail Sub-Tab: 'framework', 'grounding', 'audit'
   const [detailTab, setDetailTab] = useState('framework');
@@ -943,6 +956,25 @@ export default function App() {
           </button>
         </div>
 
+        {/* THEME TOGGLE DOCK */}
+        <div style={{ marginTop: 'auto', padding: '0 8px', marginBottom: '16px' }}>
+          <button 
+            onClick={toggleTheme}
+            className="sidebar-nav-btn"
+            style={{ width: '100%', justifyContent: 'flex-start', gap: '10px' }}
+          >
+            {theme === 'dark' ? (
+              <>
+                <Sun size={16} style={{ color: '#f59e0b' }} /> Light Theme Mode
+              </>
+            ) : (
+              <>
+                <Moon size={16} style={{ color: '#818cf8' }} /> Dark Theme Mode
+              </>
+            )}
+          </button>
+        </div>
+
         {/* User Footer Profile */}
         <div className="sidebar-footer">
           <div className="footer-avatar">GL</div>
@@ -1551,7 +1583,7 @@ export default function App() {
                           value={conflictType} 
                           onChange={(e) => setConflictType(e.target.value)}
                           className="form-select"
-                          style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', outline: 'none' }}
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', outline: 'none' }}
                         >
                           <option>Inter-Functional Divergence</option>
                           <option>Timeline Contradiction</option>
@@ -1566,7 +1598,7 @@ export default function App() {
                           onChange={(e) => setConflictDesc(e.target.value)}
                           placeholder="Describe the opposing timelines or research discrepancies..."
                           className="form-textarea"
-                          style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', resize: 'none', outline: 'none' }}
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', resize: 'none', outline: 'none' }}
                         />
                       </div>
                       <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '10px' }}>
@@ -1904,7 +1936,7 @@ export default function App() {
                 </div>
 
                 {showMcpForm && (
-                  <form onSubmit={handleRegisterMcp} style={{ background: 'rgba(0, 0, 0, 0.2)', padding: '12px', borderRadius: '8px', marginBottom: '14px' }}>
+                  <form onSubmit={handleRegisterMcp} style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px', marginBottom: '14px' }}>
                     <div className="metadata-selectors-grid">
                       <div className="select-box-group">
                         <label>Connector ID</label>
@@ -2057,9 +2089,9 @@ export default function App() {
       {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
       <div className={`drawer-overlay ${isAuditDrawerOpen ? 'open' : ''}`} onClick={() => setIsAuditDrawerOpen(false)} />
       <div className={`slide-out-drawer ${isAuditDrawerOpen ? 'open' : ''}`}>
-        <div className="truth-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: 'rgba(0,0,0,0.2)' }}>
+        <div className="truth-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: 'var(--bg-tertiary)' }}>
           <div className="truth-modal-header-title">
-            <h3 style={{ margin: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
+            <h3 style={{ margin: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
               <History size={14} style={{ color: 'var(--brand-cyan)' }} /> Visual Handoff & Ledger Verify
             </h3>
             <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: 'var(--text-muted)' }}>
@@ -2077,11 +2109,11 @@ export default function App() {
         {selectedAuditDrawerLog && (
           <div className="drawer-inner-padding animate-fade-in">
             
-            <div className="glass-card" style={{ padding: '14px', background: 'rgba(0,0,0,0.2)' }}>
+            <div className="glass-card" style={{ padding: '14px', background: 'var(--bg-tertiary)' }}>
               <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>
                 Active Transaction Pipeline Payload (JSON)
               </span>
-              <pre style={{ margin: '8px 0 0 0', background: '#030407', border: '1px solid rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', fontSize: '9.5px', color: '#34d399', overflowX: 'auto', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: '180px', overflowY: 'auto', lineHeight: '1.4' }}>
+              <pre style={{ margin: '8px 0 0 0', background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', padding: '12px', borderRadius: '8px', fontSize: '9.5px', color: '#34d399', overflowX: 'auto', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: '180px', overflowY: 'auto', lineHeight: '1.4' }}>
                 {JSON.stringify({
                   transaction_id: `tx_${selectedAuditDrawerLog.id || Math.random().toString(36).substring(2, 8)}`,
                   timestamp: selectedAuditDrawerLog.created_at || new Date().toISOString(),
@@ -2202,7 +2234,7 @@ export default function App() {
 
                 <div className="glass-card" style={{ padding: '16px' }}>
                   <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Ledger Output</span>
-                  <pre style={{ margin: '8px 0 0 0', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', fontSize: '9px', color: 'var(--brand-cyan)', overflowX: 'auto', whiteSpace: 'pre-wrap' }}>
+                  <pre style={{ margin: '8px 0 0 0', background: 'var(--bg-tertiary)', padding: '10px', borderRadius: '6px', fontSize: '9px', color: 'var(--brand-cyan)', overflowX: 'auto', whiteSpace: 'pre-wrap' }}>
                     {selectedAuditLog.model_output}
                   </pre>
                 </div>

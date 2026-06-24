@@ -27,6 +27,28 @@
   --color-danger: #ef4444;
 }
 
+/* =====================================================================
+   HIGH-CONTRAST LIGHT THEME MODE (Stripe/Linear Aesthetic)
+   ===================================================================== */
+.light-theme {
+  --bg-primary: #f8fafc; /* Slate 50 */
+  --bg-secondary: #ffffff; /* Pure White */
+  --bg-tertiary: #f1f5f9; /* Slate 100 */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(15, 23, 42, 0.05);
+  --glass-border-hover: rgba(15, 23, 42, 0.09);
+  
+  /* High contrast light accents */
+  --brand-indigo: #4f46e5;
+  --brand-blue: #2563eb;
+  --brand-cyan: #0891b2;
+  --brand-purple: #7c3aed;
+  
+  --text-primary: #0f172a; /* Slate 900 */
+  --text-secondary: #475569; /* Slate 600 */
+  --text-muted: #64748b; /* Slate 500 */
+}
+
 body {
   margin: 0;
   background-color: var(--bg-primary);
@@ -34,6 +56,7 @@ body {
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* =====================================================================
@@ -56,6 +79,7 @@ body {
   flex-shrink: 0;
   padding: 24px 16px;
   box-sizing: border-box;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sidebar-brand {
@@ -341,7 +365,7 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: border-color 0.2s ease;
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
