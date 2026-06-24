@@ -314,7 +314,7 @@ export default function App() {
   const [chatLoading, setChatLoading] = useState(false);
   const [retrievedContext, setRetrievedContext] = useState([]);
 
-  const chatEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   // Dynamic State Counters (The World-Class State Sync!)
   const validatedMemoryCount = insights.filter(i => i.is_validated && !i.is_quarantined).length;
@@ -339,7 +339,9 @@ export default function App() {
   }, [selectedInsight]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [chatMessages]);
 
   const fetchData = async () => {
@@ -1725,7 +1727,7 @@ export default function App() {
                 </div>
 
                 {/* Messages Viewport */}
-                <div className="chat-viewport">
+                <div className="chat-viewport" ref={chatContainerRef}>
                   {chatMessages.length === 1 ? (
                     
                     /* PROACTIVE INTELLIGENCE WIDGETS */
@@ -1820,7 +1822,7 @@ export default function App() {
                       Grounded advisor synthesizing oncology plans...
                     </div>
                   )}
-                  <div ref={chatEndRef} />
+
                 </div>
 
                 {/* Grounding Context */}
