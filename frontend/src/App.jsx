@@ -111,10 +111,10 @@ const DEFAULT_CONFLICTS = [
 ];
 
 const DEFAULT_AUDIT = [
-  { step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: MarketResearch_Q2_2026.pptx (4.2 MB)", model_output: "Document uploaded and converted to coordinate visual matrix." },
-  { step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding box coordinates saved for slide 12. Extracted ITACS framework data." },
-  { step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: V940, Melanoma, Stage III/IV." },
-  { step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.95. Approved. No commercial forbidden terms (ROI, profit) detected in high-risk zones." }
+  { id: "aud-1", step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: MarketResearch_Q2_2026.pptx (4.2 MB)", model_output: "Document uploaded and converted to coordinate visual matrix.", created_at: new Date(Date.now() - 60000 * 10).toISOString() },
+  { id: "aud-2", step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding box coordinates saved for slide 12. Extracted ITACS framework data.", created_at: new Date(Date.now() - 60000 * 8).toISOString() },
+  { id: "aud-3", step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: V940, Melanoma, Stage III/IV.", created_at: new Date(Date.now() - 60000 * 6).toISOString() },
+  { id: "aud-4", step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.95. Approved. No commercial forbidden terms (ROI, profit) detected in high-risk zones.", created_at: new Date(Date.now() - 60000 * 4).toISOString() }
 ];
 
 const DEFAULT_MCP = [
@@ -135,17 +135,20 @@ const DEFAULT_TASKS = [
 ];
 
 export default function App() {
-  // Navigation: 'cockpit' (Cockpit), 'matrix' (Matrix), 'ingest' (Ingestion/Governance), 'builder' (Imperative Builder), 'tracker' (Workstream Tracker), 'workshop' (Live Workshop)
+  // Navigation: 'cockpit' | 'matrix' | 'ingest' | 'builder' | 'tracker' | 'workshop'
   const [activeTab, setActiveTab] = useState('cockpit'); 
   
   // Commercial Matrix Detail Sub-Tab: 'framework', 'grounding', 'audit'
   const [detailTab, setDetailTab] = useState('framework');
   
-  // Truth Engine Modal state
+  // Progressive Disclosure: Modals & Side-Drawers state
   const [showTruthModal, setShowTruthModal] = useState(false);
   const [selectedAuditLog, setSelectedAuditLog] = useState(null);
   
-  // High-fidelity state initialization (Kills the empty states!)
+  const [isAuditDrawerOpen, setIsAuditDrawerOpen] = useState(false);
+  const [selectedAuditDrawerLog, setSelectedAuditDrawerLog] = useState(null);
+  
+  // High-fidelity state initialization
   const [insights, setInsights] = useState(DEFAULT_INSIGHTS);
   const [themes, setThemes] = useState(DEFAULT_THEMES);
   const [conflicts, setConflicts] = useState(DEFAULT_CONFLICTS);
@@ -154,7 +157,7 @@ export default function App() {
   const [evalResults, setEvalResults] = useState(DEFAULT_EVAL);
   const [tacticalTasks, setTacticalTasks] = useState(DEFAULT_TASKS);
   
-  // Kanban Imperative Board state mapping (Insight IDs to columns)
+  // Kanban Imperative Board state mapping
   const [imperatives, setImperatives] = useState({
     differentiation: ["e39f3792-7489-4e7c-86c8-f80e722a2789"],
     payer_value: ["c98a1834-4321-8765-cba9-abcdef987654"],
@@ -184,12 +187,12 @@ export default function App() {
   const [uploadTumor, setUploadTumor] = useState("Melanoma");
   const [uploadSubTumor, setUploadSubTumor] = useState("Stage III/IV");
 
-  // Search & Filters (for Matrix Grid)
+  // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [filterLane, setFilterLane] = useState("All Functions");
   const [filterAsset, setFilterAsset] = useState("All Assets");
 
-  // Form edit states (for selectedInsight details)
+  // Form edit states
   const [editOpportunity, setEditOpportunity] = useState("");
   const [editCSF, setEditCSF] = useState("");
   const [editInsight, setEditInsight] = useState("");
@@ -222,7 +225,7 @@ export default function App() {
 
   const chatEndRef = useRef(null);
 
-  // Dynamic State Counters (The World-Class State Sync Fix!)
+  // Dynamic State Counters (The World-Class State Sync!)
   const validatedMemoryCount = insights.filter(i => i.is_validated && !i.is_quarantined).length;
   const activeDraftsCount = insights.filter(i => !i.is_validated && !i.is_quarantined).length;
   const openConflictsCount = conflicts.filter(c => c.status === "Flagged").length;
@@ -254,7 +257,6 @@ export default function App() {
       if (insRes.ok) {
         const data = await insRes.json();
         if (data && data.length > 0) {
-          // Merge local mock with DB in a real deployment
           setInsights(data);
           setSelectedInsight(data[0]);
         }
@@ -391,11 +393,11 @@ export default function App() {
       setSelectedInsight(demoInsight);
 
       const newAudits = [
-        { step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: BiomarkerNGS_Report.pdf (2.4 MB)", model_output: "Document uploaded and converted to coordinate visual matrix." },
-        { step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding boxes mapped for slide 8. Extracted ITACS framework." },
-        { step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: MK-1084, Lung, Non-Small Cell." },
-        { step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.98. Approved. Enforces strict clinical focus on molecular screening; no commercial jargon detected." },
-        { step_index: 5, step_name: "Cross-Functional", agent_name: "Cross-Functional Synthesizer", user_input: "Run thematic synthesis", model_output: "Synthesis completed. Identified new theme regarding molecular diagnostics sequencing bottlenecks." }
+        { id: "dem-aud-1", step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: BiomarkerNGS_Report.pdf (2.4 MB)", model_output: "Document uploaded and converted to coordinate visual matrix." },
+        { id: "dem-aud-2", step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding boxes mapped for slide 8. Extracted ITACS framework." },
+        { id: "dem-aud-3", step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: MK-1084, Lung, Non-Small Cell." },
+        { id: "dem-aud-4", step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.98. Approved. Enforces strict clinical focus on molecular screening; no commercial jargon detected." },
+        { id: "dem-aud-5", step_index: 5, step_name: "Cross-Functional", agent_name: "Cross-Functional Synthesizer", user_input: "Run thematic synthesis", model_output: "Synthesis completed. Identified new theme regarding molecular diagnostics sequencing bottlenecks." }
       ];
       setAuditLogs(prev => [...newAudits, ...prev]);
       
@@ -657,13 +659,11 @@ export default function App() {
   // Move an implication card between Kanban columns
   const moveImperativeCard = (cardId, targetCol) => {
     setImperatives(prev => {
-      // Create copy of lists
       const updated = {
         differentiation: prev.differentiation.filter(id => id !== cardId),
         payer_value: prev.payer_value.filter(id => id !== cardId),
         diagnostics: prev.diagnostics.filter(id => id !== cardId)
       };
-      // Append to target
       updated[targetCol].push(cardId);
       return updated;
     });
@@ -757,9 +757,9 @@ export default function App() {
     }
   };
 
-  const handleAuditClick = (log) => {
-    setSelectedAuditLog(log);
-    setShowTruthModal(true);
+  const handleAuditNodeClick = (log) => {
+    setSelectedAuditDrawerLog(log);
+    setIsAuditDrawerOpen(true);
   };
 
   const parseBoldAndCitations = (text) => {
@@ -984,7 +984,6 @@ export default function App() {
                 <div className="step-node-circle">02</div>
                 <div className="step-node-label">
                   <h4>Thematic Synthesis</h4>
-                  {/* Timeline Typo Fixed! */}
                   <p>Nov 2026 - Jan 2027</p>
                 </div>
               </div>
@@ -1007,17 +1006,17 @@ export default function App() {
             {/* Left Column: Scorecard & Themes */}
             <div className="cockpit-left">
               
-              {/* Dynamic State Sync Counters (Fixed from 0,0,0!) */}
+              {/* STRIPE/LINEAR STYLE ACCENTED TELEMETRY CARDS */}
               <div className="scorecard-grid">
-                <div className="metric-card">
+                <div className="metric-card has-success">
                   <span className="metric-val blue">{validatedMemoryCount}</span>
                   <span className="metric-label">Validated Memory</span>
                 </div>
-                <div className="metric-card">
+                <div className={`metric-card ${activeDraftsCount > 0 ? 'has-warning' : ''}`}>
                   <span className="metric-val amber">{activeDraftsCount}</span>
                   <span className="metric-label">Active Drafts</span>
                 </div>
-                <div className="metric-card">
+                <div className={`metric-card ${openConflictsCount > 0 ? 'has-danger' : ''}`}>
                   <span className="metric-val red">{openConflictsCount}</span>
                   <span className="metric-label">Open Conflicts</span>
                 </div>
@@ -1114,7 +1113,7 @@ export default function App() {
                 <div className="chat-viewport">
                   {chatMessages.length === 1 ? (
                     
-                    /* PROACTIVE INTELLIGENCE WIDGETS (Anti-Empty-Void) */
+                    /* PROACTIVE INTELLIGENCE WIDGETS */
                     <div className="proactive-advisor-canvas proactive-mode animate-fade-in">
                       <div className="proactive-canvas-header">
                         <h4>Strategic Command Intelligence</h4>
@@ -1148,7 +1147,7 @@ export default function App() {
                       <div className="prompt-chips-wrapper" style={{ marginTop: '20px' }}>
                         <span className="prompt-chips-header">Launch Action Prompts</span>
                         <button 
-                          onClick={() => handleSendMessage("Generate GOLT Executive Briefing Summary for V940 Melanoma program.")}
+                          onClick={() => handleSendMessage("Generate GOLT Executive Summary for March presentation.")}
                           className="prompt-suggestion-btn"
                         >
                           → Generate Executive Summary for March GOLT presentation
@@ -1294,10 +1293,11 @@ export default function App() {
                   const isSelected = selectedInsight && selectedInsight.id === ins.id;
                   const laneClass = getFunctionBadgeClass(ins.metadata.function_lane);
                   
-                  let statusClass = "draft";
+                  // AAA Status pills (low opacity bg, desaturated contrasting text)
+                  let statusClass = "flagged";
                   let statusText = "DRAFT REVIEW";
-                  if (ins.is_validated) { statusClass = "validated"; statusText = "MEMORY"; }
-                  else if (ins.is_quarantined) { statusClass = "quarantined"; statusText = "QUARANTINE"; }
+                  if (ins.is_validated) { statusClass = "memory"; statusText = "MEMORY"; }
+                  else if (ins.is_quarantined) { statusClass = "quarantine"; statusText = "QUARANTINE"; }
 
                   return (
                     <div 
@@ -1307,7 +1307,7 @@ export default function App() {
                     >
                       <div className="matrix-card-header">
                         <span className={`matrix-lane-tag ${laneClass}`}>{ins.metadata.function_lane}</span>
-                        <span className={`matrix-status-badge ${statusClass}`}>{statusText}</span>
+                        <span className={`status-pill ${statusClass}`}>{statusText}</span>
                       </div>
 
                       <div className="matrix-card-body">
@@ -1324,6 +1324,27 @@ export default function App() {
                     </div>
                   );
                 })}
+
+                {/* PREMIUM SKELETON CARD EMPTY STATE LAYOUT */}
+                {filteredInsights.length === 0 && (
+                  <div className="skeleton-card-grid" style={{ gridColumn: '1/-1' }}>
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="skeleton-card">
+                        <div className="skeleton-header">
+                          <div className="skeleton-badge" />
+                          <div style={{ width: '40px', height: '8px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '2px' }} />
+                        </div>
+                        <div className="skeleton-title" />
+                        <div className="skeleton-line medium" />
+                        <div className="skeleton-line short" />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,0.03)', paddingTop: '10px', marginTop: '4px' }}>
+                          <div style={{ width: '50px', height: '8px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '2px' }} />
+                          <div style={{ width: '30px', height: '8px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '2px' }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1562,9 +1583,7 @@ export default function App() {
           </main>
         )}
 
-        {/* =====================================================================
-           MISSING MODULE 1: THE IMPERATIVE BUILDER (STRATEGIC KANBAN BOARD)
-           ===================================================================== */}
+        {/* MISSING MODULE 1: THE IMPERATIVE BUILDER (STRATEGIC KANBAN BOARD) */}
         {activeTab === 'builder' && (
           <main className="kanban-board animate-fade-in">
             {[
@@ -1635,9 +1654,7 @@ export default function App() {
           </main>
         )}
 
-        {/* =====================================================================
-           MISSING MODULE 2: TACTICAL WORKSTREAM TRACKER (PROJECT MANAGER)
-           ===================================================================== */}
+        {/* MISSING MODULE 2: TACTICAL WORKSTREAM TRACKER (PROJECT MANAGER) */}
         {activeTab === 'tracker' && (
           <main className="workstream-layout animate-fade-in">
             <div className="glass-card">
@@ -1682,9 +1699,7 @@ export default function App() {
           </main>
         )}
 
-        {/* =====================================================================
-           MISSING MODULE 3: LIVE WORKSHOP MODE (CONSENSUS BUILDING CANVAS)
-           ===================================================================== */}
+        {/* MISSING MODULE 3: LIVE WORKSHOP MODE (CONSENSUS BUILDING CANVAS) */}
         {activeTab === 'workshop' && (
           <main className="workshop-layout animate-fade-in">
             
@@ -1783,7 +1798,7 @@ export default function App() {
 
         {/* TAB 3: GOVERN & CONTROL (INGESTION, MCP REGISTRY, QA SIMULATOR) */}
         {activeTab === 'ingest' && (
-          <main className="ingest-layout animate-fade-in">
+          <main className="ingest-layout animate-fade-in" style={{ gridTemplateColumns: '1.2fr 1fr', gap: '28px' }}>
             
             {/* Left Column: Asset Ingestion & Connected MCP Servers */}
             <div className="ingest-left-controls">
@@ -1933,7 +1948,7 @@ export default function App() {
                         </span>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                        <span className="matrix-status-badge validated" style={{ padding: '2px 6px' }}>CONNECTED</span>
+                        <span className="status-pill memory" style={{ padding: '2px 8px' }}>CONNECTED</span>
                         <button 
                           onClick={() => handleSyncMcp(server.id)} 
                           disabled={isSyncingMcp[server.id]}
@@ -1950,7 +1965,7 @@ export default function App() {
 
             </div>
 
-            {/* Right Column: QA Simulation Console & Visual Agent Handoff Audit Logs */}
+            {/* Right Column: QA Simulation Console & Visual Agent Handoff Audit Nodes */}
             <div className="ingest-right-audit">
               
               {/* CI/CD AGENTIC QA & SIMULATION CONSOLE */}
@@ -2004,42 +2019,29 @@ export default function App() {
               </div>
 
               {/* 
-                 VISUAL STEP-BY-STEP AGENT HANDOFF LOGS (Default Expanded - Show the Machine's Work!)
+                 VISUAL AUDIT NODES (Default Expanded - Show the Machine's Work!)
+                 Decoupled from heavy raw details. Clicking opens the Slide-out Drawer!
               */}
               <div className="glass-card">
                 <h3 className="glass-card-title">
-                  <History size={16} /> Verifiable Compliance Audit Log (Default Expanded)
+                  <History size={16} /> Verifiable Compliance Audit Log (Click to Verify)
                 </h3>
                 
                 <div className="audit-scroller" style={{ maxHeight: '240px' }}>
                   {auditLogs.map((log, lIdx) => (
                     <div 
                       key={lIdx} 
-                      onClick={() => handleAuditClick(log)}
+                      onClick={() => handleAuditNodeClick(log)}
                       className="audit-node animate-fade-in"
-                      style={{ borderLeft: '3px solid #4f46e5' }}
-                      title="Click to inspect original visual slide and API step trace"
+                      style={{ borderLeft: '3px solid #4f46e5', cursor: 'pointer' }}
+                      title="Click to slide open visual handoffs and transaction payloads"
                     >
-                      <div className="audit-node-header">
+                      <div className="audit-node-header" style={{ marginBottom: 0 }}>
                         <div className="audit-badge">
                           <div className="audit-num">{log.step_index}</div>
                           <span className="audit-name">{log.step_name}</span>
                         </div>
                         <span className="audit-agent">Agent: <strong>{log.agent_name}</strong></span>
-                      </div>
-
-                      <div className="audit-payload-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px' }}>
-                        <div className="audit-payload-cell">
-                          <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase' }}>Active Transaction Pipeline Payload (JSON)</span>
-                          <pre style={{ margin: '4px 0 0 0', background: '#030407', border: '1px solid rgba(255,255,255,0.02)', borderRadius: '6px', padding: '10px', fontSize: '9px', color: '#34d399', whiteSpace: 'pre-wrap', maxHeight: '100px', overflowY: 'auto' }}>
-                            {JSON.stringify({
-                              step: log.step_name,
-                              agent: log.agent_name,
-                              input: log.user_input,
-                              output: log.model_output.substring(0, 150) + "..."
-                            }, null, 2)}
-                          </pre>
-                        </div>
                       </div>
                     </div>
                   ))}
@@ -2050,6 +2052,78 @@ export default function App() {
           </main>
         )}
 
+      </div>
+
+      {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
+      <div className={`drawer-overlay ${isAuditDrawerOpen ? 'open' : ''}`} onClick={() => setIsAuditDrawerOpen(false)} />
+      <div className={`slide-out-drawer ${isAuditDrawerOpen ? 'open' : ''}`}>
+        <div className="truth-modal-header" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: 'rgba(0,0,0,0.2)' }}>
+          <div className="truth-modal-header-title">
+            <h3 style={{ margin: 0, fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', color: 'white' }}>
+              <History size={14} style={{ color: 'var(--brand-cyan)' }} /> Visual Handoff & Ledger Verify
+            </h3>
+            <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: 'var(--text-muted)' }}>
+              Step {selectedAuditDrawerLog?.step_index}: {selectedAuditDrawerLog?.step_name} • Agent: {selectedAuditDrawerLog?.agent_name}
+            </p>
+          </div>
+          <button 
+            onClick={() => setIsAuditDrawerOpen(false)} 
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+        
+        {selectedAuditDrawerLog && (
+          <div className="drawer-inner-padding animate-fade-in">
+            
+            <div className="glass-card" style={{ padding: '14px', background: 'rgba(0,0,0,0.2)' }}>
+              <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                Active Transaction Pipeline Payload (JSON)
+              </span>
+              <pre style={{ margin: '8px 0 0 0', background: '#030407', border: '1px solid rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', fontSize: '9.5px', color: '#34d399', overflowX: 'auto', whiteSpace: 'pre-wrap', fontFamily: 'monospace', maxHeight: '180px', overflowY: 'auto', lineHeight: '1.4' }}>
+                {JSON.stringify({
+                  transaction_id: `tx_${selectedAuditDrawerLog.id || Math.random().toString(36).substring(2, 8)}`,
+                  timestamp: selectedAuditDrawerLog.created_at || new Date().toISOString(),
+                  step_index: selectedAuditDrawerLog.step_index,
+                  agent_identity: selectedAuditDrawerLog.agent_name === 'System Ingestion' ? 'spiffe://itacs.merck.com/ns/production/sa/system-ingestion' : 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator',
+                  payload: {
+                    input_trigger: selectedAuditDrawerLog.user_input,
+                    output_decision: selectedAuditDrawerLog.model_output
+                  }
+                }, null, 2)}
+              </pre>
+            </div>
+            
+            <div className="verbatim-container" style={{ margin: 0, padding: '14px' }}>
+              <h5 style={{ margin: '0 0 6px 0', fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                Verbatim Input Reference
+              </h5>
+              <p className="italic" style={{ fontSize: '11.5px', margin: 0, lineHeight: '1.5' }}>"{selectedAuditDrawerLog.user_input}"</p>
+            </div>
+
+            <div className="truth-node-graph-box" style={{ background: 'transparent', border: 'none', padding: 0 }}>
+              <h5 style={{ margin: '0 0 10px 0', fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                Interactions API Handoff Path
+              </h5>
+              <div className="truth-step-nodes-list" style={{ gap: '6px' }}>
+                <div className={`truth-graph-node-item ${selectedAuditDrawerLog.step_index >= 1 ? 'completed' : ''}`} style={{ fontSize: '9px', padding: '6px 10px' }}>
+                  <span>1. File Ingress & Hash Anchoring</span>
+                </div>
+                <div className={`truth-graph-node-item ${selectedAuditDrawerLog.step_index >= 2 ? 'completed' : ''}`} style={{ fontSize: '9px', padding: '6px 10px' }}>
+                  <span>2. Vision-Language Layout Parsing (PixelRAG)</span>
+                </div>
+                <div className={`truth-graph-node-item ${selectedAuditDrawerLog.step_index >= 3 ? 'completed' : ''}`} style={{ fontSize: '9px', padding: '6px 10px' }}>
+                  <span>3. Structured Frame Mappings</span>
+                </div>
+                <div className={`truth-graph-node-item ${selectedAuditDrawerLog.step_index >= 4 ? 'completed' : ''}`} style={{ fontSize: '9px', padding: '6px 10px' }}>
+                  <span>4. Compliance Supervisor Audit</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
       </div>
 
       {/* THE COMPLIANCE & AI TRUTH ENGINE MODAL */}
