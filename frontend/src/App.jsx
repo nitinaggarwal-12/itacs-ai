@@ -375,6 +375,9 @@ export default function App() {
   // Executive Deck Studio active slide selection
   const [activePreviewSlide, setActivePreviewSlide] = useState(1);
 
+  // Active roadmap milestone intelligence selection (Miro Gantt Overhaul!)
+  const [selectedRoadmapMilestone, setSelectedRoadmapMilestone] = useState('melanoma_readout');
+
   // Interactive Workshop Node Positions for Drag-and-Drop
   const [workshopNodes, setWorkshopNodes] = useState({
     node1: { id: 'node1', name: 'Personalized mRNA Logistics', desc: 'Weight: 16.20 • Operations & Logistics bottleneck in community clinics.', left: 60, top: 90, color: 'var(--brand-indigo)' },
@@ -5838,61 +5841,91 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
                     
                     {/* Visual Gantt Bar */}
-                    <div style={{ position: 'relative', height: '32px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                       {/* Clinical Readout Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '10%', width: '25%',
-                        height: '100%',
-                        background: 'rgba(6, 182, 212, 0.15)',
-                        borderRight: '2px solid var(--brand-cyan)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: 'var(--brand-cyan)',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('melanoma_readout')}
+                        style={{
+                          position: 'absolute',
+                          left: '10%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'melanoma_readout' ? 'rgba(6, 182, 212, 0.25)' : 'rgba(6, 182, 212, 0.12)',
+                          borderRight: '2px solid var(--brand-cyan)',
+                          outline: selectedRoadmapMilestone === 'melanoma_readout' ? '2px solid var(--brand-cyan)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'melanoma_readout' ? 'inset 0 0 12px rgba(6, 182, 212, 0.3), 0 0 15px rgba(6, 182, 212, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-cyan)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'melanoma_readout' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Clinical Trial details"
+                      >
                         Trial Readout (Q2 '26)
                       </div>
                       
                       {/* FDA Action PDUFA Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '35%', width: '30%',
-                        height: '100%',
-                        background: 'rgba(99, 102, 241, 0.15)',
-                        borderRight: '2px solid var(--brand-indigo)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: 'var(--brand-indigo)',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('melanoma_pdufa')}
+                        style={{
+                          position: 'absolute',
+                          left: '35%', width: '30%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'melanoma_pdufa' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(99, 102, 241, 0.12)',
+                          borderRight: '2px solid var(--brand-indigo)',
+                          outline: selectedRoadmapMilestone === 'melanoma_pdufa' ? '2px solid var(--brand-indigo)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'melanoma_pdufa' ? 'inset 0 0 12px rgba(99, 102, 241, 0.3), 0 0 15px rgba(99, 102, 241, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-indigo)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'melanoma_pdufa' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore FDA Review details"
+                      >
                         FDA PDUFA Review (Q4 '26)
                       </div>
-
+ 
                       {/* Commercial Launch Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '65%', width: '30%',
-                        height: '100%',
-                        background: 'rgba(139, 92, 246, 0.2)',
-                        borderRight: '2px solid var(--brand-purple)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: 'var(--brand-purple)',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('melanoma_launch')}
+                        style={{
+                          position: 'absolute',
+                          left: '65%', width: '35%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'melanoma_launch' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.15)',
+                          borderRight: '2px solid var(--brand-purple)',
+                          outline: selectedRoadmapMilestone === 'melanoma_launch' ? '2px solid var(--brand-purple)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'melanoma_launch' ? 'inset 0 0 12px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-purple)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'melanoma_launch' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Launch Readiness details"
+                      >
                         🚀 Commercial Launch (Q1 '27)
                       </div>
                     </div>
                   </div>
                 )}
-
+ 
                 {/* NSCLC Lane */}
                 {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'NSCLC') && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -5902,64 +5935,94 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
                     
                     {/* Visual Gantt Bar */}
-                    <div style={{ position: 'relative', height: '32px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
+                    <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                       {/* Clinical Readout Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '30%', width: '25%',
-                        height: '100%',
-                        background: 'rgba(245, 158, 11, 0.15)',
-                        borderRight: '2px solid #f59e0b',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: '#f59e0b',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('nsclc_readout')}
+                        style={{
+                          position: 'absolute',
+                          left: '30%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'nsclc_readout' ? 'rgba(245, 158, 11, 0.25)' : 'rgba(245, 158, 11, 0.12)',
+                          borderRight: '2px solid #f59e0b',
+                          outline: selectedRoadmapMilestone === 'nsclc_readout' ? '2px solid #f59e0b' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'nsclc_readout' ? 'inset 0 0 12px rgba(245, 158, 11, 0.3), 0 0 15px rgba(245, 158, 11, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: '#f59e0b',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'nsclc_readout' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Clinical Trial details"
+                      >
                         Trial Readout (Q1 '27)
                       </div>
                       
                       {/* FDA Action PDUFA Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '55%', width: '25%',
-                        height: '100%',
-                        background: 'rgba(99, 102, 241, 0.15)',
-                        borderRight: '2px solid var(--brand-indigo)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: 'var(--brand-indigo)',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('nsclc_pdufa')}
+                        style={{
+                          position: 'absolute',
+                          left: '55%', width: '25%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'nsclc_pdufa' ? 'rgba(99, 102, 241, 0.25)' : 'rgba(99, 102, 241, 0.12)',
+                          borderRight: '2px solid var(--brand-indigo)',
+                          outline: selectedRoadmapMilestone === 'nsclc_pdufa' ? '2px solid var(--brand-indigo)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'nsclc_pdufa' ? 'inset 0 0 12px rgba(99, 102, 241, 0.3), 0 0 15px rgba(99, 102, 241, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-indigo)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'nsclc_pdufa' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore FDA Review details"
+                      >
                         FDA PDUFA (Q3 '27)
                       </div>
-
+ 
                       {/* Commercial Launch Phase */}
-                      <div style={{
-                        position: 'absolute',
-                        left: '80%', width: '18%',
-                        height: '100%',
-                        background: 'rgba(139, 92, 246, 0.2)',
-                        borderRight: '2px solid var(--brand-purple)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        paddingLeft: '10px',
-                        fontSize: '11.5px',
-                        color: 'var(--brand-purple)',
-                        fontWeight: 'bold'
-                      }}>
+                      <div 
+                        onClick={() => setSelectedRoadmapMilestone('nsclc_launch')}
+                        style={{
+                          position: 'absolute',
+                          left: '80%', width: '20%',
+                          height: '100%',
+                          background: selectedRoadmapMilestone === 'nsclc_launch' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.15)',
+                          borderRight: '2px solid var(--brand-purple)',
+                          outline: selectedRoadmapMilestone === 'nsclc_launch' ? '2px solid var(--brand-purple)' : 'none',
+                          boxShadow: selectedRoadmapMilestone === 'nsclc_launch' ? 'inset 0 0 12px rgba(139, 92, 246, 0.3), 0 0 15px rgba(139, 92, 246, 0.4)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          paddingLeft: '12px',
+                          fontSize: '11.5px',
+                          color: 'var(--brand-purple)',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          zIndex: selectedRoadmapMilestone === 'nsclc_launch' ? 3 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        title="Click to explore Launch Readiness details"
+                      >
                         🚀 Launch (Q4 '27)
                       </div>
                     </div>
                   </div>
                 )}
               </div>
-
+ 
               {/* Timeline calibration grid scale */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', borderTop: '1px solid var(--glass-border)', paddingTop: '10px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', borderTop: '1px solid var(--glass-border)', paddingTop: '12px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', marginTop: '10px' }}>
                 <span>Q1 2026</span>
                 <span>Q2 2026</span>
                 <span>Q3 2026</span>
@@ -5969,6 +6032,95 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <span>Q3 2027</span>
                 <span>Q4 2027</span>
               </div>
+ 
+              {/* INTERACTIVE REGULATORY BRIEFING CONSOLE (Aesthetic Highlight!) */}
+              {selectedRoadmapMilestone && (
+                <div className="glass-card animate-scale-in" style={{
+                  padding: '20px',
+                  background: 'var(--bg-tertiary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '12px',
+                  marginTop: '10px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
+                  position: 'relative'
+                }}>
+                  {/* Close Button */}
+                  <button 
+                    onClick={() => setSelectedRoadmapMilestone(null)}
+                    style={{
+                      position: 'absolute',
+                      top: '16px',
+                      right: '16px',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    title="Close Briefing"
+                  >
+                    <X size={16} />
+                  </button>
+ 
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        fontSize: '9.5px',
+                        fontWeight: 'bold',
+                        color: selectedRoadmapMilestone.includes('readout') ? 'var(--brand-cyan)' : (selectedRoadmapMilestone.includes('pdufa') ? 'var(--brand-indigo)' : 'var(--brand-purple)'),
+                        background: selectedRoadmapMilestone.includes('readout') ? 'rgba(6, 182, 212, 0.08)' : (selectedRoadmapMilestone.includes('pdufa') ? 'rgba(99, 102, 241, 0.08)' : 'rgba(139, 92, 246, 0.08)'),
+                        border: `1px solid ${selectedRoadmapMilestone.includes('readout') ? 'rgba(6, 182, 212, 0.25)' : (selectedRoadmapMilestone.includes('pdufa') ? 'rgba(99, 102, 241, 0.25)' : 'rgba(139, 92, 246, 0.25)')}`,
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>
+                        {selectedRoadmapMilestone.includes('readout') ? 'Clinical Trial Milestone' : (selectedRoadmapMilestone.includes('pdufa') ? 'Regulatory Approval Gating' : 'Commercial Go-To-Market Launch')}
+                      </span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Status:</span>
+                      <strong style={{ fontSize: '11.5px', color: '#10b981' }}>
+                        {selectedRoadmapMilestone === 'melanoma_readout' && "On Track"}
+                        {selectedRoadmapMilestone === 'melanoma_pdufa' && "Active Review"}
+                        {selectedRoadmapMilestone === 'melanoma_launch' && "Readiness Active"}
+                        {selectedRoadmapMilestone === 'nsclc_readout' && "Patient Accrual Active"}
+                        {selectedRoadmapMilestone === 'nsclc_pdufa' && "Preparation Phase"}
+                        {selectedRoadmapMilestone === 'nsclc_launch' && "Planning Stage"}
+                      </strong>
+                    </div>
+ 
+                    <div>
+                      <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                        {selectedRoadmapMilestone === 'melanoma_readout' && "Phase 3 KEYNOTE-940 Efficacy Topline Readout"}
+                        {selectedRoadmapMilestone === 'melanoma_pdufa' && "FDA Priority BLA Action Date (PDUFA) Review"}
+                        {selectedRoadmapMilestone === 'melanoma_launch' && "Melanoma Commercial Launch & Vein-to-Vein Pipeline"}
+                        {selectedRoadmapMilestone === 'nsclc_readout' && "Phase 3 KEYNOTE-A18 EFS & pCR Accrual Readout"}
+                        {selectedRoadmapMilestone === 'nsclc_pdufa' && "FDA BLA Regulatory Label Expansion Action Date"}
+                        {selectedRoadmapMilestone === 'nsclc_launch' && "Lung Oncology Commercial Launch Ingress Readiness"}
+                      </h4>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--text-muted)' }}>
+                        {selectedRoadmapMilestone === 'melanoma_readout' && "Q2 2026 Target Readout • Primary Cohorts"}
+                        {selectedRoadmapMilestone === 'melanoma_pdufa' && "Q4 2026 Target Action • RTOR Channel"}
+                        {selectedRoadmapMilestone === 'melanoma_launch' && "Q1 2027 Global Launch • Regional Hubs"}
+                        {selectedRoadmapMilestone === 'nsclc_readout' && "Q1 2027 Target Readout • Pathological Response"}
+                        {selectedRoadmapMilestone === 'nsclc_pdufa' && "Q3 2027 Target Label Decision • Companion Dx"}
+                        {selectedRoadmapMilestone === 'nsclc_launch' && "Q4 2027 Target Ingress • Reflex Testing"}
+                      </p>
+                    </div>
+ 
+                    <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5', borderTop: '1px solid var(--glass-border)', paddingTop: '12px' }}>
+                      {selectedRoadmapMilestone === 'melanoma_readout' && "Primary Endpoint: Recurrence-Free Survival (RFS) topline efficacy. Positive results will trigger immediate priority BLA filing strategy. Patient cohort covers stage III/IV resected high-risk melanoma with pembrolizumab combotherapy."}
+                      {selectedRoadmapMilestone === 'melanoma_pdufa' && "Covers adjuvant combination label for mRNA-940 + pembrolizumab. Real-Time Oncology Review (RTOR) channel has been initiated with the FDA to accelerate review cycles and secure early Q4 label clearance."}
+                      {selectedRoadmapMilestone === 'melanoma_launch' && "Deploying specialized oncology patient navigators to key community clinics to coordinate prior-authorizations. Establishing leased -70°C deep-freezer placement programs at Tier-1 practices to secure cold-chain capacity."}
+                      {selectedRoadmapMilestone === 'nsclc_readout' && "Evaluating neoadjuvant mRNA-940 + pembrolizumab followed by adjuvant monotherapy. High strategic importance to secure early pathological Complete Response (pCR) data to challenge chemotherapy monotherapy."}
+                      {selectedRoadmapMilestone === 'nsclc_pdufa' && "Regulatory filing covering resectable stage II, IIIA, or IIIB NSCLC. Companion diagnostic PD-L1 expression gating protocols are being aligned with global pathology labs to streamline screening."}
+                      {selectedRoadmapMilestone === 'nsclc_launch' && "Standardizing surgical reflex testing protocols at primary resection. Deploying rapid IHC companion diagnostic kits to 250+ community hospital pathology labs by Q4 to guarantee turnaround times under 7 days."}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
