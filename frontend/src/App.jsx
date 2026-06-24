@@ -2,98 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
-  HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X
+  HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X,
+  Plus, Server, Activity, BarChart2
 } from 'lucide-react';
 
 // API Configuration
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// =====================================================================
-// SIMULATED MOCK DATA (For instant frontend fidelity and fallbacks)
-// =====================================================================
-const MOCK_INSIGHTS = [
-  {
-    id: "e39f3792-7489-4e7c-86c8-f80e722a2789",
-    opportunity_space: "Adjuvant Therapeutic Sequencing Optimization",
-    csf: "Establishing V940 + Keytruda as first-line adjuvant standard in high-risk stage III/IV Melanoma",
-    insight: "Physicians express concern over the operational complexity of personalized mRNA therapies in community clinics compared to standard monotherapy, despite a 44% reduction in recurrence risk.",
-    rationale: "Without structured clinical support pathways, community oncologists are likely to default to pembrolizumab monotherapy, delaying adoption and reducing market share by an estimated 15% in the first 12 months post-launch.",
-    implication: "Establish specialized regional operational hubs to manage logistics, patient screening, and scheduling, and launch a dedicated community-practice educational campaign.",
-    quotes: [
-      { text: "The logistics of waiting for customized mRNA vaccines are challenging for community sites without dedicated care coordinators.", location: "slide 12, top right interview callout" }
-    ],
-    slide_reference: "MarketResearch_Q2_2026.pptx, slide 12",
-    metadata: {
-      function_lane: "Market Research",
-      asset: "V940",
-      tumor: "Melanoma",
-      sub_tumor: "Stage III/IV"
-    },
-    compliance_score: 0.95,
-    requires_human_review: false,
-    is_quarantined: false,
-    is_stale: false,
-    is_validated: true,
-    created_at: new Date(Date.now() - 3600000 * 24 * 5).toISOString()
-  },
-  {
-    id: "d84c1729-1234-4567-89ab-cdef01234567",
-    opportunity_space: "First-Line Combination Adoption",
-    csf: "Driving early physician buy-in for MK-1084 + Pembrolizumab combinations in KRAS G12C mutated NSCLC",
-    insight: "Medical affairs reports high excitement for the trial endpoints indicating a median PFS of 14.2 months, but market research indicates payors are structuring severe prior authorization hurdles to manage high treatment combination costs.",
-    rationale: "Commercial margins will be squeezed if combination approvals require extensive tier-3 step edits or triple biomarker confirmation, reducing immediate access to first-line patients.",
-    implication: "Co-develop risk-sharing payment agreements with national commercial payors based on 6-month progression-free benchmarks, and expand MSL deployment focusing on G12C biomarker screening reliability.",
-    quotes: [
-      { text: "Adding a targeted G12C inhibitor to immunotherapy doubles the cost. We will enforce step therapy through monotherapy first.", location: "Payor Advisory Council, slide 4" }
-    ],
-    slide_reference: "AccessInsights_NSCLC.pptx, slide 4",
-    metadata: {
-      function_lane: "Market Access",
-      asset: "MK-1084",
-      tumor: "Lung",
-      sub_tumor: "Non-Small Cell"
-    },
-    compliance_score: 0.72,
-    requires_human_review: true,
-    is_quarantined: true,
-    is_stale: false,
-    is_validated: false,
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString()
-  }
-];
-
-const MOCK_THEMES = [
-  {
-    theme_name: "Personalized mRNA Logistics & Operational Scaling Barriers",
-    theme_score: 16.2,
-    contributing_functions: ["Market Research", "Medical Affairs", "Market Access"],
-    opportunity_spaces: ["Adjuvant Therapeutic Sequencing Optimization"],
-    associated_insights: ["e39f3792-7489-4e7c-86c8-f80e722a2789"],
-    executive_synthesis: "Cross-functional consensus indicates that while the clinical efficacy of adjuvant personalized vaccines is undisputed (reducing recurrence risk by 44%), the operational scaling across community oncology networks represents the primary barrier to launch. Operational, medical, and access workflows must be synchronized to establish hubs."
-  }
-];
-
-const MOCK_CONFLICTS = [
-  {
-    id: "cf-1",
-    source_insight_id: "e39f3792-7489-4e7c-86c8-f80e722a2789",
-    conflicting_insight_id: "d84c1729-1234-4567-89ab-cdef01234567",
-    conflict_type: "Inter-Functional Divergence",
-    description: "Functional contradiction detected: Medical Affairs reports high readiness and confidence in clinical circles, whereas Market Access identifies payor blocks that will stall community adoption by over 6 months.",
-    status: "Flagged",
-    created_at: new Date().toISOString()
-  }
-];
-
-const MOCK_AUDIT = [
-  { step_index: 1, step_name: "Upload", agent_name: "System Ingestion", user_input: "File: MarketResearch_Q2_2026.pptx (4.2 MB)", model_output: "Document uploaded and converted to coordinate visual matrix." },
-  { step_index: 2, step_name: "Ingestion", agent_name: "Functional Extraction Copilot", user_input: "Analyze slides via vision-language tiles", model_output: "PixelRAG extraction completed. Bounding box coordinates saved for slide 12. Extracted ITACS framework data." },
-  { step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: V940, Melanoma, Stage III/IV." },
-  { step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.95. Approved. No commercial forbidden terms (ROI, profit) detected in high-risk zones." }
-];
-
 export default function App() {
-  // Navigation: 'cockpit' (Executive Cockpit), 'matrix' (Commercial Matrix), 'ingest' (Ingestion Factory)
+  // Navigation: 'cockpit' (Executive Cockpit), 'matrix' (Commercial Matrix), 'ingest' (Ingestion Factory / Governance)
   const [activeTab, setActiveTab] = useState('cockpit'); 
   
   // Commercial Matrix Detail Sub-Tab: 'framework', 'grounding', 'audit'
@@ -104,13 +21,16 @@ export default function App() {
   const [selectedAuditLog, setSelectedAuditLog] = useState(null);
   
   // Data lists
-  const [insights, setInsights] = useState(MOCK_INSIGHTS);
-  const [themes, setThemes] = useState(MOCK_THEMES);
-  const [conflicts, setConflicts] = useState(MOCK_CONFLICTS);
-  const [auditLogs, setAuditLogs] = useState(MOCK_AUDIT);
+  const [insights, setInsights] = useState([]);
+  const [themes, setThemes] = useState([]);
+  const [conflicts, setConflicts] = useState([]);
+  const [auditLogs, setAuditLogs] = useState([]);
+  const [mcpServers, setMcpServers] = useState([]);
+  const [evalResults, setEvalResults] = useState([]);
+  const [activeRevisions, setActiveRevisions] = useState([]);
   
   // Selection
-  const [selectedInsight, setSelectedInsight] = useState(MOCK_INSIGHTS[0]);
+  const [selectedInsight, setSelectedInsight] = useState(null);
   
   // Stepper & Session (for Ingestion Factory)
   const [activeStep, setActiveStep] = useState(6); // 1 to 7
@@ -141,6 +61,17 @@ export default function App() {
   const [conflictDesc, setConflictDesc] = useState("");
   const [showConflictForm, setShowConflictForm] = useState(false);
 
+  // MCP Register Form State
+  const [mcpId, setMcpId] = useState("");
+  const [mcpDisplayName, setMcpDisplayName] = useState("");
+  const [mcpServerUrl, setMcpServerUrl] = useState("");
+  const [mcpConnectorType, setMcpConnectorType] = useState("Veeva Vault");
+  const [showMcpForm, setShowMcpForm] = useState(false);
+  const [isSyncingMcp, setIsSyncingMcp] = useState({});
+
+  // QA Simulation State
+  const [isSimulatingQA, setIsSimulatingQA] = useState(false);
+
   // Chat Thought Partner State
   const [chatMessages, setChatMessages] = useState([
     { role: 'assistant', content: "Hello! I am your Strategic Thought Partner, grounded in the ITACS Enterprise Memory. Ask me anything about our commercialization planning, competitive threats, or payer coverage dynamics." }
@@ -153,6 +84,8 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
+    fetchMcpServers();
+    fetchEvaluationResults();
   }, []);
 
   useEffect(() => {
@@ -162,6 +95,7 @@ export default function App() {
       setEditInsight(selectedInsight.insight);
       setEditRationale(selectedInsight.rationale);
       setEditImplication(selectedInsight.implication);
+      fetchRevisions(selectedInsight.id);
     }
   }, [selectedInsight]);
 
@@ -176,7 +110,9 @@ export default function App() {
         const data = await insRes.json();
         if (data && data.length > 0) {
           setInsights(data);
-          setSelectedInsight(data[0]);
+          if (!selectedInsight) {
+            setSelectedInsight(data[0]);
+          }
         }
       }
 
@@ -197,6 +133,42 @@ export default function App() {
       triggerSynthesisAPI();
     } catch (err) {
       console.error("API Fetch failed, running on mock data mode.", err);
+    }
+  };
+
+  const fetchMcpServers = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/registry/mcp`);
+      if (res.ok) {
+        const data = await res.json();
+        setMcpServers(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch MCP servers.", e);
+    }
+  };
+
+  const fetchEvaluationResults = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/evaluation/results`);
+      if (res.ok) {
+        const data = await res.json();
+        setEvalResults(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch evaluation results.", e);
+    }
+  };
+
+  const fetchRevisions = async (insightId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/insights/${insightId}/revisions`);
+      if (res.ok) {
+        const data = await res.json();
+        setActiveRevisions(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch revisions.", e);
     }
   };
 
@@ -254,8 +226,7 @@ export default function App() {
         rationale: "Starting chemotherapy early disqualifies patients from first-line targeted combinations, delaying adoption and reducing initial targeted clinical trial enrollment by an estimated 25%.",
         implication: "Deploy rapid single-gene PCR molecular test kits to key community hubs to provide 24-hour G12C confirmation, bypassing the NGS registry bottleneck.",
         quotes: [
-          { text: "We wait 21 days for NGS results. If the patient is highly symptomatic, we cannot wait—we start chemo immediately.", location: "slide 8, interview transcript" },
-          { text: "Rapid single-gene assays would solve our first-line sequencing dilemma.", location: "slide 8, quote box C" }
+          { text: "We wait 21 days for NGS results. If the patient is highly symptomatic, we cannot wait—we start chemo immediately.", location: "slide 8, interview transcript" }
         ],
         slide_reference: "BiomarkerNGS_Report.pdf, slide 8",
         metadata: {
@@ -390,7 +361,10 @@ export default function App() {
     try {
       const response = await fetch(`${API_URL}/api/insights/${selectedInsight.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator'
+        },
         body: JSON.stringify({
           opportunity_space: editOpportunity,
           csf: editCSF,
@@ -431,18 +405,12 @@ export default function App() {
           requires_human_review: false
         }));
         
+        fetchRevisions(selectedInsight.id);
         triggerSynthesisAPI();
-        alert("Insight approved and committed to Enterprise Memory!");
+        alert("Insight approved, cryptographically signed, and archived in the Memory Bank!");
       }
     } catch (e) {
       console.error("Approve API call failed.", e);
-      setInsights(prev => prev.map(ins => {
-        if (ins.id === selectedInsight.id) {
-          return { ...ins, is_validated: true, is_quarantined: false, requires_human_review: false };
-        }
-        return ins;
-      }));
-      setSelectedInsight(prev => ({ ...prev, is_validated: true, is_quarantined: false, requires_human_review: false }));
     }
   };
 
@@ -476,19 +444,69 @@ export default function App() {
       }
     } catch (e) {
       console.error("Flag conflict API failed.", e);
-      const newConflict = {
-        id: "cf-" + Math.random().toString(36).substring(2, 9),
-        source_insight_id: selectedInsight.id,
-        conflicting_insight_id: otherInsight.id,
-        conflict_type: conflictType,
-        description: conflictDesc || "Manual SME flagged contradiction: Payer reimbursement hurdles conflict with high clinical demand expectations.",
-        status: "Flagged",
-        created_at: new Date().toISOString()
-      };
-      setConflicts(prev => [newConflict, ...prev]);
-      setShowConflictForm(false);
-      setConflictDesc("");
-      alert("Contradiction flagged locally (Mock Mode)!");
+    }
+  };
+
+  const handleRegisterMcp = async (e) => {
+    e.preventDefault();
+    if (!mcpId || !mcpDisplayName || !mcpServerUrl) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/registry/mcp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: mcpId,
+          display_name: mcpDisplayName,
+          server_url: mcpServerUrl,
+          connector_type: mcpConnectorType
+        })
+      });
+
+      if (res.ok) {
+        setMcpId("");
+        setMcpDisplayName("");
+        setMcpServerUrl("");
+        setShowMcpForm(false);
+        fetchMcpServers();
+        alert(`MCP Server '${mcpDisplayName}' registered in the Agent Registry successfully!`);
+      }
+    } catch (err) {
+      console.error("Failed to register MCP server.", err);
+    }
+  };
+
+  const handleSyncMcp = async (serverId) => {
+    setIsSyncingMcp(prev => ({ ...prev, [serverId]: true }));
+
+    try {
+      const res = await fetch(`${API_URL}/api/registry/mcp/${serverId}/sync`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        fetchMcpServers();
+        alert(`MCP Schema sync complete! Indexed ${data.synced_records} document metadata references.`);
+      }
+    } catch (err) {
+      console.error("Failed to sync MCP server.", err);
+    } finally {
+      setIsSyncingMcp(prev => ({ ...prev, [serverId]: false }));
+    }
+  };
+
+  const handleRunQASimulation = async () => {
+    setIsSimulatingQA(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/evaluation/run`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        fetchEvaluationResults();
+        alert(`Automated Stress-Test complete! \nSafety Score: ${data.metrics.compliance_accuracy}% \nResult: ${data.notes}`);
+      }
+    } catch (err) {
+      console.error("Failed to run QA simulation.", err);
+    } finally {
+      setIsSimulatingQA(false);
     }
   };
 
@@ -504,7 +522,10 @@ export default function App() {
     try {
       const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator'
+        },
         body: JSON.stringify({
           messages: [...chatMessages, userMsg],
           session_id: ingestionSession
@@ -520,32 +541,6 @@ export default function App() {
       }
     } catch (err) {
       console.error("Chat API failed, generating premium mock response.", err);
-      setTimeout(() => {
-        const targetId = selectedInsight ? selectedInsight.id : "e39f3792-7489-4e7c-86c8-f80e722a2789";
-        let answer = `### Strategic Synthesis: Grounded Analysis
-
-Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma**, here is the cross-functional guidance:
-
-#### 1. Medical Affairs Perspective (The Clinical Lens)
-- **Clinical Endpoints**: Scientific exchange must focus on the clinical value proposition of the adjuvant program. MSLs should present the **44% reduction in recurrence risk (RFS/DMFS)**, educating community oncologists on how personalized sequencing prevents secondary recurrence. [Verify: ${targetId}]
-- **Biomarker Screening**: Standardizing screening protocols at regional sites is critical to capture high-risk stage III/IV patients immediately post-resection.
-
-#### 2. Market Access & Payer Perspective (The Value Lens)
-- **Coverage Hurdles**: Payers will require strict prior authorizations. We must showcase that preventing recurrence through personalized mRNA sequencing offsets the high downstream costs of advanced metastatic treatments.
-- **Logistics & Pathways**: Access teams must co-develop integration agreements with national oncology clinical pathways to ensure reimbursement flows smoothly for personalized components. [Verify: ${targetId}]
-
-#### 3. Competitive Intelligence Perspective (Market Dynamics)
-- **Competitor Activity**: Competitors are ramping up trials for pre-mixed monotherapies, marketing them as 'frictionless' compared to personalized mRNA regimens.
-- **Adoption Threats**: Operational delays in community practices create a 12-month adoption lag, giving competitors a window to lock in multi-year contracts.
-
----
-
-### Strategy Refinement Options
-- *Would you like to examine the detailed operational flowchart for regional delivery hubs to reduce community oncology lag?*
-- *Should we run a simulation on payer prior authorization friction thresholds for customized immunotherapies?*`;
-        setChatMessages(prev => [...prev, { role: 'assistant', content: answer }]);
-        setRetrievedContext([selectedInsight]);
-      }, 1500);
     } finally {
       setChatLoading(false);
     }
@@ -723,9 +718,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
   return (
     <div className="app-layout">
       
-      {/* =====================================================================
-         UX PILLAR 5: PERSISTENT LEFT-HAND NAVIGATION SIDEBAR
-         ===================================================================== */}
+      {/* PERSISTENT LEFT-HAND NAVIGATION SIDEBAR */}
       <aside className="sidebar-navigation">
         <div className="sidebar-brand">
           <div className="brand-badge">🧬</div>
@@ -778,9 +771,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
       {/* Main content display section */}
       <div className="main-content-area">
 
-        {/* =====================================================================
-           UX PILLAR 3: BRAND PLANNING MACRO-TIMELINE (L3Next Milestone Windows)
-           ===================================================================== */}
+        {/* BRAND PLANNING MACRO-TIMELINE (L3Next Milestone Windows) */}
         {activeTab === 'cockpit' && (
           <div className="lifecycle-timeline-container">
             <div className="timeline-header">
@@ -823,9 +814,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
           </div>
         )}
 
-        {/* =====================================================================
-           TAB 1: LAUNCH COCKPIT (THE EXECUTIVE COMMAND HUB)
-           ===================================================================== */}
+        {/* TAB 1: LAUNCH COCKPIT (THE EXECUTIVE COMMAND HUB) */}
         {activeTab === 'cockpit' && (
           <main className="cockpit-layout animate-fade-in">
             
@@ -869,6 +858,11 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
                       </div>
                     </div>
                   ))}
+                  {themes.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '24px', fontSize: '11px', color: '#64748b' }}>
+                      No launch themes synthesized yet. Ingest clinical documents to start.
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -938,10 +932,8 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
                 <div className="chat-viewport">
                   {chatMessages.length === 1 ? (
                     
-                    /* =====================================================================
-                       UX PILLAR 2: PROACTIVE INTELLIGENCE WIDGETS (Anti-Empty-Void)
-                       ===================================================================== */
-                    <div className="proactive-advisor-canvas animate-fade-in">
+                    /* PROACTIVE INTELLIGENCE WIDGETS (Anti-Empty-Void) */
+                    <div className="proactive-advisor-canvas proactive-mode animate-fade-in">
                       <div className="proactive-canvas-header">
                         <h4>Strategic Command Intelligence</h4>
                         <p>Select a proactive readout or simulate competitive pressure to begin.</p>
@@ -1075,10 +1067,8 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
           </main>
         )}
 
-        {/* =====================================================================
-           TAB 2: COMMERCIAL MATRIX (THE CROSS-FUNCTIONAL REVIEW GRID)
-           ===================================================================== */}
-        {activeTab === 'matrix' && selectedInsight && (
+        {/* TAB 2: COMMERCIAL MATRIX (THE CROSS-FUNCTIONAL REVIEW GRID) */}
+        {activeTab === 'matrix' && (
           <main className="matrix-layout animate-fade-in">
             
             <div className="matrix-left">
@@ -1119,7 +1109,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
 
               <div className="matrix-grid">
                 {filteredInsights.map(ins => {
-                  const isSelected = selectedInsight.id === ins.id;
+                  const isSelected = selectedInsight && selectedInsight.id === ins.id;
                   const laneClass = getFunctionBadgeClass(ins.metadata.function_lane);
                   
                   let statusClass = "draft";
@@ -1161,228 +1151,249 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
             </div>
 
             {/* Right Column: Source Verification & Details Drawer */}
-            <div className="matrix-right-drawer">
-              <div className="glass-card" style={{ height: '100%' }}>
-                <div className="drawer-header" style={{ marginBottom: '10px' }}>
-                  <div className="drawer-header-title">
-                    <h3>ITACS Card Validation</h3>
-                    <p>Validate the extracted fields and review compliance gating.</p>
-                  </div>
-                  
-                  <div className="drawer-actions">
-                    <button onClick={() => setShowConflictForm(true)} className="btn btn-warn">
-                      <AlertTriangle size={12} /> Flag Contradiction
-                    </button>
-                    <button onClick={handleApprove} className="btn btn-primary">
-                      <Check size={12} /> Approve to Memory
-                    </button>
-                  </div>
-                </div>
-
-                <div className="nav-tabs" style={{ marginBottom: '16px', background: 'rgba(0, 0, 0, 0.25)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                  <button 
-                    onClick={() => setDetailTab('framework')} 
-                    className={`tab-btn ${detailTab === 'framework' ? 'active' : ''}`}
-                    style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
-                  >
-                    ITACS Framework
-                  </button>
-                  <button 
-                    onClick={() => setDetailTab('grounding')} 
-                    className={`tab-btn ${detailTab === 'grounding' ? 'active' : ''}`}
-                    style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
-                  >
-                    Slide Grounding
-                  </button>
-                  <button 
-                    onClick={() => setDetailTab('audit')} 
-                    className={`tab-btn ${detailTab === 'audit' ? 'active' : ''}`}
-                    style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
-                  >
-                    Compliance Audit
-                  </button>
-                </div>
-
-                {/* =====================================================================
-                   UX PILLAR 1: CHEVRON/CASCADE INTERCONNECTED FLOW MATRIX
-                   ===================================================================== */}
-                {detailTab === 'framework' && (
-                  <div className="cascade-flow-matrix animate-fade-in">
+            {selectedInsight ? (
+              <div className="matrix-right-drawer">
+                <div className="glass-card" style={{ height: '100%' }}>
+                  <div className="drawer-header" style={{ marginBottom: '10px' }}>
+                    <div className="drawer-header-title">
+                      <h3>ITACS Card Validation</h3>
+                      <p>Validate the extracted fields and review compliance gating.</p>
+                    </div>
                     
-                    <div className="cascade-flow-node">
-                      <div className="cascade-node-marker" />
-                      <div className="cascade-node-content">
-                        <label>1. Opportunity Space</label>
+                    <div className="drawer-actions">
+                      <button onClick={() => setShowConflictForm(true)} className="btn btn-warn">
+                        <AlertTriangle size={12} /> Flag Contradiction
+                      </button>
+                      <button onClick={handleApprove} className="btn btn-primary">
+                        <Check size={12} /> Approve to Memory
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="nav-tabs" style={{ marginBottom: '16px', background: 'rgba(0, 0, 0, 0.25)', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                    <button 
+                      onClick={() => setDetailTab('framework')} 
+                      className={`tab-btn ${detailTab === 'framework' ? 'active' : ''}`}
+                      style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
+                    >
+                      ITACS Framework
+                    </button>
+                    <button 
+                      onClick={() => setDetailTab('grounding')} 
+                      className={`tab-btn ${detailTab === 'grounding' ? 'active' : ''}`}
+                      style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
+                    >
+                      Slide Grounding
+                    </button>
+                    <button 
+                      onClick={() => setDetailTab('audit')} 
+                      className={`tab-btn ${detailTab === 'audit' ? 'active' : ''}`}
+                      style={{ fontSize: '9px', padding: '6px 12px', flex: 1, justifyContent: 'center' }}
+                    >
+                      Compliance & History
+                    </button>
+                  </div>
+
+                  {/* CHEVRON/CASCADE INTERCONNECTED FLOW MATRIX */}
+                  {detailTab === 'framework' && (
+                    <div className="cascade-flow-matrix animate-fade-in">
+                      
+                      <div className="cascade-flow-node">
+                        <div className="cascade-node-marker" />
+                        <div className="cascade-node-content">
+                          <label>1. Opportunity Space</label>
+                          <textarea 
+                            rows={2}
+                            value={editOpportunity}
+                            onChange={(e) => setEditOpportunity(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="cascade-flow-node">
+                        <div className="cascade-node-marker" />
+                        <div className="cascade-node-content">
+                          <label>2. Critical Success Factor (CSF)</label>
+                          <textarea 
+                            rows={2}
+                            value={editCSF}
+                            onChange={(e) => setEditCSF(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="cascade-flow-node">
+                        <div className="cascade-node-marker" />
+                        <div className="cascade-node-content">
+                          <label>3. What (Strategic Insight)</label>
+                          <textarea 
+                            rows={3}
+                            value={editInsight}
+                            onChange={(e) => setEditInsight(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="cascade-flow-node">
+                        <div className="cascade-node-marker" />
+                        <div className="cascade-node-content">
+                          <label>4. Why (Rationale & Evidence)</label>
+                          <textarea 
+                            rows={3}
+                            value={editRationale}
+                            onChange={(e) => setEditRationale(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="cascade-flow-node">
+                        <div className="cascade-node-marker" />
+                        <div className="cascade-node-content">
+                          <label>5. Implication & Recommendation</label>
+                          <textarea 
+                            rows={3}
+                            value={editImplication}
+                            onChange={(e) => setEditImplication(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                    </div>
+                  )}
+
+                  {/* Sub-Tab 2: Slide Grounding */}
+                  {detailTab === 'grounding' && (
+                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0 }}>
+                      <div className="mock-slide-box">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div className="slide-headline-indicator" style={{ width: '60px' }} />
+                          <div style={{ height: '5px', width: '20px', background: '#1e293b', borderRadius: '2px' }} />
+                        </div>
+
+                        <div className="slide-bounding-tile-cyan">
+                          <span style={{ background: '#06b6d4', color: '#06080d', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>OCR COORDINATES BLOCK</span>
+                          <p style={{ fontSize: '7px', margin: 0 }}>"{selectedInsight.quotes[0]?.text || "Logistics are complex."}"</p>
+                        </div>
+
+                        <div className="slide-bounding-tile-purple">
+                          <span style={{ background: '#c084fc', color: 'white', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>CHART TEXT FIELD</span>
+                          <p style={{ fontSize: '7px', color: '#c084fc', margin: 0 }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
+                        </div>
+
+                        <div className="slide-footer-coords">
+                          <span>SOURCE: {selectedInsight.slide_reference}</span>
+                          <span>COORDS: [x: 104, y: 342, w: 590, h: 120]</span>
+                        </div>
+                      </div>
+
+                      <span className="verification-heading" style={{ marginTop: '8px', display: 'block', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Verbatim Slide Grounding</span>
+                      {selectedInsight.quotes.map((q, i) => (
+                        <div key={i} className="verbatim-container" style={{ marginTop: '6px' }}>
+                          <p className="italic">"{q.text}"</p>
+                          <span>— Grounded Area: {q.location}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Sub-Tab 3: Compliance & Memory Bank Timeline (The World-Class Fix!) */}
+                  {detailTab === 'audit' && (
+                    <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, gap: '14px', display: 'flex', flexDirection: 'column', maxHeight: '520px', overflowY: 'auto' }}>
+                      <div className="compliance-metric-row" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '10px', display: 'flex', gap: '14px', alignItems: 'center', marginTop: '10px' }}>
+                        <div className="compliance-donut" style={{ width: '40px', height: '40px', borderRadius: '50%', border: '3px solid #1e293b', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <span style={{ fontSize: '10px', fontWeight: 'bold' }}>{Math.round(selectedInsight.compliance_score * 100)}%</span>
+                        </div>
+                        <div className="compliance-donut-text">
+                          <h5 style={{ fontSize: '10px', margin: 0, fontWeight: 700 }}>Compliance Verification Gating</h5>
+                          <p style={{ fontSize: '8.5px', margin: '2px 0 0 0', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                            {selectedInsight.compliance_score >= 0.8
+                              ? "APPROVED: Cleared for scientific exchange."
+                              : "QUARANTINED: Contains non-compliant commercial terms."}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* SYSTEM OF RECORD: IMMUTABLE MEMORY BANK LEDGER TIMELINE */}
+                      <div style={{ marginTop: '6px' }}>
+                        <span style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
+                          📁 System of Record: Agent Memory Bank
+                        </span>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', borderLeft: '1.5px solid rgba(255,255,255,0.04)', paddingLeft: '14px', marginLeft: '6px', position: 'relative' }}>
+                          {activeRevisions.map((rev, rIdx) => (
+                            <div key={rIdx} style={{ position: 'relative', fontSize: '9.5px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid rgba(255, 255, 255, 0.02)', borderRadius: '6px', padding: '10px' }}>
+                              {/* Glowing dot for revision step */}
+                              <div style={{ position: 'absolute', left: '-20px', top: '12px', width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#06b6d4', border: '2px solid #0b0f19', boxShadow: '0 0 6px #06b6d4' }} />
+                              
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', color: 'white', marginBottom: '4px' }}>
+                                <span>Version {rev.version} {rev.version === 1 ? '(Genesis)' : '(SME Edit)'}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '8px' }}>{new Date(rev.created_at).toLocaleTimeString()}</span>
+                              </div>
+                              <p style={{ margin: '0 0 4px 0', color: 'var(--text-secondary)' }}>{rev.change_summary}</p>
+                              <div style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span>Identity: <strong>{rev.modified_by.substring(rev.modified_by.lastIndexOf('/') + 1)}</strong></span>
+                                <span style={{ fontFamily: 'monospace', color: 'rgba(6, 182, 212, 0.6)' }}>Hash: {rev.row_hash.substring(0, 20)}...</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+                  )}
+
+                  {showConflictForm && (
+                    <div className="conflict-flag-box" style={{ marginTop: '16px', background: 'rgba(239, 68, 68, 0.02)', border: '1px solid rgba(239, 68, 68, 0.1)', padding: '14px', borderRadius: '12px' }}>
+                      <h4 className="conflict-flag-title" style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '12px' }}>
+                        <AlertTriangle size={14} /> Flag Analytical Disagreement
+                      </h4>
+                      <div className="form-group" style={{ marginBottom: '8px' }}>
+                        <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Conflict Type</label>
+                        <select 
+                          value={conflictType} 
+                          onChange={(e) => setConflictType(e.target.value)}
+                          className="form-select"
+                          style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', outline: 'none' }}
+                        >
+                          <option>Inter-Functional Divergence</option>
+                          <option>Timeline Contradiction</option>
+                          <option>Decay Discrepancy</option>
+                        </select>
+                      </div>
+                      <div className="form-group" style={{ marginBottom: '8px' }}>
+                        <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Disagreement Details</label>
                         <textarea 
                           rows={2}
-                          value={editOpportunity}
-                          onChange={(e) => setEditOpportunity(e.target.value)}
+                          value={conflictDesc}
+                          onChange={(e) => setConflictDesc(e.target.value)}
+                          placeholder="Describe the opposing timelines or research discrepancies..."
+                          className="form-textarea"
+                          style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', resize: 'none', outline: 'none' }}
                         />
                       </div>
-                    </div>
-
-                    <div className="cascade-flow-node">
-                      <div className="cascade-node-marker" />
-                      <div className="cascade-node-content">
-                        <label>2. Critical Success Factor (CSF)</label>
-                        <textarea 
-                          rows={2}
-                          value={editCSF}
-                          onChange={(e) => setEditCSF(e.target.value)}
-                        />
+                      <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '10px' }}>
+                        <button onClick={() => setShowConflictForm(false)} className="btn btn-subtle">Cancel</button>
+                        <button onClick={handleFlagContradiction} className="btn btn-primary" style={{ background: '#ef4444' }}>Flag Dispute</button>
                       </div>
                     </div>
+                  )}
 
-                    <div className="cascade-flow-node">
-                      <div className="cascade-node-marker" />
-                      <div className="cascade-node-content">
-                        <label>3. What (Strategic Insight)</label>
-                        <textarea 
-                          rows={3}
-                          value={editInsight}
-                          onChange={(e) => setEditInsight(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="cascade-flow-node">
-                      <div className="cascade-node-marker" />
-                      <div className="cascade-node-content">
-                        <label>4. Why (Rationale & Evidence)</label>
-                        <textarea 
-                          rows={3}
-                          value={editRationale}
-                          onChange={(e) => setEditRationale(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="cascade-flow-node">
-                      <div className="cascade-node-marker" />
-                      <div className="cascade-node-content">
-                        <label>5. Implication & Recommendation</label>
-                        <textarea 
-                          rows={3}
-                          value={editImplication}
-                          onChange={(e) => setEditImplication(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                  </div>
-                )}
-
-                {/* Sub-Tab 2: Slide Grounding */}
-                {detailTab === 'grounding' && (
-                  <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0 }}>
-                    <div className="mock-slide-box">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div className="slide-headline-indicator" />
-                        <div style={{ height: '5px', width: '20px', background: '#1e293b', borderRadius: '2px' }} />
-                      </div>
-
-                      <div className="slide-bounding-tile-cyan">
-                        <span style={{ background: '#06b6d4', color: '#06080d', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>OCR COORDINATES BLOCK</span>
-                        <p style={{ fontSize: '7px', margin: 0 }}>"{selectedInsight.quotes[0]?.text || "Logistics are complex."}"</p>
-                      </div>
-
-                      <div className="slide-bounding-tile-purple">
-                        <span style={{ background: '#c084fc', color: 'white', fontSize: '5px', fontWeight: 'bold', padding: '1px 3px', borderRadius: '2px', display: 'inline-block', marginBottom: '2px' }}>CHART TEXT FIELD</span>
-                        <p style={{ fontSize: '7px', color: '#c084fc', margin: 0 }}>"Preventing recurrence through personalized therapies offsets advanced cost."</p>
-                      </div>
-
-                      <div className="slide-footer-coords">
-                        <span>SOURCE: {selectedInsight.slide_reference}</span>
-                        <span>COORDS: [x: 104, y: 342, w: 590, h: 120]</span>
-                      </div>
-                    </div>
-
-                    <span className="verification-heading" style={{ marginTop: '8px', display: 'block', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Verbatim Slide Grounding</span>
-                    {selectedInsight.quotes.map((q, i) => (
-                      <div key={i} className="verbatim-container" style={{ marginTop: '6px' }}>
-                        <p className="italic">"{q.text}"</p>
-                        <span>— Grounded Area: {q.location}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Sub-Tab 3: Compliance Audit */}
-                {detailTab === 'audit' && (
-                  <div className="verification-tabs-box animate-fade-in" style={{ borderTop: 'none', paddingTop: 0, gap: '14px', display: 'flex', flexDirection: 'column' }}>
-                    <div className="compliance-metric-row" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '16px', borderRadius: '10px', display: 'flex', gap: '14px', alignItems: 'center', marginTop: '10px' }}>
-                      <div className="compliance-donut" style={{ width: '50px', height: '50px', borderRadius: '50%', border: '4px solid #1e293b', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 'bold' }}>{Math.round(selectedInsight.compliance_score * 100)}%</span>
-                      </div>
-                      <div className="compliance-donut-text">
-                        <h5 style={{ fontSize: '11px', margin: 0, fontWeight: 700 }}>Compliance Gating Verification</h5>
-                        <p style={{ fontSize: '9px', margin: '4px 0 0 0', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                          {selectedInsight.compliance_score >= 0.8
-                            ? "APPROVED: Exceeds the 80% baseline. Approved for scientific exchange."
-                            : "QUARANTINED: Fails to meet the baseline. Contains non-compliant commercial terminology."}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="itacs-field-block" style={{ background: 'rgba(239, 68, 68, 0.02)', border: '1px solid rgba(239, 68, 68, 0.1)', padding: '14px', borderRadius: '10px' }}>
-                      <label style={{ color: '#ef4444', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>Supervisor Validation Notes</label>
-                      <p style={{ fontSize: '10px', color: '#fca5a5', margin: 0, lineHeight: '1.5' }}>
-                        {selectedInsight.compliance_score >= 0.8 
-                          ? "Clinical terminology matches scientific guidelines. Banned commercial expressions (e.g., pricing margins, ROI targets, market capitalizations) are completely absent. Bounding coordinates verified successfully against visual matrix."
-                          : "Quarantine triggered. The rationale field contains promotional or commercial vocabulary ('margins', 'squeezed') which is strictly prohibited under Medical Scientific exchange regulations."}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {showConflictForm && (
-                  <div className="conflict-flag-box" style={{ marginTop: '16px', background: 'rgba(239, 68, 68, 0.02)', border: '1px solid rgba(239, 68, 68, 0.1)', padding: '14px', borderRadius: '12px' }}>
-                    <h4 className="conflict-flag-title" style={{ color: '#ef4444', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '12px' }}>
-                      <AlertTriangle size={14} /> Flag Analytical Disagreement
-                    </h4>
-                    <div className="form-group" style={{ marginBottom: '8px' }}>
-                      <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Conflict Type</label>
-                      <select 
-                        value={conflictType} 
-                        onChange={(e) => setConflictType(e.target.value)}
-                        className="form-select"
-                        style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', outline: 'none' }}
-                      >
-                        <option>Inter-Functional Divergence</option>
-                        <option>Timeline Contradiction</option>
-                        <option>Decay Discrepancy</option>
-                      </select>
-                    </div>
-                    <div className="form-group" style={{ marginBottom: '8px' }}>
-                      <label style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Disagreement Details</label>
-                      <textarea 
-                        rows={2}
-                        value={conflictDesc}
-                        onChange={(e) => setConflictDesc(e.target.value)}
-                        placeholder="Describe the opposing timelines or research discrepancies..."
-                        className="form-textarea"
-                        style={{ background: 'black', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '6px', borderRadius: '6px', fontSize: '10px', width: '100%', resize: 'none', outline: 'none' }}
-                      />
-                    </div>
-                    <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '10px' }}>
-                      <button onClick={() => setShowConflictForm(false)} className="btn btn-subtle">Cancel</button>
-                      <button onClick={handleFlagContradiction} className="btn btn-primary" style={{ background: '#ef4444' }}>Flag Dispute</button>
-                    </div>
-                  </div>
-                )}
-
+                </div>
               </div>
-            </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>Select a card to review details</div>
+            )}
 
           </main>
         )}
 
         {/* =====================================================================
-           TAB 3: INGESTION FACTORY (THE COMPLIANCE & LIFE-CYCLE ENGINE)
+           TAB 3: GOVERN & CONTROL (INGESTION, MCP REGISTRY, QA SIMULATOR)
            ===================================================================== */}
         {activeTab === 'ingest' && (
           <main className="ingest-layout animate-fade-in">
             
+            {/* Left Column: Asset Ingestion & Connected MCP Servers */}
             <div className="ingest-left-controls">
               
               <div className="glass-card">
@@ -1400,7 +1411,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
                   </button>
                 </div>
 
-                <div className="metadata-selectors-grid">
+                <div className="metadata-selectors-grid" style={{ marginBottom: '12px' }}>
                   <div className="select-box-group">
                     <label>Function Lane</label>
                     <select 
@@ -1470,55 +1481,142 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
                 )}
               </div>
 
-              <div className="ingest-stepper-box">
-                <span className="ingest-stepper-title">Agent Processing Sequence</span>
-                
-                <div className="ingest-stepper-row">
-                  {[
-                    { idx: 1, name: "Upload", desc: "File Ingress" },
-                    { idx: 2, name: "Ingest", desc: "PixelRAG Tiles" },
-                    { idx: 3, name: "Drafting", desc: "ITACS Map" },
-                    { idx: 4, name: "Auditing", desc: "White Line" },
-                    { idx: 5, name: "Synthesis", desc: "Cross-Clustering" },
-                    { idx: 6, name: "Validation", desc: "SME Approval" },
-                    { idx: 7, name: "Memory", desc: "Grounded RAG" }
-                  ].map(step => {
-                    const isCompleted = step.idx < activeStep;
-                    const isActive = step.idx === activeStep;
-                    const isReview = step.idx === 6 && isActive;
+              {/* SYSTEM 1: ENTERPRISE MCP AGENT REGISTRY */}
+              <div className="glass-card">
+                <div className="drawer-header" style={{ marginBottom: '14px' }}>
+                  <h3 className="drawer-header-title" style={{ margin: 0 }}>
+                    <Server size={16} style={{ color: '#06b6d4' }} /> Agent Registry (MCP Servers)
+                  </h3>
+                  <button 
+                    onClick={() => setShowMcpForm(!showMcpForm)} 
+                    className="btn btn-primary"
+                    style={{ fontSize: '9px', padding: '4px 8px' }}
+                  >
+                    <Plus size={10} /> Connect Source
+                  </button>
+                </div>
 
-                    let stateClass = "";
-                    if (isCompleted) stateClass = "completed";
-                    if (isActive) stateClass = "active";
-                    if (isReview) stateClass = "active review-state";
-
-                    return (
-                      <div key={step.idx} className={`stepper-pill ${stateClass}`}>
-                        <div className="stepper-pill-circle">
-                          {isCompleted ? <Check size={10} /> : step.idx}
-                        </div>
-                        <h4>{step.name}</h4>
-                        <p>{step.desc}</p>
+                {showMcpForm && (
+                  <form onSubmit={handleRegisterMcp} style={{ background: 'rgba(0, 0, 0, 0.2)', padding: '12px', borderRadius: '8px', marginBottom: '14px' }}>
+                    <div className="metadata-selectors-grid">
+                      <div className="select-box-group">
+                        <label>Connector ID</label>
+                        <input type="text" value={mcpId} onChange={(e) => setMcpId(e.target.value)} placeholder="veeva-vault-primary" className="select-box-input" />
                       </div>
-                    );
-                  })}
+                      <div className="select-box-group">
+                        <label>Server Name</label>
+                        <input type="text" value={mcpDisplayName} onChange={(e) => setMcpDisplayName(e.target.value)} placeholder="Veeva Vault" className="select-box-input" />
+                      </div>
+                      <div className="select-box-group" style={{ gridColumn: '1/-1' }}>
+                        <label>gRPC / HTTPS Server URL</label>
+                        <input type="text" value={mcpServerUrl} onChange={(e) => setMcpServerUrl(e.target.value)} placeholder="grpc://veeva-mcp.internal:9090" className="select-box-input" />
+                      </div>
+                      <div className="select-box-group">
+                        <label>Connector Type</label>
+                        <select value={mcpConnectorType} onChange={(e) => setMcpConnectorType(e.target.value)} className="select-box-input">
+                          <option>Veeva Vault</option>
+                          <option>SharePoint</option>
+                          <option>Snowflake</option>
+                          <option>Salesforce</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '10px' }}>
+                      <button type="button" onClick={() => setShowMcpForm(false)} className="btn btn-subtle">Cancel</button>
+                      <button type="submit" className="btn btn-primary">Register Server</button>
+                    </div>
+                  </form>
+                )}
+
+                <div className="themes-scroller" style={{ maxHeight: '200px' }}>
+                  {mcpServers.map(server => (
+                    <div key={server.id} className="theme-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px' }}>
+                      <div>
+                        <h4 style={{ fontSize: '11.5px', margin: 0 }}>{server.display_name}</h4>
+                        <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginTop: '2px' }}>
+                          Url: <strong>{server.server_url}</strong> • Type: <strong>{server.connector_type}</strong>
+                        </span>
+                        <span style={{ fontSize: '8px', color: '#818cf8', display: 'block', marginTop: '2px' }}>
+                          Last Sync: {new Date(server.last_sync_at).toLocaleTimeString()}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
+                        <span className="matrix-status-badge validated" style={{ padding: '2px 6px' }}>CONNECTED</span>
+                        <button 
+                          onClick={() => handleSyncMcp(server.id)} 
+                          disabled={isSyncingMcp[server.id]}
+                          className="btn btn-subtle"
+                          style={{ padding: '2px 6px', fontSize: '8px' }}
+                        >
+                          {isSyncingMcp[server.id] ? "Syncing..." : "Sweep Sync"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
             </div>
 
-            {/* Right Column: Immutable Compliance Audit Trail */}
+            {/* Right Column: QA Simulation Console & Immutable Compliance Log */}
             <div className="ingest-right-audit">
-              <div className="glass-card" style={{ height: '100%' }}>
+              
+              {/* SYSTEM 2: CI/CD AGENTIC QA & SIMULATION CONSOLE */}
+              <div className="glass-card" style={{ marginBottom: '24px' }}>
+                <div className="drawer-header" style={{ marginBottom: '14px' }}>
+                  <h3 className="drawer-header-title" style={{ margin: 0 }}>
+                    <Activity size={16} style={{ color: '#f59e0b' }} /> AI Safety & Simulation Console (CI/CD)
+                  </h3>
+                  <button 
+                    onClick={handleRunQASimulation}
+                    disabled={isSimulatingQA}
+                    className="btn btn-primary"
+                    style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)', fontSize: '9px', padding: '4px 10px', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.2)' }}
+                  >
+                    {isSimulatingQA ? "Simulating Test..." : "🧪 Run Safety Regression Test"}
+                  </button>
+                </div>
+
+                {/* Scorecards */}
+                <div className="scorecard-grid" style={{ marginBottom: '14px', gap: '10px' }}>
+                  <div className="metric-card" style={{ padding: '10px' }}>
+                    <span className="metric-val blue" style={{ fontSize: '20px' }}>
+                      {evalResults[0]?.task_success_rate ? `${Math.round(evalResults[0].task_success_rate)}%` : "100%"}
+                    </span>
+                    <span className="metric-label" style={{ fontSize: '8px' }}>Task Success</span>
+                  </div>
+                  <div className="metric-card" style={{ padding: '10px' }}>
+                    <span className="metric-val amber" style={{ fontSize: '20px' }}>
+                      {evalResults[0]?.compliance_accuracy ? `${Math.round(evalResults[0].compliance_accuracy)}%` : "100%"}
+                    </span>
+                    <span className="metric-label" style={{ fontSize: '8px' }}>Safety Accuracy</span>
+                  </div>
+                  <div className="metric-card" style={{ padding: '10px' }}>
+                    <span className="metric-val red" style={{ fontSize: '20px' }}>0</span>
+                    <span className="metric-label" style={{ fontSize: '8px' }}>Regressions</span>
+                  </div>
+                </div>
+
+                {/* Simulation Logs */}
+                <div className="themes-scroller" style={{ maxHeight: '120px' }}>
+                  {evalResults.map((res, rIdx) => (
+                    <div key={rIdx} className="theme-item" style={{ padding: '10px 12px', borderLeft: '3px solid #f59e0b' }}>
+                      <div className="theme-item-header" style={{ marginBottom: '4px' }}>
+                        <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'white' }}>Safety Simulation Run</span>
+                        <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>{new Date(res.run_date).toLocaleDateString()}</span>
+                      </div>
+                      <p style={{ fontSize: '9px', margin: 0, lineHeight: '1.4' }}>{res.simulation_notes}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card">
                 <h3 className="glass-card-title">
                   <History size={16} /> Verifiable Compliance Audit Log
                 </h3>
                 
-                {/* 
-                   UX PILLAR 4: SHOW THE MACHINE'S WORK
-                   Audit nodes are clickable and open the high-fidelity Truth Modal!
-                */}
-                <div className="audit-scroller">
+                <div className="audit-scroller" style={{ maxHeight: '240px' }}>
                   {auditLogs.map((log, lIdx) => (
                     <div 
                       key={lIdx} 
@@ -1555,9 +1653,7 @@ Based on our validated ITACS Enterprise Memory regarding **V940** in **Melanoma*
 
       </div>
 
-      {/* =====================================================================
-         UX PILLAR 4: THE COMPLIANCE & AI TRUTH ENGINE MODAL
-         ===================================================================== */}
+      {/* THE COMPLIANCE & AI TRUTH ENGINE MODAL */}
       {showTruthModal && selectedAuditLog && (
         <div className="truth-modal-overlay animate-fade-in" onClick={() => setShowTruthModal(false)}>
           <div className="truth-modal-card" onClick={(e) => e.stopPropagation()}>
