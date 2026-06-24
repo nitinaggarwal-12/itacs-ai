@@ -2051,21 +2051,84 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           <div className="chat-speech-bubble">
                             {renderMessageContent(msg.content)}
 
-                            {!isUser && msg.content.includes("Strategy Refinement Options") && (
-                              <div className="prompt-chips-wrapper">
-                                <span className="prompt-chips-header font-bold">Suggested Refinements</span>
-                                <button 
-                                  onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
-                                  className="prompt-suggestion-btn"
-                                >
-                                  → Analyze community operational delivery hubs
-                                </button>
-                                <button 
-                                  onClick={() => handleSendMessage("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
-                                  className="prompt-suggestion-btn"
-                                >
-                                  → Simulate payer prior authorization friction
-                                </button>
+                            {!isUser && index === chatMessages.length - 1 && (
+                              <div className="prompt-chips-wrapper" style={{ marginTop: '14px' }}>
+                                <span className="prompt-chips-header" style={{ fontSize: '9px', fontWeight: 700, color: 'var(--brand-cyan)', textTransform: 'uppercase', display: 'block', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                                  Suggested Next Actions
+                                </span>
+                                
+                                {(() => {
+                                  const contentLower = msg.content.toLowerCase();
+                                  if (contentLower.includes("payer") || contentLower.includes("prior auth") || contentLower.includes("reimbursement") || contentLower.includes("access")) {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Simulate payer prior authorization friction thresholds
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Analyze community operational delivery hubs
+                                        </button>
+                                      </>
+                                    );
+                                  } else if (contentLower.includes("logistics") || contentLower.includes("cold-chain") || contentLower.includes("delivery") || contentLower.includes("infrastructure")) {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Analyze community operational delivery hubs
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Evaluate access threats and step-therapy gating
+                                        </button>
+                                      </>
+                                    );
+                                  } else if (contentLower.includes("executive summary") || contentLower.includes("summary") || contentLower.includes("presentation") || contentLower.includes("golt")) {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Evaluate access threats and step-therapy gating
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Simulate competitive wargaming pressure in Lung Cancer
+                                        </button>
+                                      </>
+                                    );
+                                  } else {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → What changed in payer coverage timelines since last week?
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
+                                          className="prompt-suggestion-btn"
+                                        >
+                                          → Simulate competitive wargaming pressure in Lung Cancer
+                                        </button>
+                                      </>
+                                    );
+                                  }
+                                })()}
                               </div>
                             )}
                           </div>
