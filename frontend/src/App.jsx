@@ -228,6 +228,38 @@ export default function App() {
   const [deckApprovedSlides, setDeckApprovedSlides] = useState([]);
   const [isCompilingDeck, setIsCompilingDeck] = useState(false);
   const [compilationStep, setCompilationStep] = useState(0);
+
+  // 5. KOL Network Graph States
+  const [selectedKol, setSelectedKol] = useState("Dr. Sarah Patel");
+
+  // 6. Vein-to-Vein Logistics States
+  const [logisticsBiopsy, setLogisticsBiopsy] = useState(85); // % capacity
+  const [logisticsSequencing, setLogisticsSequencing] = useState(92); // % capacity
+  const [logisticsManufacturing, setLogisticsManufacturing] = useState(96); // % capacity (bottleneck!)
+  const [logisticsInfusion, setLogisticsInfusion] = useState(70); // % capacity
+
+  // 7. Indication Roadmap States
+  const [selectedIndicationFilter, setSelectedIndicationFilter] = useState('ALL');
+
+  // 8. Strategic Resource Allocation States
+  const [budgetAllocations, setBudgetAllocations] = useState({
+    "Sharpen Clinical Differentiation": 45, // % ($22.5M)
+    "Demonstrate Payer Value": 35, // % ($17.5M)
+    "Accelerate Diagnostic Speed": 15, // % ($7.5M)
+    "Optimize Launch Readiness": 5 // % ($2.5M)
+  });
+
+  // 9. AI Field Force Roleplay States
+  const [roleplayPersona, setRoleplayPersona] = useState('skeptical_oncologist');
+  const [roleplayChatHistory, setRoleplayChatHistory] = useState([
+    { sender: 'doctor', text: "Hello, I hear you are representing the new personalized mRNA combo V940. Honestly, we have been using pembrolizumab monotherapy for years in melanoma. Why should I add the complexity of a customized vaccine for my adjuvant patients?" }
+  ]);
+  const [roleplayInput, setRoleplayInput] = useState("");
+  const [roleplayScores, setRoleplayScores] = useState({
+    clinicalEvidence: 0,
+    payerArgument: 0,
+    overallGrade: 'Pending'
+  });
   
   // Selection
   const [selectedInsight, setSelectedInsight] = useState(DEFAULT_INSIGHTS[0]);
@@ -1287,6 +1319,12 @@ export default function App() {
             <Sparkles size={16} /> Launch Cockpit
           </button>
           <button 
+            onClick={() => setActiveTab('cascade')}
+            className={`sidebar-nav-btn ${activeTab === 'cascade' ? 'active' : ''}`}
+          >
+            <Calendar size={16} style={{ color: 'var(--brand-cyan)' }} /> Indication Roadmap
+          </button>
+          <button 
             onClick={() => setActiveTab('wargaming')}
             className={`sidebar-nav-btn ${activeTab === 'wargaming' ? 'active' : ''}`}
           >
@@ -1326,6 +1364,12 @@ export default function App() {
           >
             <Users size={16} /> Live Workshop
           </button>
+          <button 
+            onClick={() => setActiveTab('kol')}
+            className={`sidebar-nav-btn ${activeTab === 'kol' ? 'active' : ''}`}
+          >
+            <Users size={16} style={{ color: 'var(--brand-cyan)' }} /> Stakeholder Engagement
+          </button>
         </div>
 
         <div className="nav-group">
@@ -1336,6 +1380,18 @@ export default function App() {
           >
             <FileText size={16} style={{ color: 'var(--brand-blue)' }} /> Executive Deck Studio
           </button>
+          <button 
+            onClick={() => setActiveTab('budget')}
+            className={`sidebar-nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
+          >
+            <PieChart size={16} style={{ color: 'var(--brand-purple)' }} /> Budget Strategy
+          </button>
+          <button 
+            onClick={() => setActiveTab('roleplay')}
+            className={`sidebar-nav-btn ${activeTab === 'roleplay' ? 'active' : ''}`}
+          >
+            <BookOpen size={16} style={{ color: 'var(--brand-blue)' }} /> Execution Readiness
+          </button>
         </div>
 
         <div className="nav-group">
@@ -1345,6 +1401,12 @@ export default function App() {
             className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
           >
             <Database size={16} /> Ingestion Factory
+          </button>
+          <button 
+            onClick={() => setActiveTab('logistics')}
+            className={`sidebar-nav-btn ${activeTab === 'logistics' ? 'active' : ''}`}
+          >
+            <Activity size={16} style={{ color: 'var(--brand-purple)' }} /> Manufacturing Readiness
           </button>
           <button 
             onClick={() => setActiveTab('skills')}
@@ -4310,6 +4372,1062 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* 1. STAKEHOLDER ENGAGEMENT (KOL & DOL NETWORK GRAPH) */}
+        {activeTab === 'kol' && (
+          <div className="kol-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 380px',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left: Force-Directed Network Graph Mockup */}
+            <div className="glass-card" style={{
+              position: 'relative',
+              background: 'rgba(5, 7, 12, 0.6)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '16px',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              overflow: 'hidden',
+              height: '100%',
+              boxSizing: 'border-box'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  CLINICAL ADVOCACY NETWORK
+                </span>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'white' }}>
+                  Key Opinion Leader (KOL) Network Graph
+                </h3>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Visualizes co-authorships, clinical trials, and sentiment toward our V940 asset. Click a node to inspect advocacy details.
+                </p>
+              </div>
+
+              {/* Force-directed graph canvas mockup */}
+              <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center', justifyItems: 'center', justifyContent: 'center' }}>
+                {/* SVG Connections */}
+                <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                  <line x1="50%" y1="50%" x2="25%" y2="30%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="75%" y2="30%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+                  <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="rgba(255,255,255,0.05)" strokeWidth="1.5" />
+                  
+                  {/* Outer connections */}
+                  <line x1="25%" y1="30%" x2="75%" y2="30%" stroke="rgba(255,255,255,0.02)" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="30%" y1="75%" x2="70%" y2="75%" stroke="rgba(255,255,255,0.02)" strokeWidth="1" strokeDasharray="4" />
+                </svg>
+
+                {/* Center Asset Node */}
+                <div style={{
+                  position: 'absolute',
+                  width: '70px', height: '70px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
+                  border: '2px solid white',
+                  boxShadow: '0 0 25px rgba(99, 102, 241, 0.4)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  zIndex: 5
+                }}>
+                  <strong style={{ fontSize: '11px', color: 'white' }}>MK-940</strong>
+                  <span style={{ fontSize: '7px', color: 'rgba(255,255,255,0.7)' }}>(V940)</span>
+                </div>
+
+                {/* Node 1: Dr. Sarah Patel */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Sarah Patel")}
+                  style={{
+                    position: 'absolute',
+                    top: '30%', left: '25%',
+                    width: '56px', height: '56px',
+                    borderRadius: '50%',
+                    background: '#0b0f19',
+                    border: `2px solid ${selectedKol === 'Dr. Sarah Patel' ? 'var(--brand-cyan)' : '#10b981'}`,
+                    boxShadow: selectedKol === 'Dr. Sarah Patel' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
+                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Patel</strong>
+                  </div>
+                </div>
+
+                {/* Node 2: Dr. Marcus Vance */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Marcus Vance")}
+                  style={{
+                    position: 'absolute',
+                    top: '30%', right: '25%',
+                    width: '56px', height: '56px',
+                    borderRadius: '50%',
+                    background: '#0b0f19',
+                    border: `2px solid ${selectedKol === 'Dr. Marcus Vance' ? 'var(--brand-cyan)' : '#10b981'}`,
+                    boxShadow: selectedKol === 'Dr. Marcus Vance' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
+                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Vance</strong>
+                  </div>
+                </div>
+
+                {/* Node 3: Dr. Aris Thorne */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Aris Thorne")}
+                  style={{
+                    position: 'absolute',
+                    bottom: '25%', left: '30%',
+                    width: '56px', height: '56px',
+                    borderRadius: '50%',
+                    background: '#0b0f19',
+                    border: `2px solid ${selectedKol === 'Dr. Aris Thorne' ? 'var(--brand-cyan)' : '#f59e0b'}`,
+                    boxShadow: selectedKol === 'Dr. Aris Thorne' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '12px' }}>👨‍⚕️</div>
+                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Thorne</strong>
+                  </div>
+                </div>
+
+                {/* Node 4: Dr. Evelyn Chen */}
+                <div 
+                  onClick={() => setSelectedKol("Dr. Evelyn Chen")}
+                  style={{
+                    position: 'absolute',
+                    bottom: '25%', right: '30%',
+                    width: '56px', height: '56px',
+                    borderRadius: '50%',
+                    background: '#0b0f19',
+                    border: `2px solid ${selectedKol === 'Dr. Evelyn Chen' ? 'var(--brand-cyan)' : '#10b981'}`,
+                    boxShadow: selectedKol === 'Dr. Evelyn Chen' ? '0 0 15px var(--brand-cyan)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 4,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '12px' }}>👩‍⚕️</div>
+                    <strong style={{ fontSize: '8px', color: 'white', display: 'block' }}>Chen</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-muted)' }}>
+                <span>🟢 Positive Sentiment (&gt;75%)</span>
+                <span>🟡 Neutral Payer Pushback (40%-70%)</span>
+              </div>
+            </div>
+
+            {/* Right: KOL AI Sentiment Panel */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '20px',
+              overflowY: 'auto'
+            }}>
+              {selectedKol ? (
+                <>
+                  <div>
+                    <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      STAKEHOLDER PROFILE
+                    </span>
+                    <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', color: 'white', fontWeight: 800 }}>
+                      {selectedKol}
+                    </h3>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>
+                      {selectedKol === 'Dr. Sarah Patel' && 'Oncology Department Chair, Harvard Medical School'}
+                      {selectedKol === 'Dr. Marcus Vance' && 'Chief HEOR Strategy Lead, Berlin Health Institute'}
+                      {selectedKol === 'Dr. Aris Thorne' && 'Payer Advisory Board Director, US Humana Network'}
+                      {selectedKol === 'Dr. Evelyn Chen' && 'Clinical Lead and ASCO President (2026)'}
+                    </p>
+                  </div>
+
+                  {/* Sentiment Metric Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px', borderRadius: '8px' }}>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>AI SENTIMENT</span>
+                      <strong style={{ fontSize: '16px', color: selectedKol === 'Dr. Aris Thorne' ? '#f59e0b' : '#10b981' }}>
+                        {selectedKol === 'Dr. Sarah Patel' && '95% Positive'}
+                        {selectedKol === 'Dr. Marcus Vance' && '80% Positive'}
+                        {selectedKol === 'Dr. Aris Thorne' && '45% Neutral'}
+                        {selectedKol === 'Dr. Evelyn Chen' && '90% Positive'}
+                      </strong>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px', borderRadius: '8px' }}>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ADVOCACY ALIGNMENT</span>
+                      <strong style={{ fontSize: '12px', color: 'white' }}>
+                        {selectedKol === 'Dr. Sarah Patel' && 'Clinical Efficacy'}
+                        {selectedKol === 'Dr. Marcus Vance' && 'HEOR Evidence'}
+                        {selectedKol === 'Dr. Aris Thorne' && 'Prior-Auth Cost'}
+                        {selectedKol === 'Dr. Evelyn Chen' && 'Adjuvant Trial Lead'}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* PubMed Publication History */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <h5 style={{ margin: 0, fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                      Recent PubMed & ASCO Abstracts
+                    </h5>
+                    
+                    {[
+                      {
+                        title: selectedKol === 'Dr. Aris Thorne' ? 'Payer prior-authorization timelines and clinical outcomes in adjuvant melanoma' : 'Efficacy and safety of personalized mRNA vaccine combo V940 in melanoma',
+                        journal: selectedKol === 'Dr. Aris Thorne' ? 'Journal of Managed Care Pharmacy (2026)' : 'New England Journal of Medicine (2025)',
+                        sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Neutral' : 'Highly Positive'
+                      },
+                      {
+                        title: selectedKol === 'Dr. Aris Thorne' ? 'Reimbursement cost-effectiveness thresholds for personalized gene therapies' : 'Phase 3 trial design and endpoints for neoadjuvant NSCLC vaccine protocols',
+                        journal: selectedKol === 'Dr. Aris Thorne' ? 'HEOR Quarterly Review (2026)' : 'Lancet Oncology (2026)',
+                        sentiment: selectedKol === 'Dr. Aris Thorne' ? 'Moderate HEOR Friction' : 'Positive'
+                      }
+                    ].map((pub, pubIdx) => (
+                      <div key={pubIdx} style={{ background: 'rgba(0,0,0,0.2)', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                        <h6 style={{ margin: '0 0 4px 0', fontSize: '10px', color: 'white', fontWeight: 'bold', lineHeight: '1.4' }}>
+                          {pub.title}
+                        </h6>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '8.5px', color: 'var(--text-muted)' }}>
+                          <span>{pub.journal}</span>
+                          <span style={{ color: pub.sentiment.includes('Positive') ? '#10b981' : '#f59e0b', fontWeight: 'bold' }}>{pub.sentiment}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Sentiment summary */}
+                  <div style={{ background: 'rgba(99,102,241,0.05)', border: '1px solid rgba(99,102,241,0.12)', padding: '12px 14px', borderRadius: '10px', fontSize: '9.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                    <strong>AI Sentiment Analysis Summary:</strong><br />
+                    {selectedKol === 'Dr. Sarah Patel' && 'Dr. Patel is a highly vocal advocate for our clinical efficacy data. Her recent ASCO presentations strongly endorse the 44% recurrence risk reduction.'}
+                    {selectedKol === 'Dr. Marcus Vance' && 'Dr. Vance supports our HEOR package but notes that Germany pricing reviews will require strict overall survival endpoints compared to pembrolizumab alone.'}
+                    {selectedKol === 'Dr. Aris Thorne' && 'Dr. Thorne represents significant payer friction. He demands further cost-effectiveness models and cold-chain operational guarantee data before easing prior-authorization restrictions.'}
+                    {selectedKol === 'Dr. Evelyn Chen' && 'Dr. Chen is highly optimistic about trial expansions in adjuvant lung cancer. She recommends accelerating patient diagnostic kit rollouts to clinics.'}
+                  </div>
+                </>
+              ) : (
+                <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '32px 0' }}>
+                  Select a KOL node on the graph to inspect sentiment and clinical advocacy logs.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 2. MANUFACTURING READINESS (VEIN-TO-VEIN LOGISTICS) */}
+        {activeTab === 'logistics' && (
+          <div className="logistics-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflowY: 'auto'
+          }}>
+            {/* Top Row: Logistics Overview */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  PERSONALIZED mRNA SUPPLY CHAIN
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Vein-to-Vein Logistics Radar
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Personalized cancer vaccines (V940) require biopsy extraction, rapid sequencing, custom manufacturing, and cold-chain clinic infusion within 22 days.
+                </p>
+              </div>
+
+              {/* Dynamic Warning Alert */}
+              {logisticsManufacturing >= 95 && (
+                <div className="animate-pulse" style={{
+                  padding: '12px 16px',
+                  background: 'rgba(239,68,68,0.08)',
+                  border: '1px solid rgba(239,68,68,0.2)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  <span style={{ fontSize: '16px' }}>🔴</span>
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ fontSize: '11px', color: '#fca5a5' }}>
+                      CAPACITY BOTTLE-NECK WARNING: Custom vaccine manufacturing slots are at {logisticsManufacturing}% capacity.
+                    </strong>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#fca5a5' }}>
+                      Patient Turnaround Time (TAT) is projected to slip from 18 days to 24 days. Action required: Allocate backup manufacturing lines in Merck Jersey Hub.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Row: Pipeline Diagram Mockup & Node Sliders */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'grid',
+              gridTemplateColumns: '1fr 340px',
+              gap: '32px'
+            }}>
+              
+              {/* Left: Pipeline Diagram Flow */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center' }}>
+                <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'white' }}>
+                  Vein-to-Vein Pipeline Flow Chart
+                </h3>
+                
+                {/* Horizontal nodes list representing flow */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto 1fr auto 1fr', alignItems: 'center', gap: '8px', padding: '20px 0' }}>
+                  
+                  {/* Node 1: Biopsy */}
+                  <div style={{
+                    background: 'rgba(255,255,255,0.01)',
+                    border: `1px solid ${logisticsBiopsy >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    padding: '16px',
+                    borderRadius: '12px',
+                    textAlign: 'center'
+                  }}>
+                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🩸</span>
+                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>1. Biopsy Extraction</strong>
+                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Clinic Capacity: {logisticsBiopsy}%</span>
+                  </div>
+
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
+
+                  {/* Node 2: Sequencing */}
+                  <div style={{
+                    background: 'rgba(255,255,255,0.01)',
+                    border: `1px solid ${logisticsSequencing >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    padding: '16px',
+                    borderRadius: '12px',
+                    textAlign: 'center'
+                  }}>
+                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🧬</span>
+                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>2. Tumor Sequencing</strong>
+                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Lab Capacity: {logisticsSequencing}%</span>
+                  </div>
+
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
+
+                  {/* Node 3: Manufacturing */}
+                  <div style={{
+                    background: logisticsManufacturing >= 95 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.01)',
+                    border: `2px solid ${logisticsManufacturing >= 95 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    boxShadow: logisticsManufacturing >= 95 ? '0 0 15px rgba(239,68,68,0.2)' : 'none',
+                    padding: '16px',
+                    borderRadius: '12px',
+                    textAlign: 'center',
+                    transition: 'all 0.3s ease'
+                  }}>
+                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🏭</span>
+                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>3. Manufacturing</strong>
+                    <span style={{ fontSize: '8.5px', color: logisticsManufacturing >= 95 ? '#fca5a5' : 'var(--text-muted)' }}>Slot Capacity: {logisticsManufacturing}%</span>
+                  </div>
+
+                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
+
+                  {/* Node 4: Infusion */}
+                  <div style={{
+                    background: 'rgba(255,255,255,0.01)',
+                    border: `1px solid ${logisticsInfusion >= 90 ? '#ef4444' : 'rgba(255,255,255,0.04)'}`,
+                    padding: '16px',
+                    borderRadius: '12px',
+                    textAlign: 'center'
+                  }}>
+                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>💉</span>
+                    <strong style={{ fontSize: '11px', color: 'white', display: 'block' }}>4. Infusion Clinic</strong>
+                    <span style={{ fontSize: '8.5px', color: 'var(--text-muted)' }}>Slot Capacity: {logisticsInfusion}%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Simulated capacity controls */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: '1px solid rgba(255,255,255,0.04)', paddingLeft: '24px' }}>
+                <h4 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                  Simulate Capacity Loads
+                </h4>
+                
+                {[
+                  { label: 'Biopsy Slot Load', state: logisticsBiopsy, setter: setLogisticsBiopsy },
+                  { label: 'DNA Sequencing Load', state: logisticsSequencing, setter: setLogisticsSequencing },
+                  { label: 'mRNA Manufacturing Load', state: logisticsManufacturing, setter: setLogisticsManufacturing },
+                  { label: 'Adjuvant Infusion Load', state: logisticsInfusion, setter: setLogisticsInfusion }
+                ].map((ctrl, ctrlIdx) => (
+                  <div key={ctrlIdx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{ctrl.label}</span>
+                      <strong style={{ color: 'white' }}>{ctrl.state}%</strong>
+                    </div>
+                    <input
+                      type="range"
+                      min="50"
+                      max="100"
+                      value={ctrl.state}
+                      onChange={(e) => ctrl.setter(parseInt(e.target.value))}
+                      style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 3. REGULATORY & LABEL CASCADES (MULTIPLE INDICATION GANTT) */}
+        {activeTab === 'cascade' && (
+          <div className="cascade-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflowY: 'auto'
+          }}>
+            {/* Top row: Indication Roadmap Header */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  MULTI-INDICATIONS PIPELINE
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Regulatory & Label Cascades
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Tracks clinical trial readouts, FDA PDUFA action dates, and commercial launch windows across parallel oncology indications.
+                </p>
+              </div>
+
+              {/* Indication Filters */}
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {['ALL', 'MELANOMA', 'NSCLC'].map(ind => (
+                  <button
+                    key={ind}
+                    onClick={() => setSelectedIndicationFilter(ind)}
+                    className={`btn ${selectedIndicationFilter === ind ? 'btn-primary' : 'btn-subtle'}`}
+                    style={{ fontSize: '10px', padding: '6px 12px', cursor: 'pointer' }}
+                  >
+                    {ind}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Row: Gantt Chart Mockup */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'white' }}>
+                Regulatory & Commercial Indication Roadmap (Q1 2026 - Q4 2027)
+              </h3>
+
+              {/* Gantt Timeline tracks */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '10px' }}>
+                {/* Melanoma Lane */}
+                {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'MELANOMA') && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                      <strong style={{ color: 'var(--brand-cyan)' }}>1. MELANOMA (ADJUVANT COMBO V940)</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>Phase 3 Efficacy: Primary Endpoints Met</span>
+                    </div>
+                    
+                    {/* Visual Gantt Bar */}
+                    <div style={{ position: 'relative', height: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                      {/* Clinical Readout Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '10%', width: '25%',
+                        height: '100%',
+                        background: 'rgba(6, 182, 212, 0.15)',
+                        borderRight: '2px solid var(--brand-cyan)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: 'var(--brand-cyan)',
+                        fontWeight: 'bold'
+                      }}>
+                        Trial Readout (Q2 '26)
+                      </div>
+                      
+                      {/* FDA Action PDUFA Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '35%', width: '30%',
+                        height: '100%',
+                        background: 'rgba(99, 102, 241, 0.15)',
+                        borderRight: '2px solid var(--brand-indigo)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: 'var(--brand-indigo)',
+                        fontWeight: 'bold'
+                      }}>
+                        FDA PDUFA Review (Q4 '26)
+                      </div>
+
+                      {/* Commercial Launch Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '65%', width: '30%',
+                        height: '100%',
+                        background: 'rgba(139, 92, 246, 0.2)',
+                        borderRight: '2px solid var(--brand-purple)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: 'var(--brand-purple)',
+                        fontWeight: 'bold'
+                      }}>
+                        🚀 Commercial Launch (Q1 '27)
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* NSCLC Lane */}
+                {(selectedIndicationFilter === 'ALL' || selectedIndicationFilter === 'NSCLC') && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+                      <strong style={{ color: '#f59e0b' }}>2. NON-SMALL CELL LUNG CANCER (NSCLC NEOADJUVANT)</strong>
+                      <span style={{ color: 'var(--text-muted)' }}>Phase 3 Accrual: Enrolling Active Patients</span>
+                    </div>
+                    
+                    {/* Visual Gantt Bar */}
+                    <div style={{ position: 'relative', height: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                      {/* Clinical Readout Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '30%', width: '25%',
+                        height: '100%',
+                        background: 'rgba(245, 158, 11, 0.15)',
+                        borderRight: '2px solid #f59e0b',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: '#f59e0b',
+                        fontWeight: 'bold'
+                      }}>
+                        Trial Readout (Q1 '27)
+                      </div>
+                      
+                      {/* FDA Action PDUFA Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '55%', width: '25%',
+                        height: '100%',
+                        background: 'rgba(99, 102, 241, 0.15)',
+                        borderRight: '2px solid var(--brand-indigo)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: 'var(--brand-indigo)',
+                        fontWeight: 'bold'
+                      }}>
+                        FDA PDUFA (Q3 '27)
+                      </div>
+
+                      {/* Commercial Launch Phase */}
+                      <div style={{
+                        position: 'absolute',
+                        left: '80%', width: '18%',
+                        height: '100%',
+                        background: 'rgba(139, 92, 246, 0.2)',
+                        borderRight: '2px solid var(--brand-purple)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        paddingLeft: '10px',
+                        fontSize: '9px',
+                        color: 'var(--brand-purple)',
+                        fontWeight: 'bold'
+                      }}>
+                        🚀 Launch (Q4 '27)
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Timeline calibration grid scale */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '10px', fontSize: '9px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                <span>Q1 2026</span>
+                <span>Q2 2026</span>
+                <span>Q3 2026</span>
+                <span>Q4 2026</span>
+                <span>Q1 2027</span>
+                <span>Q2 2027</span>
+                <span>Q3 2027</span>
+                <span>Q4 2027</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 4. STRATEGIC RESOURCE ALLOCATION (BUDGET TREE-MAP) */}
+        {activeTab === 'budget' && (
+          <div className="budget-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateRows: 'auto 1fr',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflowY: 'auto'
+          }}>
+            {/* Top Row: Budget Strategy Overview */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  FINANCIAL STRATEGY INTEGRATION
+                </span>
+                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  Strategic Resource Allocation (Budget Strategy)
+                </h2>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Total Brand Launch Budget: <strong style={{ color: 'white' }}>$50.0M USD</strong>. Maps financial allocations directly to the pillars created in the Imperative Builder.
+                </p>
+              </div>
+
+              {/* AI Misalignment Flag */}
+              {budgetAllocations["Accelerate Diagnostic Speed"] === 15 ? (
+                <div className="animate-scale-in" style={{
+                  padding: '12px 16px',
+                  background: 'rgba(245,158,11,0.08)',
+                  border: '1px solid rgba(245,158,11,0.2)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '12px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '16px' }}>⚠️</span>
+                    <div>
+                      <strong style={{ fontSize: '11px', color: '#fde047' }}>
+                        AI STRATEGIC ALIGNMENT WARNING: Diagnostic Screening Speed is flagged as GOLT Priority #1, but is underfunded.
+                      </strong>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#fde047' }}>
+                        Diagnostic Speed has the highest priority weighting (Accrual Barrier) but only has 15% ($7.5M) budget allocated. Consider shifting $5.0M to avoid launch execution bottlenecks.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      setBudgetAllocations({
+                        "Sharpen Clinical Differentiation": 35, // down from 45%
+                        "Demonstrate Payer Value": 35,
+                        "Accelerate Diagnostic Speed": 25, // up from 15%
+                        "Optimize Launch Readiness": 5
+                      });
+                      alert("⚡ Brand Launch Budget optimized successfully. Aligned with GOLT priority matrices!");
+                    }}
+                    className="btn btn-primary"
+                    style={{ fontSize: '10px', padding: '6px 12px', whiteSpace: 'nowrap', cursor: 'pointer' }}
+                  >
+                    ⚡ Auto-Reallocate Budget
+                  </button>
+                </div>
+              ) : (
+                <div className="animate-scale-in" style={{
+                  padding: '12px 16px',
+                  background: 'rgba(16,185,129,0.08)',
+                  border: '1px solid rgba(16,185,129,0.2)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  <span style={{ fontSize: '16px' }}>✓</span>
+                  <div>
+                    <strong style={{ fontSize: '11px', color: '#a7f3d0' }}>
+                      ✓ AI STRATEGIC ALIGNMENT OPTIMIZED: Budget matches tactical priority weights.
+                    </strong>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#a7f3d0' }}>
+                      Diagnostic screening has been reallocated to 25% ($12.5M), resolving structural launch execution friction.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Row: Hierarchical budget blocks (Tree-map mockup) */}
+            <div className="glass-card" style={{
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}>
+              <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'white' }}>
+                $50.0M Budget Distribution Map
+              </h3>
+
+              {/* Tree-map horizontal blocks representation */}
+              <div style={{ display: 'flex', height: '160px', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
+                {/* Block 1: Clinical Differentiation */}
+                <div style={{
+                  flex: budgetAllocations["Sharpen Clinical Differentiation"],
+                  background: 'rgba(99, 102, 241, 0.15)',
+                  border: '2px solid var(--brand-indigo)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.4s ease'
+                }}>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                      Sharpen Clinical Differentiation
+                    </h4>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #2</span>
+                  </div>
+                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                    {budgetAllocations["Sharpen Clinical Differentiation"]}% (${(50 * budgetAllocations["Sharpen Clinical Differentiation"] / 100).toFixed(1)}M)
+                  </strong>
+                </div>
+
+                {/* Block 2: Payer Value */}
+                <div style={{
+                  flex: budgetAllocations["Demonstrate Payer Value"],
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  border: '2px solid var(--brand-purple)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.4s ease'
+                }}>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                      Demonstrate Payer Value
+                    </h4>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #3</span>
+                  </div>
+                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                    {budgetAllocations["Demonstrate Payer Value"]}% (${(50 * budgetAllocations["Demonstrate Payer Value"] / 100).toFixed(1)}M)
+                  </strong>
+                </div>
+
+                {/* Block 3: Diagnostic Screening */}
+                <div style={{
+                  flex: budgetAllocations["Accelerate Diagnostic Speed"],
+                  background: budgetAllocations["Accelerate Diagnostic Speed"] === 25 ? 'rgba(6, 182, 212, 0.15)' : 'rgba(245,158,11,0.1)',
+                  border: `2px solid ${budgetAllocations["Accelerate Diagnostic Speed"] === 25 ? 'var(--brand-cyan)' : '#f59e0b'}`,
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.4s ease'
+                }}>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '11.5px', color: 'white', fontWeight: 'bold' }}>
+                      Accelerate Diagnostic Speed
+                    </h4>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #1</span>
+                  </div>
+                  <strong style={{ fontSize: '18px', color: 'white' }}>
+                    {budgetAllocations["Accelerate Diagnostic Speed"]}% (${(50 * budgetAllocations["Accelerate Diagnostic Speed"] / 100).toFixed(1)}M)
+                  </strong>
+                </div>
+
+                {/* Block 4: Launch Readiness */}
+                <div style={{
+                  flex: budgetAllocations["Optimize Launch Readiness"],
+                  background: 'rgba(255,255,255,0.01)',
+                  border: '1px dashed rgba(255,255,255,0.1)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.4s ease'
+                }}>
+                  <div>
+                    <h4 style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)' }}>
+                      Optimize Launch Readiness
+                    </h4>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>GOLT Priority #4</span>
+                  </div>
+                  <strong style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
+                    {budgetAllocations["Optimize Launch Readiness"]}% (${(50 * budgetAllocations["Optimize Launch Readiness"] / 100).toFixed(1)}M)
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 5. Execution Readiness (MSL SIMULATION ROLEPLAY PORTAL) */}
+        {activeTab === 'roleplay' && (
+          <div className="roleplay-container animate-fade-in" style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 380px',
+            gap: '24px',
+            padding: '24px 32px',
+            height: 'calc(100vh - 80px)',
+            boxSizing: 'border-box',
+            overflow: 'hidden'
+          }}>
+            {/* Left: AI Skeptical Oncologist Chat Arena */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '16px',
+              overflow: 'hidden'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  FIELD FORCE ROLEPLAY TERMINAL
+                </span>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'white' }}>
+                  Execution Readiness Sandbox (MSL Coach)
+                </h3>
+                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                  Simulate clinical details with skeptical oncology stakeholders. Pitch our approved strategic insights and receive real-time messaging grades.
+                </p>
+              </div>
+
+              {/* Active Chat Window */}
+              <div style={{
+                flex: 1,
+                background: '#04060b',
+                border: '1px solid rgba(255,255,255,0.05)',
+                borderRadius: '12px',
+                padding: '16px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px'
+              }}>
+                {roleplayChatHistory.map((msg, msgIdx) => (
+                  <div key={msgIdx} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px',
+                    alignSelf: msg.sender === 'msl' ? 'flex-end' : 'flex-start',
+                    maxWidth: '80%'
+                  }}>
+                    <span style={{ fontSize: '8px', color: 'var(--text-muted)', textTransform: 'uppercase', alignSelf: msg.sender === 'msl' ? 'flex-end' : 'flex-start' }}>
+                      {msg.sender === 'msl' ? 'MSL Rep (You)' : 'Dr. Thorne (Oncologist)'}
+                    </span>
+                    <div style={{
+                      padding: '10px 14px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      lineHeight: '1.5',
+                      background: msg.sender === 'msl' ? 'var(--brand-indigo)' : 'rgba(255,255,255,0.03)',
+                      color: 'white',
+                      border: msg.sender === 'msl' ? 'none' : '1px solid rgba(255,255,255,0.04)'
+                    }}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Chat Input form */}
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!roleplayInput.trim()) return;
+                  
+                  // 1. Append MSL Pitch
+                  const userPitch = roleplayInput;
+                  setRoleplayChatHistory(prev => [...prev, { sender: 'msl', text: userPitch }]);
+                  setRoleplayInput("");
+
+                  // 2. Dynamic scoring calculation (Skeletal verification AI!)
+                  const hasClinicalKey = userPitch.toLowerCase().includes("risk") || userPitch.toLowerCase().includes("44%") || userPitch.toLowerCase().includes("survival");
+                  const hasPayerKey = userPitch.toLowerCase().includes("payer") || userPitch.toLowerCase().includes("access") || userPitch.toLowerCase().includes("evidence");
+                  
+                  const targetClin = hasClinicalKey ? Math.min(100, Math.floor(Math.random() * 15) + 85) : Math.floor(Math.random() * 20) + 50;
+                  const targetPay = hasPayerKey ? Math.min(100, Math.floor(Math.random() * 15) + 80) : Math.floor(Math.random() * 20) + 40;
+                  
+                  const avg = (targetClin + targetPay) / 2;
+                  let grade = 'C';
+                  if (avg >= 90) grade = 'A';
+                  else if (avg >= 80) grade = 'B';
+                  
+                  setTimeout(() => {
+                    setRoleplayScores({
+                      clinicalEvidence: targetClin,
+                      payerArgument: targetPay,
+                      overallGrade: grade
+                    });
+
+                    // 3. Append Doctor Skeptical Response
+                    let doctorReply = "That's an interesting point, but how does this 44% reduction translate to overall survival? pembrolizumab alone is already the standard.";
+                    if (hasClinicalKey && hasPayerKey) {
+                      doctorReply = "Ah, I see you are connecting the HEOR payer evidence packages with the adjuvant OS trial margins. That does address my concerns about reimbursement timelines.";
+                    } else if (hasPayerKey) {
+                      doctorReply = "Reimbursement timelines are important, but as a clinician, I need to see the clinical trial margins before prescribing this combo.";
+                    }
+                    setRoleplayChatHistory(prev => [...prev, { sender: 'doctor', text: doctorReply }]);
+                  }, 1500);
+                }}
+                style={{ display: 'flex', gap: '10px', flexShrink: 0 }}
+              >
+                <input
+                  type="text"
+                  placeholder="Type your strategic clinical pitch to Dr. Thorne..."
+                  value={roleplayInput}
+                  onChange={(e) => setRoleplayInput(e.target.value)}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(255,255,255,0.05)',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    color: 'white',
+                    outline: 'none'
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ padding: '10px 18px', fontSize: '11px', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  Send Pitch
+                </button>
+              </form>
+            </div>
+
+            {/* Right: Pitch Grading Scorecard */}
+            <div className="glass-card" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px',
+              height: '100%',
+              boxSizing: 'border-box',
+              gap: '20px',
+              overflowY: 'auto'
+            }}>
+              <div>
+                <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  PITCH PERFORMANCE EVALUATION
+                </span>
+                <h3 style={{ margin: '4px 0 0 0', fontSize: '14px', color: 'white', fontWeight: 800 }}>
+                  Strategic Message Scorecard
+                </h3>
+              </div>
+
+              {/* Big Grade readout */}
+              <div style={{
+                background: 'rgba(99,102,241,0.05)',
+                border: '1px solid rgba(99,102,241,0.12)',
+                padding: '20px',
+                borderRadius: '12px',
+                textAlign: 'center'
+              }}>
+                <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>OVERALL GRADE</span>
+                <strong style={{ fontSize: '36px', color: roleplayScores.overallGrade === 'A' ? '#10b981' : (roleplayScores.overallGrade === 'B' ? 'var(--brand-cyan)' : 'var(--text-muted)') }}>
+                  {roleplayScores.overallGrade}
+                </strong>
+              </div>
+
+              {/* Subscores */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {/* Score 1: Clinical Efficacy */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Clinical Evidence Pitching</span>
+                    <strong style={{ color: 'white' }}>{roleplayScores.clinicalEvidence}/100</strong>
+                  </div>
+                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: `${roleplayScores.clinicalEvidence}%`, height: '100%', background: '#10b981', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+                  </div>
+                </div>
+
+                {/* Score 2: HEOR Payer Argument */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ display: 'flex', justifyItems: 'center', justifyContent: 'space-between', fontSize: '11px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>Payer / HEOR Value Alignment</span>
+                    <strong style={{ color: 'white' }}>{roleplayScores.payerArgument}/100</strong>
+                  </div>
+                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: `${roleplayScores.payerArgument}%`, height: '100%', background: 'var(--brand-cyan)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px 14px', borderRadius: '10px', fontSize: '9.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                💡 <strong>MSL Messaging Coach Tip:</strong><br />
+                To secure a Grade A pitch, make sure to explicitly cite:
+                <ul style={{ margin: '4px 0 0 0', paddingLeft: '16px' }}>
+                  <li>The clinical trial's <strong>44% recurrence risk reduction</strong>.</li>
+                  <li>The <strong>HEOR package</strong> designed to offset payer prior-authorization timelines.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* PROGRESSIVE DISCLOSURE: SLIDE-OUT AUDIT DETAIL DRAWER (Elite UX Fix!) */}
 
       </div>
 
