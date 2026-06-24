@@ -128,13 +128,13 @@ body {
 }
 
 .nav-group-title {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: var(--text-muted);
   padding: 0 8px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   display: block;
 }
 
@@ -144,9 +144,9 @@ body {
   border: 1px solid transparent;
   color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -183,28 +183,28 @@ body {
 }
 
 .footer-avatar {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: #1e293b;
   border: 1.5px solid var(--brand-cyan);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
 }
 
 .footer-user-info h5 {
   margin: 0;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .footer-user-info p {
   margin: 0;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -235,7 +235,7 @@ body {
 
 .timeline-header h3 {
   font-family: 'Outfit', sans-serif;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -247,7 +247,7 @@ body {
   background: rgba(245, 158, 11, 0.1);
   border: 1px solid rgba(245, 158, 11, 0.25);
   color: var(--color-warning);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   padding: 3px 8px;
   border-radius: 20px;
@@ -275,7 +275,7 @@ body {
 
 .timeline-progress-bar {
   position: absolute;
-  top: 12px;
+  top: 15px;
   left: 0;
   right: 0;
   height: 2px;
@@ -300,15 +300,15 @@ body {
 }
 
 .step-node-circle {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background-color: var(--bg-tertiary);
   border: 2px solid var(--glass-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   color: var(--text-muted);
   transition: all 0.3s ease;
@@ -334,7 +334,7 @@ body {
 
 .step-node-label h4 {
   margin: 0;
-  font-size: 11px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text-secondary);
 }
@@ -345,7 +345,7 @@ body {
 
 .step-node-label p {
   margin: 2px 0 0 0;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -417,7 +417,7 @@ body {
   background-color: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 16px;
+  padding: 22px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -467,26 +467,26 @@ body {
 
 .metric-val {
   font-family: 'Outfit', sans-serif;
-  font-size: 28px;
+  font-size: 42px;
   font-weight: 800;
 }
 
-.metric-val.blue { color: var(--brand-cyan); text-shadow: 0 0 10px rgba(6, 182, 212, 0.2); }
-.metric-val.amber { color: var(--color-warning); text-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
-.metric-val.red { color: var(--color-danger); text-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+.metric-val.blue { color: var(--brand-cyan); text-shadow: 0 0 12px rgba(6, 182, 212, 0.35); }
+.metric-val.amber { color: var(--color-warning); text-shadow: 0 0 12px rgba(245, 158, 11, 0.35); }
+.metric-val.red { color: var(--color-danger); text-shadow: 0 0 12px rgba(239, 68, 68, 0.35); }
 
 .metric-label {
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-muted);
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* Strategic Themes Scroller */
 .themes-scroller {
-  max-height: 280px;
+  max-height: calc(100vh - 420px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -565,7 +565,7 @@ body {
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 620px;
+  height: calc(100vh - 200px);
   box-sizing: border-box;
 }
 
@@ -681,7 +681,7 @@ body {
 
 .widget-card-header h5 {
   margin: 0;
-  font-size: 11px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -691,7 +691,7 @@ body {
 
 .proactive-widget-card p {
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -702,7 +702,7 @@ body {
 }
 
 .prompt-chips-header {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -715,9 +715,9 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   color: var(--text-secondary);
-  font-size: 10px;
+  font-size: 12.5px;
   font-family: 'Inter', sans-serif;
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -784,7 +784,7 @@ body {
 }
 
 .grounding-header {
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 700;
   color: var(--text-muted);
   display: flex;
@@ -799,7 +799,7 @@ body {
 }
 
 .grounding-pill {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--brand-cyan);
   background: rgba(6, 182, 212, 0.08);
@@ -859,8 +859,8 @@ body {
   border-radius: 8px;
   color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  padding: 8px 12px;
+  font-size: 13px;
+  padding: 10px 14px;
   outline: none;
   cursor: pointer;
 }
@@ -869,7 +869,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  max-height: 480px;
+  max-height: calc(100vh - 220px);
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -878,7 +878,7 @@ body {
   background-color: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  padding: 18px;
+  padding: 24px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -906,7 +906,7 @@ body {
 }
 
 .matrix-lane-tag {
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -921,11 +921,11 @@ body {
 .matrix-lane-tag.ci { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: var(--color-warning); }
 
 .matrix-status-badge {
-  font-size: 7px;
+  font-size: 9.5px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 1px 4px;
+  padding: 3px 6px;
   border-radius: 3px;
   border: 1px solid transparent;
 }
@@ -936,7 +936,7 @@ body {
 
 .matrix-card-body h4 {
   font-family: 'Outfit', sans-serif;
-  font-size: 11px;
+  font-size: 14.5px;
   font-weight: 700;
   margin: 0 0 6px 0;
   color: var(--text-primary);
@@ -944,7 +944,7 @@ body {
 }
 
 .matrix-card-body p {
-  font-size: 10px;
+  font-size: 12.5px;
   color: var(--text-secondary);
   margin: 0;
   line-height: 1.4;
@@ -957,7 +957,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px;
+  font-size: 11.5px;
   color: var(--text-muted);
 }
 
@@ -1204,7 +1204,7 @@ body {
 .dropzone-box {
   border: 2px dashed rgba(255, 255, 255, 0.06);
   border-radius: 12px;
-  padding: 28px;
+  padding: 36px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1227,14 +1227,14 @@ body {
 }
 
 .dropzone-box p {
-  font-size: 11px;
+  font-size: 13.5px;
   font-weight: 700;
   margin: 12px 0 4px 0;
   color: var(--text-primary);
 }
 
 .dropzone-box span {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -1253,7 +1253,7 @@ body {
 }
 
 .select-box-group label {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1266,8 +1266,8 @@ body {
   border-radius: 6px;
   color: var(--text-secondary);
   font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  padding: 6px 10px;
+  font-size: 13px;
+  padding: 8px 12px;
   outline: none;
 }
 
@@ -1281,7 +1281,7 @@ body {
 
 .ingest-stepper-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1351,7 +1351,7 @@ body {
    AUDIT LOGS & TRUTH ENGINE
    ===================================================================== */
 .audit-scroller {
-  max-height: 480px;
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
   padding-right: 6px;
   display: flex;
