@@ -486,6 +486,101 @@ export default function App() {
   const [simVoteCounts, setSimVoteCounts] = useState({ optionA: 14, optionB: 8 });
   const simIntervalRef = useRef(null);
 
+  // =====================================================================
+  // PREMIUM GAMIFIED ONBOARDING TOUR (WORKFLOW 1: LAUNCH INTELLIGENCE)
+  // =====================================================================
+  const [tourActive, setTourActive] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const [highlightStyle, setHighlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
+
+  const tourSteps = [
+    {
+      targetId: null,
+      title: "Launch Intelligence Tour 🚀",
+      description: "Welcome to the global oncology command center! This premium guided workflow will take you step-by-step through our indication roadmap, active clinical readouts, competitor wargames, and HTA radar. Let's begin the mission!",
+      buttonText: "Start Mission ➔",
+      action: () => {}
+    },
+    {
+      targetId: "nav-cockpit",
+      title: "The Launch Cockpit 📊",
+      description: "This is your executive command home. It aggregates real-time cross-functional oncology KPIs, trial milestones, and proactive AI advisor alerts in a single view.",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => setActiveTab('cockpit')
+    },
+    {
+      targetId: "nav-cascade",
+      title: "Oncology Pipeline Gantt 📅",
+      description: "Next up, we have the Indication Roadmap. This interactive clinical Gantt chart tracks our active trial timelines, regulatory filing windows, and launch dates across 5 parallel cancer indications.",
+      buttonText: "Go to Roadmap ➔",
+      action: (setActiveTab) => setActiveTab('cascade')
+    },
+    {
+      targetId: "gantt-readout-melanoma",
+      title: "Clinical Trial Readout 🔬",
+      description: "This highlighted block represents the Phase 3 KEYNOTE-940 Efficacy Topline Readout (Q2 2026). Let's click it to explore companion diagnostics and cold-chain logistics briefings below!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab, setSelectedRoadmapMilestone) => {
+        setActiveTab('cascade');
+        setSelectedRoadmapMilestone('melanoma_readout');
+      }
+    },
+    {
+      targetId: "nav-wargaming",
+      title: "Competitive Wargaming ⚔️",
+      description: "Now, let's explore the Competitive Wargaming console. Here, you can adjust competitor trial timelines and price-cut threats using real-time sliders to calculate strategic risk!",
+      buttonText: "Go to Wargaming ➔",
+      action: (setActiveTab) => setActiveTab('wargaming')
+    },
+    {
+      targetId: "nav-radar",
+      title: "Global HTA Radar 📡",
+      description: "Finally, let's open the Global Market Radar. This interactive map displays country-by-country Health Technology Assessment (HTA) approval waves and launch windows!",
+      buttonText: "Go to Market Radar ➔",
+      action: (setActiveTab) => setActiveTab('radar')
+    },
+    {
+      targetId: null,
+      title: "Mission Accomplished! 🎉🏆",
+      description: "Congratulations! You have successfully completed Workflow 1: Launch Onboarding & Competitor Briefing. You are now officially certified as an ITACS Launch Strategist! Your progress has been saved.",
+      buttonText: "Complete Mission 🏅",
+      action: () => {}
+    }
+  ];
+
+  useEffect(() => {
+    if (!tourActive) return;
+
+    const step = tourSteps[tourStep];
+    if (step.action) {
+      step.action(setActiveTab, setSelectedRoadmapMilestone);
+    }
+
+    if (!step.targetId) {
+      setHighlightStyle({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      const element = document.getElementById(step.targetId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        setHighlightStyle({
+          top: rect.top - 6 + window.scrollY,
+          left: rect.left - 6 + window.scrollX,
+          width: rect.width + 12,
+          height: rect.height + 12,
+          opacity: 1
+        });
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        setHighlightStyle({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
+      }
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [tourStep, tourActive]);
+
   useEffect(() => {
     // Synchronize initial body class to respect theme state
     if (theme === 'light') {
@@ -1770,24 +1865,28 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           <div className="nav-group">
           <span className="nav-group-title">Command & Interrogate</span>
           <button 
+            id="nav-cockpit"
             onClick={() => setActiveTab('cockpit')}
             className={`sidebar-nav-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
           >
             <Sparkles size={16} /> Launch Cockpit
           </button>
           <button 
+            id="nav-cascade"
             onClick={() => setActiveTab('cascade')}
             className={`sidebar-nav-btn ${activeTab === 'cascade' ? 'active' : ''}`}
           >
             <Calendar size={16} style={{ color: 'var(--brand-cyan)' }} /> Indication Roadmap
           </button>
           <button 
+            id="nav-wargaming"
             onClick={() => setActiveTab('wargaming')}
             className={`sidebar-nav-btn ${activeTab === 'wargaming' ? 'active' : ''}`}
           >
             <Play size={16} style={{ color: 'var(--brand-purple)' }} /> Competitive Wargaming
           </button>
           <button 
+            id="nav-radar"
             onClick={() => setActiveTab('radar')}
             className={`sidebar-nav-btn ${activeTab === 'radar' ? 'active' : ''}`}
           >
@@ -2004,7 +2103,126 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
         {/* BRAND PLANNING MACRO-TIMELINE (L3Next Milestone Windows) */}
         {activeTab === 'cockpit' && (
-          <div className="lifecycle-timeline-container">
+          <>
+            {/* GAMIFIED ONBOARDING MISSIONS CENTER */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '12px',
+              padding: '20px',
+              margin: '0 32px 24px 32px',
+              boxSizing: 'border-box'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '18px' }}>🧬</span>
+                  <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '0.5px' }}>Interactive Onboarding Missions</h3>
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '3px 8px', borderRadius: '20px' }}>
+                  Progress: {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)'}
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                {/* Mission 1 Card */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>Mission 1</span>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '#10b981' : 'var(--text-muted)' }}>
+                        {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'Completed 🏅' : 'Active 🚀'}
+                      </span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Launch Intelligence & Briefing</h4>
+                    <p style={{ margin: '0 0 16px 0', fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Master indication timelines, clinical Gantt milestones, competitor trial wargaming, and global HTA radar maps.</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setTourStep(0);
+                      setTourActive(true);
+                    }}
+                    style={{
+                      width: '100%',
+                      background: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'transparent' : 'var(--brand-cyan)',
+                      border: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '1px solid var(--glass-border)' : 'none',
+                      color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--text-primary)' : '#ffffff',
+                      borderRadius: '6px',
+                      padding: '8px',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '4px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'Replay Mission 🔄' : 'Start Mission 🚀'}
+                  </button>
+                </div>
+
+                {/* Mission 2 Card (Locked) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  opacity: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>Mission 2</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '12.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Insight Gating & GOLT Audit</h4>
+                    <p style={{ margin: '0 0 16px 0', fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>Audit clinical statements, verify slide OCR grounding, review compliance timelines, and approve memory bank promotions.</p>
+                  </div>
+                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed' }}>
+                    Complete Mission 1 to Unlock
+                  </button>
+                </div>
+
+                {/* Mission 3 Card (Locked) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  opacity: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>Mission 3</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '12.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Operational Action & Telemetry</h4>
+                    <p style={{ margin: '0 0 16px 0', fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>Map Kanban strategic tasks, brainstorm obstacles, vote on weights, map KOLs, and synchronize execution readiness.</p>
+                  </div>
+                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed' }}>
+                    Complete Mission 2 to Unlock
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="lifecycle-timeline-container">
             <div className="timeline-header">
               <h3>Oncology Brand Launch Planning Lifecycle</h3>
               <div className="timeline-active-badge">
@@ -2043,7 +2261,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
             </div>
           </div>
-        )}
+        </>
+      )}
 
         {/* TAB 1: LAUNCH COCKPIT (THE EXECUTIVE COMMAND HUB) */}
         {activeTab === 'cockpit' && (
@@ -6125,6 +6344,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <div style={{ position: 'relative', height: '36px', background: 'var(--bg-primary)', borderRadius: '6px', border: '1px solid var(--glass-border)', overflow: 'hidden' }}>
                       {/* Clinical Readout Phase */}
                       <div 
+                        id="gantt-readout-melanoma"
                         onClick={() => setSelectedRoadmapMilestone('melanoma_readout')}
                         style={{
                           position: 'absolute',
@@ -7421,6 +7641,168 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             </form>
           </div>
         </div>
+      )}
+
+      {/* =====================================================================
+         PREMIUM SPOTLIGHT & GLASSMORPHIC TOOLTIP RENDERING
+         ===================================================================== */}
+      {tourActive && (
+        <>
+          {/* Dynamic morphing spotlight mask */}
+          {highlightStyle.opacity > 0 && (
+            <div 
+              style={{
+                position: 'absolute',
+                top: highlightStyle.top,
+                left: highlightStyle.left,
+                width: highlightStyle.width,
+                height: highlightStyle.height,
+                border: '2px solid var(--brand-cyan)',
+                borderRadius: '8px',
+                boxShadow: '0 0 0 9999px rgba(3, 4, 7, 0.65), 0 0 15px var(--brand-cyan)',
+                zIndex: 9999,
+                pointerEvents: 'none',
+                transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}
+            />
+          )}
+
+          {/* Full-screen click-blocking mask for centered steps */}
+          {highlightStyle.opacity === 0 && (
+            <div 
+              style={{
+                position: 'fixed',
+                top: 0, left: 0, right: 0, bottom: 0,
+                background: 'rgba(3, 4, 7, 0.65)',
+                backdropFilter: 'blur(4px)',
+                zIndex: 9998
+              }}
+            />
+          )}
+
+          {/* Glassmorphic Tooltip Card */}
+          <div 
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 8px 16px -6px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(20px)',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              ...(highlightStyle.opacity === 0 
+                ? {
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 10000,
+                    width: '380px'
+                  }
+                : (() => {
+                    const step = tourSteps[tourStep];
+                    const isSidebar = step.targetId && step.targetId.startsWith('nav-');
+                    if (isSidebar) {
+                      return {
+                        position: 'absolute',
+                        top: highlightStyle.top + (highlightStyle.height / 2) - 100,
+                        left: highlightStyle.left + highlightStyle.width + 16,
+                        zIndex: 10000,
+                        width: '320px',
+                        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                      };
+                    } else {
+                      return {
+                        position: 'absolute',
+                        top: highlightStyle.top + highlightStyle.height + 16,
+                        left: highlightStyle.left + (highlightStyle.width / 2) - 160,
+                        zIndex: 10000,
+                        width: '320px',
+                        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                      };
+                    }
+                  })()
+              )
+            }}
+            className="animate-fade-in"
+          >
+            {/* Tooltip Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '1.5px' }}>
+                {tourStep === 0 ? "Mission Start" : (tourStep === tourSteps.length - 1 ? "Mission Complete" : `Step ${tourStep} of ${tourSteps.length - 2}`)}
+              </span>
+              <button 
+                onClick={() => setTourActive(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {/* Title & Description */}
+            <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {tourSteps[tourStep].title}
+            </h3>
+            <p style={{ margin: '0 0 16px 0', fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              {tourSteps[tourStep].description}
+            </p>
+
+            {/* Footer Progress & Action */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--glass-border)', paddingTop: '12px' }}>
+              {/* Dots Progress Indicator */}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {tourSteps.map((_, idx) => {
+                  if (idx === 0 || idx === tourSteps.length - 1) return null;
+                  return (
+                    <div 
+                      key={idx}
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        borderRadius: '50%',
+                        background: idx === tourStep ? 'var(--brand-cyan)' : 'rgba(255, 255, 255, 0.15)',
+                        transition: 'all 0.2s ease'
+                      }}
+                    />
+                  );
+                })}
+              </div>
+
+              {/* Action Button */}
+              <button 
+                onClick={() => {
+                  if (tourStep < tourSteps.length - 1) {
+                    setTourStep(prev => prev + 1);
+                  } else {
+                    localStorage.setItem('itacs_tour_completed_w1', 'true');
+                    setTourActive(false);
+                    window.location.reload();
+                  }
+                }}
+                style={{
+                  background: 'var(--brand-cyan)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '6px 12px',
+                  fontSize: '10.5px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  boxShadow: '0 2px 8px rgba(6, 182, 212, 0.2)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {tourSteps[tourStep].buttonText}
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
     </div>
