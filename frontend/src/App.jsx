@@ -2398,8 +2398,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <div className="glass-card" style={{ height: '100%' }}>
                   <div className="drawer-header" style={{ marginBottom: '10px' }}>
                     <div className="drawer-header-title">
-                      <h3>ITACS Card Validation</h3>
-                      <p>Validate the extracted fields and review compliance gating.</p>
+                      <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>ITACS Card Validation</h3>
+                      <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>Validate the extracted fields and review compliance gating.</p>
                     </div>
                   </div>
 
@@ -2414,7 +2414,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'framework' ? 'var(--brand-cyan)' : 'transparent',
-                          color: detailTab === 'framework' ? '#06080d' : 'var(--text-secondary)',
+                          color: detailTab === 'framework' ? '#ffffff' : 'var(--text-secondary)',
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
@@ -2435,7 +2435,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'grounding' ? 'var(--brand-cyan)' : 'transparent',
-                          color: detailTab === 'grounding' ? '#06080d' : 'var(--text-secondary)',
+                          color: detailTab === 'grounding' ? '#ffffff' : 'var(--text-secondary)',
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
@@ -2456,7 +2456,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           flex: 1,
                           justifyContent: 'center',
                           background: detailTab === 'audit' ? 'var(--brand-cyan)' : 'transparent',
-                          color: detailTab === 'audit' ? '#06080d' : 'var(--text-secondary)',
+                          color: detailTab === 'audit' ? '#ffffff' : 'var(--text-secondary)',
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
