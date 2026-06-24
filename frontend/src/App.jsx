@@ -2255,13 +2255,13 @@ export default function App() {
             </div>
 
             {/* 4-Column Board Wrapper */}
-            <main className="kanban-board" style={{ gridTemplateColumns: `repeat(${pillars.length + 1}, 1fr)`, height: 'calc(100vh - 230px)', padding: 0 }}>
+            <main className="kanban-board" style={{ gridTemplateColumns: `repeat(${pillars.length + 1}, 1fr)`, height: 'calc(100vh - 220px)', padding: 0 }}>
               
               {/* Column 0: Unassigned Inbox */}
-              <div className="kanban-column" style={{ background: 'rgba(11, 15, 25, 0.4)', borderStyle: 'dashed' }}>
-                <div className="kanban-column-header" style={{ borderBottomColor: 'rgba(255, 255, 255, 0.08)' }}>
+              <div className="kanban-column" style={{ background: 'rgba(15, 23, 42, 0.015)', borderStyle: 'dashed', borderWidth: '1.5px' }}>
+                <div className="kanban-column-header">
                   <h3 style={{ color: 'var(--text-muted)' }}>Unassigned Implications Inbox</h3>
-                  <span className="kanban-card-count" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                  <span className="kanban-card-count">
                     {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).length} Cards
                   </span>
                 </div>
@@ -2272,23 +2272,23 @@ export default function App() {
                       key={card.id} 
                       className="kanban-card animate-fade-in" 
                       onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
-                      style={{ cursor: 'pointer', borderLeft: '3px solid #64748b' }}
+                      style={{ cursor: 'pointer', borderLeft: '4px solid #64748b' }}
                       title="Click to explore Clinical Grounding and slide lineage"
                     >
-                      <h4 style={{ fontSize: '12px', fontWeight: 'bold' }}>{card.opportunity_space}</h4>
-                      <p style={{ fontSize: '10.5px', fontStyle: 'italic', color: 'var(--text-secondary)', margin: '6px 0 10px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
+                      <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>{card.opportunity_space}</h4>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineHeight: '1.4' }}>
                         "Implication: {card.implication}"
                       </p>
                       
                       <div className="kanban-card-footer">
-                        <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
-                        <div style={{ display: 'flex', gap: '4px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
+                        <div style={{ display: 'flex', gap: '6px' }}>
                           {pillars.map(p => (
                             <button
                               key={p.key_name}
                               onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
                               className="kanban-move-btn"
-                              style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                              style={{ padding: '4px 6px', fontSize: '11px' }}
                               title={`Move to ${p.display_name}`}
                             >
                               {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
@@ -2323,21 +2323,21 @@ export default function App() {
                           key={card.id} 
                           className="kanban-card animate-fade-in"
                           onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: 'pointer', borderLeft: `4px solid ${col.class_name === 'diff' ? 'var(--brand-indigo)' : (col.class_name === 'value' ? 'var(--brand-cyan)' : 'var(--brand-purple)')}` }}
                           title="Click to explore Clinical Grounding and slide lineage"
                         >
-                          <h4 style={{ fontSize: '12px', fontWeight: 'bold' }}>{card.opportunity_space}</h4>
-                          <p style={{ fontSize: '10.5px', fontStyle: 'italic', color: 'var(--brand-cyan)', margin: '6px 0 10px 0', whiteSpace: 'normal', lineBreak: 'anywhere' }}>
+                          <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>{card.opportunity_space}</h4>
+                          <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--text-secondary)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineHeight: '1.4' }}>
                             "Implication: {card.implication}"
                           </p>
                           
                           <div className="kanban-card-footer">
-                            <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
-                            <div style={{ display: 'flex', gap: '4px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
+                            <div style={{ display: 'flex', gap: '6px' }}>
                               <button
                                 onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, 'unassigned'); }}
                                 className="kanban-move-btn"
-                                style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                                style={{ padding: '4px 6px', fontSize: '11px' }}
                                 title="Move back to Unassigned Inbox"
                               >
                                 📥
@@ -2347,7 +2347,7 @@ export default function App() {
                                   key={p.key_name}
                                   onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
                                   className="kanban-move-btn"
-                                  style={{ padding: '3px 5px', fontSize: '8.5px' }}
+                                  style={{ padding: '4px 6px', fontSize: '11px' }}
                                   title={`Move to ${p.display_name}`}
                                 >
                                   {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
@@ -4410,7 +4410,6 @@ export default function App() {
                   🎯 <strong>AI Rollout Insight:</strong> Global launch velocity is stable. Primary blockers are Germany pricing negotiations and Japan diagnostic scale-up delays. Recommended next action: Dispatch pricing dossier package directly to European G-BA committee.
                 </div>
               </div>
-            </div>
             </div>
           </div>
         )}
