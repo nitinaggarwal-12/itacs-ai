@@ -91,6 +91,80 @@ const MOCK_AUDIT = [
   { step_index: 3, step_name: "Functional Draft", agent_name: "Functional Extraction Copilot", user_input: "Verify framework fields", model_output: "Draft generated: 5 structural cards mapped successfully. Metadata tags: V940, Melanoma, Stage III/IV." },
   { step_index: 4, step_name: "Compliance Check", agent_name: "Compliance Supervisor", user_input: "Audit for Medical Affairs rules & commercial vocabulary", model_output: "Compliance score: 0.95. Approved. No commercial forbidden terms (ROI, profit) detected in high-risk zones." }
 ];
+// High-performance parser to render Markdown bold markers (**text**) into glowing strong tags
+const parseBold = (text) => {
+  const parts = text.split('**');
+  return parts.map((part, i) => {
+    if (i % 2 === 1) {
+      return <strong key={i} style={{ color: 'white', fontWeight: 800 }}>{part}</strong>;
+    }
+    return part;
+  });
+};
+
+// Bulletproof line-by-line Markdown parser to render clean headings, bullet points, and paragraphs
+const renderMessageContent = (content) => {
+  if (!content) return null;
+  const lines = content.split('\n');
+  let inList = false;
+  const elements = [];
+  let listItems = [];
+
+  lines.forEach((line, idx) => {
+    const trimmed = line.trim();
+    
+    // Flush active list if we exit list mode
+    if (!trimmed.startsWith('-') && inList) {
+      elements.push(
+        <ul key={`list-${idx}`} style={{ marginLeft: '20px', marginBottom: '12px', listStyleType: 'disc' }}>
+          {listItems}
+        </ul>
+      );
+      listItems = [];
+      inList = false;
+    }
+
+    if (trimmed.startsWith('### ')) {
+      elements.push(
+        <h3 key={idx} style={{ marginTop: '16px', marginBottom: '8px', color: '#93c5fd', fontSize: '13px', fontWeight: 800 }}>
+          {parseBold(trimmed.substring(4))}
+        </h3>
+      );
+    } else if (trimmed.startsWith('#### ')) {
+      elements.push(
+        <h4 key={idx} style={{ marginTop: '12px', marginBottom: '6px', color: '#60a5fa', fontSize: '11px', fontWeight: 700 }}>
+          {parseBold(trimmed.substring(5))}
+        </h4>
+      );
+    } else if (trimmed.startsWith('- ')) {
+      inList = true;
+      listItems.push(
+        <li key={`li-${idx}`} style={{ marginBottom: '6px', fontSize: '11px', color: '#cbd5e1', lineHeight: '1.6' }}>
+          {parseBold(trimmed.substring(2))}
+        </li>
+      );
+    } else if (trimmed === '') {
+      // Skip empty lines
+    } else {
+      elements.push(
+        <p key={idx} style={{ marginBottom: '10px', fontSize: '11px', color: '#cbd5e1', lineHeight: '1.6' }}>
+          {parseBold(trimmed)}
+        </p>
+      );
+    }
+  });
+
+  // Flush any remaining list items at the end of the content
+  if (inList && listItems.length > 0) {
+    elements.push(
+      <ul key="list-final" style={{ marginLeft: '20px', marginBottom: '12px', listStyleType: 'disc' }}>
+        {listItems}
+      </ul>
+    );
+  }
+
+  return elements;
+};
 
 export default function App() {
   // Navigation: 'cockpit' (Executive Cockpit), 'matrix' (Commercial Matrix), 'ingest' (Ingestion Factory)
@@ -517,9 +591,12 @@ export default function App() {
     } catch (err) {
       console.error("Chat API failed, generating premium mock response.", err);
       setTimeout(() => {
+        const assetName = selectedInsight.metadata?.asset || selectedInsight.asset || "V940";
+        const tumorName = selectedInsight.metadata?.tumor || selectedInsight.tumor || "Melanoma";
+        
         let answer = `### Strategic Synthesis: Grounded Analysis
 
-Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.asset}** in **${selectedInsight.tumor}**, here is the cross-functional guidance:
+Based on our validated ITACS Enterprise Memory regarding **${assetName}** in **${tumorName}**, here is the cross-functional guidance:
 
 #### 1. Medical Affairs Perspective (The Clinical Lens)
 - **Clinical Endpoints**: Scientific exchange must focus on the clinical value proposition of the adjuvant program. MSLs should present the **44% reduction in recurrence risk (RFS/DMFS)**, educating community oncologists on how personalized sequencing prevents secondary recurrence.
@@ -731,25 +808,8 @@ Based on our validated ITACS Enterprise Memory regarding **${selectedInsight.ass
                       </div>
                       
                       <div className="chat-speech-bubble">
-                        {/* Simple custom renderer for mock strategic markdown */}
-                        {msg.content.split('\n\n').map((para, pIdx) => {
-                          if (para.startsWith('###')) {
-                            return <h3 key={pIdx}>{para.replace('###', '')}</h3>;
-                          }
-                          if (para.startsWith('####')) {
-                            return <h4 key={pIdx}>{para.replace('####', '')}</h4>;
-                          }
-                          if (para.startsWith('-')) {
-                            return (
-                              <ul key={pIdx}>
-                                {para.split('\n').map((li, liIdx) => (
-                                  <li key={liIdx}>{li.replace('-', '').trim()}</li>
-                                ))}
-                              </ul>
-                            );
-                          }
-                          return <p key={pIdx} style={{ marginBottom: '8px' }}>{para}</p>;
-                        })}
+                        {/* Invokes the robust line-by-line Markdown and Bold tag parser */}
+                        {renderMessageContent(msg.content)}
 
                         {!isUser && msg.content.includes("Strategy Refinement Options") && (
                           <div className="prompt-chips-wrapper">
