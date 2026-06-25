@@ -502,6 +502,47 @@ export default function App() {
   const [highlightStyle, setHighlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
   const [hasDraggedTimeline, setHasDraggedTimeline] = useState(false);
 
+  // Premium Cockpit Educational States
+  const [playbookTab, setPlaybookTab] = useState('input');
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [videoLogs, setVideoLogs] = useState([]);
+  const videoIntervalRef = useRef(null);
+
+  const MOCK_VIDEO_LOGS = [
+    "🚀 INGESTION: Connecting to FDA clinical trials repository...",
+    "🧬 PARSING: Extracting Phase 3 KEYNOTE-940 PDF data packs...",
+    "🔍 NLP CORE: Grounding therapeutic sequencing recommendation...",
+    "🎯 Slide Grounding: Mapping coordinates [x: 104, y: 342, w: 590, h: 120] on Slide 12...",
+    "🔒 AUDIT LEDGER: Appending cryptographic SHA-256 block hash...",
+    "🛡️ COMPLIANCE GATING: Analyzing G-BA pricing blockers in Germany...",
+    "📊 TELEMETRY: Recalculating relative threat index for Competitor X...",
+    "⚡ SYNCING: Publishing access dossiers to downstream Salesforce/Veeva CRM...",
+    "🎉 SUCCESS: Pipeline V1.3.1 synchronized with 95% compliance score!"
+  ];
+
+  useEffect(() => {
+    if (isVideoPlaying) {
+      setVideoLogs([MOCK_VIDEO_LOGS[0]]);
+      let index = 1;
+      videoIntervalRef.current = setInterval(() => {
+        if (index < MOCK_VIDEO_LOGS.length) {
+          setVideoLogs(prev => [...prev, MOCK_VIDEO_LOGS[index]]);
+          index++;
+        } else {
+          // Loop logs
+          setVideoLogs([MOCK_VIDEO_LOGS[0]]);
+          index = 1;
+        }
+      }, 1000);
+    } else {
+      if (videoIntervalRef.current) clearInterval(videoIntervalRef.current);
+      setVideoLogs([]);
+    }
+    return () => {
+      if (videoIntervalRef.current) clearInterval(videoIntervalRef.current);
+    };
+  }, [isVideoPlaying]);
+
   // Track slider movements during the wargaming step
   useEffect(() => {
     if (tourActive && tourStep === 4) {
