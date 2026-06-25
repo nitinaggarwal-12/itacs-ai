@@ -1854,7 +1854,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
     const parts = text.split('**');
     const boldParsed = parts.map((part, i) => {
       if (i % 2 === 1) {
-        return <strong key={`b-${i}`} style={{ color: 'white', fontWeight: 800 }}>{part}</strong>;
+        return <strong key={`b-${i}`} style={{ color: 'inherit', fontWeight: 800 }}>{part}</strong>;
       }
       return part;
     });
