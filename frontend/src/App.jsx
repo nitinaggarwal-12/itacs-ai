@@ -492,6 +492,16 @@ export default function App() {
   const [tourActive, setTourActive] = useState(false);
   const [tourStep, setTourStep] = useState(0);
   const [highlightStyle, setHighlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
+  const [hasDraggedTimeline, setHasDraggedTimeline] = useState(false);
+
+  // Track slider movements during the wargaming step
+  useEffect(() => {
+    if (tourActive && tourStep === 4) {
+      if (warTimeline !== 6) {
+        setHasDraggedTimeline(true);
+      }
+    }
+  }, [warTimeline, tourActive, tourStep]);
 
   const tourSteps = [
     {
@@ -506,7 +516,10 @@ export default function App() {
       title: "The Launch Cockpit 📊",
       description: "This is your executive command home. It aggregates real-time cross-functional oncology KPIs, trial milestones, and proactive AI advisor alerts in a single view.",
       buttonText: "Next Step ➔",
-      action: (setActiveTab) => setActiveTab('cockpit')
+      action: (setActiveTab) => {
+        setActiveTab('cockpit');
+        setHasDraggedTimeline(false); // Reset interaction states
+      }
     },
     {
       targetId: "nav-cascade",
@@ -522,20 +535,19 @@ export default function App() {
       buttonText: "Next Step ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone) => {
         setActiveTab('cascade');
-        setSelectedRoadmapMilestone('melanoma_readout');
       }
     },
     {
-      targetId: "nav-wargaming",
+      targetId: "war-timeline-slider",
       title: "Competitive Wargaming ⚔️",
       description: "Now, let's explore the Competitive Wargaming console. Here, you can adjust competitor trial timelines and price-cut threats using real-time sliders to calculate strategic risk!",
-      buttonText: "Go to Wargaming ➔",
+      buttonText: "Next Step ➔",
       action: (setActiveTab) => setActiveTab('wargaming')
     },
     {
-      targetId: "nav-radar",
+      targetId: "radar-region-eu",
       title: "Global HTA Radar 📡",
-      description: "Finally, let's open the Global Market Radar. This interactive map displays country-by-country Health Technology Assessment (HTA) approval waves and launch windows!",
+      description: "Finally, let's open the global market rollout radar. Here, we track country-by-country Health Technology Assessment (HTA) approval waves and launch windows in real-time.",
       buttonText: "Go to Market Radar ➔",
       action: (setActiveTab) => setActiveTab('radar')
     },
@@ -5145,6 +5157,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <strong style={{ color: 'var(--brand-cyan)' }}>{warTimeline} Months</strong>
                   </div>
                   <input
+                    id="war-timeline-slider"
                     type="range"
                     min="1"
                     max="12"
@@ -5349,6 +5362,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   { code: 'APAC', label: 'Asia-Pacific (APAC)', color: '#f59e0b', status: 'AMBER (Diagnostic Lag)', desc: 'Japan PMDA bridge trials active; diagnostic kit scale delay.' }
                 ].map(region => (
                   <button
+                    id={`radar-region-${region.code.toLowerCase()}`}
                     key={region.code}
                     onClick={() => setSelectedRegionFilter(region.code)}
                     className="glass-card"
@@ -7742,12 +7756,29 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </button>
             </div>
 
-            {/* Title & Description */}
+            {/* Title & Description (State-Aware Dynamic Evaluation!) */}
             <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
               {tourSteps[tourStep].title}
             </h3>
             <p style={{ margin: '0 0 16px 0', fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-              {tourSteps[tourStep].description}
+              {(() => {
+                if (tourStep === 3) {
+                  return selectedRoadmapMilestone === 'melanoma_readout'
+                    ? "🎉 Perfect! Look at the Regulatory Briefing Card that has appeared at the bottom of your screen. It has dynamically loaded the KEYNOTE-940 trial parameters, including primary endpoints (RFS), RTOR channels, and companion diagnostic details!"
+                    : "This highlighted block represents the Phase 3 KEYNOTE-940 Efficacy Topline Readout (Q2 2026). 👉 CLICK directly on this block right now to sync our downstream regulatory briefs!";
+                }
+                if (tourStep === 4) {
+                  return hasDraggedTimeline
+                    ? "🎉 Excellent! Notice how adjusting the timeline dynamically recalculates our relative threat index and launch risk metrics in the wargaming charts below! Adjusting competitor timelines allows us to optimize filing speeds."
+                    : "This is the Competitor X FDA Approval Timeline slider. 👉 Try DRAGGING this slider right now to simulate Competitor X launching earlier or later!";
+                }
+                if (tourStep === 5) {
+                  return selectedRegionFilter === 'EU'
+                    ? "🎉 Sensational! Look at the cards in the center of the screen: they have dynamically filtered to display only European HTA strategies, and the overall sync telemetry at the bottom has updated to 75% for EMA!"
+                    : "This is the European Union (EMA) rollout tracker. 👉 CLICK directly on this card right now to filter our global launch insights database and see the G-BA pricing blockers in Europe!";
+                }
+                return tourSteps[tourStep].description;
+              })()}
             </p>
 
             {/* Footer Progress & Action */}
@@ -7771,14 +7802,22 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 })}
               </div>
 
-              {/* Action Button */}
+              {/* Action Button (State-Aware Lock!) */}
               <button 
+                disabled={(() => {
+                  if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return true;
+                  if (tourStep === 4 && !hasDraggedTimeline) return true;
+                  if (tourStep === 5 && selectedRegionFilter !== 'EU') return true;
+                  return false;
+                })()}
                 onClick={() => {
                   if (tourStep < tourSteps.length - 1) {
                     setTourStep(prev => prev + 1);
                   } else {
                     localStorage.setItem('itacs_tour_completed_w1', 'true');
                     setTourActive(false);
+                    // Redirect back to cockpit so the reload lands them home!
+                    window.location.hash = 'cockpit';
                     window.location.reload();
                   }
                 }}
@@ -7790,7 +7829,18 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   padding: '6px 12px',
                   fontSize: '10.5px',
                   fontWeight: 'bold',
-                  cursor: 'pointer',
+                  cursor: (() => {
+                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 'not-allowed';
+                    if (tourStep === 4 && !hasDraggedTimeline) return 'not-allowed';
+                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return 'not-allowed';
+                    return 'pointer';
+                  })(),
+                  opacity: (() => {
+                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 0.4;
+                    if (tourStep === 4 && !hasDraggedTimeline) return 0.4;
+                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return 0.4;
+                    return 1;
+                  })(),
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
@@ -7798,7 +7848,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   transition: 'all 0.2s ease'
                 }}
               >
-                {tourSteps[tourStep].buttonText}
+                {(() => {
+                  if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return "Waiting for click... 🔒";
+                  if (tourStep === 4 && !hasDraggedTimeline) return "Waiting for drag... 🔒";
+                  if (tourStep === 5 && selectedRegionFilter !== 'EU') return "Waiting for click... 🔒";
+                  return tourSteps[tourStep].buttonText;
+                })()}
               </button>
             </div>
           </div>
