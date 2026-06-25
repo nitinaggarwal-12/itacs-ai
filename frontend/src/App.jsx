@@ -2840,26 +2840,140 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     {chatMessages.map((msg, msgIdx) => {
                       const isUser = msg.role === 'user';
                       return (
-                        <div 
-                          key={msgIdx} 
-                          className={`message ${isUser ? 'user' : 'assistant'}`} 
-                          style={{ 
-                            display: 'flex', 
-                            gap: '10px', 
-                            background: isUser ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255, 255, 255, 0.02)', 
-                            padding: '12px', 
-                            borderRadius: '8px', 
-                            border: isUser ? '1px solid rgba(6, 182, 212, 0.15)' : '1px solid var(--glass-border)',
-                            alignItems: 'flex-start'
-                          }}
-                        >
-                          <div className="avatar" style={{ fontSize: '16px', userSelect: 'none' }}>{isUser ? 'GL' : '🤖'}</div>
-                          <div className="bubble markdown-bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', flex: 1 }}>
-                            {renderMessageContent(msg.content)}
+                        <div key={msgIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div 
+                            className={`message ${isUser ? 'user' : 'assistant'}`} 
+                            style={{ 
+                              display: 'flex', 
+                              gap: '10px', 
+                              background: isUser ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255, 255, 255, 0.02)', 
+                              padding: '12px', 
+                              borderRadius: '8px', 
+                              border: isUser ? '1px solid rgba(6, 182, 212, 0.15)' : '1px solid var(--glass-border)',
+                              alignItems: 'flex-start'
+                            }}
+                          >
+                            <div className="avatar" style={{ fontSize: '16px', userSelect: 'none' }}>{isUser ? 'GL' : '🤖'}</div>
+                            <div className="bubble markdown-bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', flex: 1 }}>
+                              {renderMessageContent(msg.content)}
+                            </div>
                           </div>
+
+                          {/* Dynamic Follow-Up Suggested Next Actions (Premium UI Touch!) */}
+                          {!isUser && msgIdx === chatMessages.length - 1 && chatMessages.length > 1 && (
+                            <div style={{ paddingLeft: '28px', display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '2px' }}>
+                              <span style={{ fontSize: '9.5px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', userSelect: 'none' }}>
+                                Suggested Next Actions
+                              </span>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {(() => {
+                                  const contentLower = msg.content.toLowerCase();
+                                  if (contentLower.includes("payer") || contentLower.includes("prior auth") || contentLower.includes("reimbursement") || contentLower.includes("access")) {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Simulate prior-auth friction thresholds
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Analyze community delivery hubs
+                                        </button>
+                                      </>
+                                    );
+                                  } else if (contentLower.includes("logistics") || contentLower.includes("cold-chain") || contentLower.includes("delivery") || contentLower.includes("practices")) {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("How do we reduce community oncology adoption lag for mRNA vaccines?")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Optimize V940 clinic deep-freeze leases
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Evaluate access timelines
+                                        </button>
+                                      </>
+                                    );
+                                  } else {
+                                    return (
+                                      <>
+                                        <button 
+                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Evaluate access timelines
+                                        </button>
+                                        <button 
+                                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
+                                          style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '10.5px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                                          onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                                          onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                                        >
+                                          → Simulate competitor pressure
+                                        </button>
+                                      </>
+                                    );
+                                  }
+                                })()}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
+
+                    {/* Initial Suggested Launch Action Prompts (Welcome state) */}
+                    {chatMessages.length === 1 && (
+                      <div style={{ paddingLeft: '28px', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                        <span style={{ fontSize: '9.5px', fontWeight: 700, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', userSelect: 'none' }}>
+                          Suggested Launch Action Prompts
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
+                          <button 
+                            onClick={() => handleSendMessage("Generate GOLT Executive Summary for March presentation.")}
+                            style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease', textAlign: 'left' }}
+                            onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                            onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                          >
+                            → Generate Executive Summary for March GOLT presentation
+                          </button>
+                          <button 
+                            onClick={() => handleSendMessage("How do we reduce community oncology adoption lag for mRNA vaccines?")}
+                            style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease', textAlign: 'left' }}
+                            onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                            onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                          >
+                            → Analyze community oncology operational hubs
+                          </button>
+                          <button 
+                            onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
+                            style={{ background: 'rgba(6, 182, 212, 0.05)', border: '1px solid rgba(6, 182, 212, 0.15)', color: 'var(--brand-cyan)', borderRadius: '6px', padding: '6px 12px', fontSize: '11px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease', textAlign: 'left' }}
+                            onMouseEnter={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.1)'}
+                            onMouseLeave={(e) => e.target.style.background = 'rgba(6, 182, 212, 0.05)'}
+                          >
+                            → Evaluate access threats and step-therapy gating
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     {chatLoading && (
                       <div className="message assistant" style={{ display: 'flex', gap: '10px', padding: '12px', alignItems: 'center' }}>
                         <div className="avatar">🤖</div>
