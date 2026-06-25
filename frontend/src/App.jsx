@@ -314,7 +314,7 @@ export default function App() {
   const getInitialTab = () => {
     const hash = window.location.hash.replace('#', '');
     const validTabs = [
-      'home', 'cascade', 'wargaming', 'radar', 'tracker', 
+      'home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
       'matrix', 'builder', 'workshop', 'kol', 'deck', 
       'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
     ];
@@ -328,7 +328,7 @@ export default function App() {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
       const validTabs = [
-        'home', 'cascade', 'wargaming', 'radar', 'tracker', 
+        'home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
         'matrix', 'builder', 'workshop', 'kol', 'deck', 
         'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
       ];
@@ -1925,6 +1925,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             <Home size={16} style={{ color: 'var(--brand-cyan)' }} /> Welcome Home
           </button>
           <button 
+            id="nav-cockpit"
+            onClick={() => setActiveTab('cockpit')}
+            className={`sidebar-nav-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
+          >
+            <Activity size={16} style={{ color: 'var(--brand-cyan)' }} /> Launch Cockpit
+          </button>
+          <button 
             id="nav-cascade"
             onClick={() => setActiveTab('cascade')}
             className={`sidebar-nav-btn ${activeTab === 'cascade' ? 'active' : ''}`}
@@ -2698,6 +2705,187 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   )}
                 </div>
               </div>
+            </div>
+
+          </main>
+        )}
+
+        {/* TAB 1.5: LAUNCH COCKPIT (THE EXECUTIVE COMMAND HUB - RESTORED!) */}
+        {activeTab === 'cockpit' && (
+          <main className="cockpit-layout animate-fade-in" style={{ padding: '0 32px 32px 32px', display: 'flex', flexDirection: 'column', gap: '28px', boxSizing: 'border-box' }}>
+            
+            {/* LAUNCH PREPARATION SCOREBOARD */}
+            <div className="scoreboard-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+              <div className="score-card glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', padding: '20px', borderRadius: '12px' }}>
+                <div className="score-header" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '8px' }}>
+                  <span>Launch Readiness Index</span>
+                  <Activity size={14} style={{ color: 'var(--brand-cyan)' }} />
+                </div>
+                <div className="score-body">
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>94.2%</h2>
+                  <span className="trend positive" style={{ color: '#10b981', fontSize: '11px', fontWeight: 'bold' }}>▲ +1.4% this month</span>
+                </div>
+              </div>
+
+              <div className="score-card glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', padding: '20px', borderRadius: '12px' }}>
+                <div className="score-header" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '8px' }}>
+                  <span>Active Content Conflicts</span>
+                  <AlertTriangle size={14} style={{ color: 'var(--brand-purple)' }} />
+                </div>
+                <div className="score-body">
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>3</h2>
+                  <span className="trend stable" style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Stable since ingestion</span>
+                </div>
+              </div>
+
+              <div className="score-card glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', padding: '20px', borderRadius: '12px' }}>
+                <div className="score-header" style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '12px', marginBottom: '8px' }}>
+                  <span>Audited Publications</span>
+                  <History size={14} style={{ color: 'var(--brand-cyan)' }} />
+                </div>
+                <div className="score-body">
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>14 / 15</h2>
+                  <span className="trend positive" style={{ color: '#10b981', fontSize: '11px', fontWeight: 'bold' }}>▲ 95% validation complete</span>
+                </div>
+              </div>
+            </div>
+
+            {/* DUAL COGNITIVE TILES */}
+            <div className="cognitive-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '28px' }}>
+              
+              {/* Tile 1: AI Compliance Advisor */}
+              <div className="cognitive-card glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="card-header-premium" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="header-icon-bullet-purple" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-purple)' }} />
+                    <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>AI Compliance Advisor</h3>
+                  </div>
+                  <span className="cognitive-status-tag" style={{ fontSize: '10px', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '3px 8px', borderRadius: '20px', fontWeight: 'bold' }}>Active Analysis</span>
+                </div>
+                
+                <div className="advisor-chat-container" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div className="advisor-messages" style={{ height: '240px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '4px' }}>
+                    <div className="message system" style={{ display: 'flex', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                      <div className="avatar" style={{ fontSize: '16px' }}>🤖</div>
+                      <div className="bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        Welcome, GOLT Team Lead. I have completed a differential compliance check across all active V940 slide decks. I detected 3 high-probability positioning conflicts with health authority guidelines in Europe. How would you like to proceed?
+                      </div>
+                    </div>
+                    
+                    {chatMessages.map(msg => (
+                      <div key={msg.id} className={`message ${msg.sender}`} style={{ display: 'flex', gap: '10px', background: msg.sender === 'user' ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: msg.sender === 'user' ? '1px solid rgba(6, 182, 212, 0.15)' : '1px solid var(--glass-border)' }}>
+                        <div className="avatar" style={{ fontSize: '16px' }}>{msg.sender === 'user' ? 'GL' : '🤖'}</div>
+                        <div className="bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{msg.text}</div>
+                      </div>
+                    ))}
+                    
+                    {chatLoading && (
+                      <div className="message assistant" style={{ display: 'flex', gap: '10px', padding: '12px' }}>
+                        <div className="avatar">🤖</div>
+                        <div className="bubble" style={{ color: 'var(--text-muted)' }}>Synthesizing compliance mapping...</div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  <div className="chat-input-row" style={{ display: 'flex', gap: '10px', background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', padding: '6px 12px', borderRadius: '8px' }}>
+                    <input 
+                      type="text"
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                      placeholder="Ask about clinical adoption, access barriers, or competitive timeline alignment..."
+                      style={{ flex: 1, background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '12px', outline: 'none' }}
+                      className="chat-text-input"
+                    />
+                    <button 
+                      onClick={() => handleSendMessage()}
+                      disabled={chatLoading}
+                      style={{ background: 'none', border: 'none', color: 'var(--brand-cyan)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                      <Send size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tile 2: Proactive Recommendations */}
+              <div className="cognitive-card glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div className="card-header-premium" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="header-icon-bullet-cyan" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-cyan)' }} />
+                    <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Proactive Recommendations</h3>
+                  </div>
+                  <span className="cognitive-action-badge" style={{ fontSize: '10px', color: '#ffffff', background: 'var(--brand-purple)', padding: '3px 8px', borderRadius: '20px', fontWeight: 'bold' }}>3 Actions</span>
+                </div>
+
+                <div className="proactive-scroll-list" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '280px', paddingRight: '4px' }}>
+                  
+                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Germany G-BA Dossier Conflict</strong>
+                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#ef4444', background: 'rgba(239,68,68,0.08)', padding: '2px 6px', borderRadius: '4px' }}>High Risk</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      German G-BA pricing pushback is predicted. AI recommends generating proactive volume-based pricing models in Europe to mitigate 22% benefit advantage disputes.
+                    </p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                      <button 
+                        onClick={() => {
+                          setSelectedRoadmapMilestone('nsclc_readout');
+                          setActiveTab('workshop');
+                        }} 
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
+                      >
+                        Model in Workshop
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>VEVA CRM Slide Handoff Gap</strong>
+                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#f59e0b', background: 'rgba(245,158,11,0.08)', padding: '2px 6px', borderRadius: '4px' }}>Medium Risk</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      The approved access presentation slides for the US FDA launch have not been pushed to Salesforce/Veeva CRM, leaving field MSLs without grounded clinical evidence.
+                    </p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                      <button 
+                        onClick={() => {
+                          setActiveTab('tracker');
+                        }} 
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
+                      >
+                        Sync Telemetry
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Japan PMDA Diagnostics Lag</strong>
+                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#3b82f6', background: 'rgba(59,130,246,0.08)', padding: '2px 6px', borderRadius: '4px' }}>Low Risk</span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      Companion diagnostic kit installations in Japan are lagging behind patient enrollment speeds. PMDA bridge trials require immediate IHC screening validation.
+                    </p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                      <button 
+                        onClick={() => {
+                          setSelectedRoadmapMilestone('bladder_pdufa');
+                          setActiveTab('cascade');
+                        }} 
+                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
+                      >
+                        View Gantt Gating
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
 
           </main>
