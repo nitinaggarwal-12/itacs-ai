@@ -2611,6 +2611,57 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
             </div>
 
+            {/* SECTION 1.5: BRAND VIDEO OVERVIEW */}
+            <div className="glass-card animate-fade-in" style={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+              backdropFilter: 'blur(12px)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '20px' }}>🎬</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    ITACS Platform Strategic Video Overview
+                  </h3>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    Synthesized overview of the oncology commercialization engine (created via NotebookLM)
+                  </span>
+                </div>
+              </div>
+              
+              <div style={{
+                position: 'relative',
+                paddingBottom: '56.25%', /* 16:9 Aspect Ratio */
+                height: 0,
+                overflow: 'hidden',
+                borderRadius: '12px',
+                border: '1px solid var(--glass-border)',
+                background: '#04060a',
+                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)'
+              }}>
+                <video 
+                  src="/Scaling_Pharma_AI.mp4" 
+                  controls 
+                  preload="metadata"
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '12px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
+            </div>
+
             {/* SECTION 2: THE DYNAMIC ONBOARDING ROADMAP (Subway Map) */}
             <div style={{
               background: 'var(--bg-secondary)',

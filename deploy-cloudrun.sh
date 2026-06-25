@@ -34,6 +34,7 @@ gcloud services enable \
     artifactregistry.googleapis.com \
     secretmanager.googleapis.com \
     iam.googleapis.com \
+    cloudbuild.googleapis.com \
     --project="$PROJECT_ID"
 
 # 2. Create Artifact Registry Repository
@@ -48,8 +49,8 @@ else
     echo "Repository $AR_REPO already exists."
 fi
 
-# Authenticate Docker to Artifact Registry
-gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+# Authenticate Docker to Artifact Registry (Optional - bypassed since local Docker is not installed)
+gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet || true
 
 # 3. Provision Cloud SQL PostgreSQL Database
 echo "Step 3: Checking/Creating Cloud SQL Database Instance..."
@@ -58,6 +59,7 @@ if ! gcloud sql instances describe "$DB_INSTANCE_NAME" --project="$PROJECT_ID" &
     gcloud sql instances create "$DB_INSTANCE_NAME" \
         --database-version=POSTGRES_16 \
         --tier=db-f1-micro \
+        --edition=ENTERPRISE \
         --region="$REGION" \
         --root-password="$DB_PASSWORD" \
         --project="$PROJECT_ID"
@@ -74,17 +76,19 @@ gcloud sql users create "$DB_USER" --instance="$DB_INSTANCE_NAME" --password="$D
 DB_CONNECTION_NAME=$(gcloud sql instances describe "$DB_INSTANCE_NAME" --format="value(connectionName)" --project="$PROJECT_ID")
 echo "Cloud SQL Connection String: $DB_CONNECTION_NAME"
 
-# 4. Build and Push Backend Image
-echo "Step 4: Building and Pushing Backend Docker Image..."
+# 4. Build and Push Backend Image via Cloud Build
+echo "Step 4: Building Backend Docker Image in the cloud (via Google Cloud Build)..."
 BACKEND_IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/$BACKEND_SERVICE:latest"
-docker build -t "$BACKEND_IMAGE" ./backend
-docker push "$BACKEND_IMAGE"
+gcloud builds submit ./backend \
+    --tag "$BACKEND_IMAGE" \
+    --project="$PROJECT_ID"
 
-# 5. Build and Push Frontend Image
-echo "Step 5: Building and Pushing Frontend Docker Image..."
+# 5. Build and Push Frontend Image via Cloud Build
+echo "Step 5: Building Frontend Docker Image in the cloud (via Google Cloud Build)..."
 FRONTEND_IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/$FRONTEND_SERVICE:latest"
-docker build -t "$FRONTEND_IMAGE" ./frontend
-docker push "$FRONTEND_IMAGE"
+gcloud builds submit ./frontend \
+    --tag "$FRONTEND_IMAGE" \
+    --project="$PROJECT_ID"
 
 # 6. Deploy Backend Service to Cloud Run
 echo "Step 6: Deploying FastAPI Backend to Cloud Run..."
