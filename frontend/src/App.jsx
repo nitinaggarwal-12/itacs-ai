@@ -5,7 +5,7 @@ import {
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
   HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X,
   Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users, Sun, Moon,
-  PieChart, BookOpen
+  PieChart, BookOpen, Home
 } from 'lucide-react';
 
 // API Configuration
@@ -314,11 +314,11 @@ export default function App() {
   const getInitialTab = () => {
     const hash = window.location.hash.replace('#', '');
     const validTabs = [
-      'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
+      'home', 'cascade', 'wargaming', 'radar', 'tracker', 
       'matrix', 'builder', 'workshop', 'kol', 'deck', 
       'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
     ];
-    return validTabs.includes(hash) ? hash : 'cockpit';
+    return validTabs.includes(hash) ? hash : 'home';
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
@@ -328,7 +328,7 @@ export default function App() {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
       const validTabs = [
-        'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
+        'home', 'cascade', 'wargaming', 'radar', 'tracker', 
         'matrix', 'builder', 'workshop', 'kol', 'deck', 
         'budget', 'roleplay', 'ingest', 'logistics', 'skills', 'theater'
       ];
@@ -520,12 +520,12 @@ export default function App() {
       action: () => {}
     },
     {
-      targetId: "nav-cockpit",
-      title: "The Launch Cockpit 📊",
-      description: "This is your executive command home. It aggregates real-time cross-functional oncology KPIs, trial milestones, and proactive AI advisor alerts in a single view.",
+      targetId: "nav-home",
+      title: "Welcome Home Portal 🏠",
+      description: "This is your brand welcome home and educational portal. It contains your V940 oncology launch briefing, operating playbook, and live ingestion terminal!",
       buttonText: "Next Step ➔",
       action: (setActiveTab) => {
-        setActiveTab('cockpit');
+        setActiveTab('home');
         setHasDraggedTimeline(false); // Reset interaction states
       }
     },
@@ -1877,11 +1877,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           <div className="nav-group">
           <span className="nav-group-title">Command & Interrogate</span>
           <button 
-            id="nav-cockpit"
-            onClick={() => setActiveTab('cockpit')}
-            className={`sidebar-nav-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
+            id="nav-home"
+            onClick={() => setActiveTab('home')}
+            className={`sidebar-nav-btn ${activeTab === 'home' ? 'active' : ''}`}
           >
-            <Sparkles size={16} /> Launch Cockpit
+            <Home size={16} style={{ color: 'var(--brand-cyan)' }} /> Welcome Home
           </button>
           <button 
             id="nav-cascade"
@@ -2050,7 +2050,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               <span>ITACS Platform</span>
               <span>/</span>
               <span style={{ color: 'var(--brand-cyan)' }}>
-                {activeTab === 'cockpit' && 'Command & Interrogate'}
+                {activeTab === 'home' && 'Command & Interrogate'}
                 {activeTab === 'cascade' && 'Command & Interrogate'}
                 {activeTab === 'wargaming' && 'Command & Interrogate'}
                 {activeTab === 'radar' && 'Command & Interrogate'}
@@ -2069,7 +2069,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </span>
             </div>
             <h2 style={{ margin: '4px 0 0 0', fontSize: '18px', fontWeight: 800, fontFamily: "'Outfit', sans-serif", color: 'var(--text-primary)' }}>
-              {activeTab === 'cockpit' && 'Launch Cockpit'}
+              {activeTab === 'home' && 'Welcome Home Portal'}
               {activeTab === 'cascade' && 'Indication Roadmap'}
               {activeTab === 'wargaming' && 'Competitive Wargaming'}
               {activeTab === 'radar' && 'Global Market Radar'}
@@ -2114,338 +2114,547 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
         </header>
 
         {/* BRAND PLANNING MACRO-TIMELINE (L3Next Milestone Windows) */}
-        {activeTab === 'cockpit' && (
+        {activeTab === 'home' && (
           <div style={{ display: 'none' }} />
         )}
 
-        {/* TAB 1: LAUNCH COCKPIT (THE EXECUTIVE COMMAND HUB) */}
-        {activeTab === 'cockpit' && (
-          <main className="cockpit-layout animate-fade-in">
+        {/* TAB 1: WELCOME HOME PORTAL (THE BRAND BRIEFING HUB) */}
+        {activeTab === 'home' && (
+          <main className="cockpit-layout animate-fade-in" style={{ padding: '0 32px 32px 32px', display: 'flex', flexDirection: 'column', gap: '28px', boxSizing: 'border-box' }}>
             
-            {/* Left Column: Scorecard & Themes */}
-            <div className="cockpit-left">
-              
-              {/* STRIPE/LINEAR STYLE ACCENTED TELEMETRY CARDS */}
-              <div className="scorecard-grid">
-                <div className="metric-card has-success">
-                  <span className="metric-val blue">{validatedMemoryCount}</span>
-                  <span className="metric-label">Validated Memory</span>
+            {/* SECTION 1: HERO BRIEFING BANNER */}
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '16px',
+              padding: '32px',
+              display: 'grid',
+              gridTemplateColumns: '1.2fr 0.8fr',
+              gap: '32px',
+              alignItems: 'center',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+              backdropFilter: 'blur(12px)'
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.12)', padding: '4px 10px', borderRadius: '20px', letterSpacing: '1px', textTransform: 'uppercase' }}>Oncology Core Suite</span>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
+                  <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: '600' }}>CONNECTED: PIPELINE V1.3.1</span>
                 </div>
-                <div className={`metric-card ${activeDraftsCount > 0 ? 'has-warning' : ''}`}>
-                  <span className="metric-val amber">{activeDraftsCount}</span>
-                  <span className="metric-label">Active Drafts</span>
-                </div>
-                <div className={`metric-card ${openConflictsCount > 0 ? 'has-danger' : ''}`}>
-                  <span className="metric-val red">{openConflictsCount}</span>
-                  <span className="metric-label">Open Conflicts</span>
-                </div>
-              </div>
-
-              <div className="glass-card">
-                <h3 className="glass-card-title">
-                  <Sparkles size={16} style={{ color: '#60a5fa' }} /> Launch Themes & Strategic Risks
-                </h3>
-                <div className="themes-scroller">
-                  {themes.map((theme, idx) => (
-                    <div 
-                      key={idx} 
-                      className="theme-item"
-                      onClick={() => handleSendMessage(`Analyze the launch implications and strategic risks of theme: "${theme.theme_name}"`)}
-                      style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
-                      title="Click to ask the Strategic Advisor to analyze this launch theme"
-                    >
-                      <div className="theme-item-header">
-                        <h4>{theme.theme_name}</h4>
-                        <span className="theme-score">Weight: {theme.theme_score}</span>
-                      </div>
-                      <p>{theme.executive_synthesis}</p>
-                      <div className="theme-meta-chips">
-                        {theme.contributing_functions.map((fn, fIdx) => (
-                          <span key={fIdx} className="meta-chip">{fn}</span>
-                        ))}
-                        <span className="meta-chip" style={{ color: '#818cf8', background: 'rgba(129, 140, 248, 0.1)' }}>
-                          {theme.opportunity_spaces[0]}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="glass-card">
-                <h3 className="glass-card-title">
-                  <AlertTriangle size={16} style={{ color: '#ef4444' }} /> Active Alignments (Conflicts Room)
-                </h3>
-                <div className="themes-scroller" style={{ maxHeight: '220px' }}>
-                  {conflicts.map(conf => (
-                    <div 
-                      key={conf.id} 
-                      className="theme-item" 
-                      style={{ borderLeft: '3px solid #ef4444', cursor: 'pointer' }}
-                      onClick={() => {
-                        setActiveTab('workshop');
-                        alert(`Consensus Hub: Directing you to the Live Workshop to resolve conflict: "${conf.conflict_type}". Cast your anonymous team vote to lock consensus!`);
-                      }}
-                      title="Click to resolve this disagreement inside the Live Workshop Consensus board"
-                    >
-                      <div className="theme-item-header">
-                        <h4 style={{ color: '#fca5a5', fontSize: '11px' }}>{conf.conflict_type}</h4>
-                        <span className="theme-score" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}>FLAGGED</span>
-                      </div>
-                      <p style={{ fontSize: '10px' }}>{conf.description}</p>
-                      <div className="drawer-actions" style={{ justifyContent: 'flex-end', marginTop: '6px' }}>
-                        <button 
-                          className="btn btn-primary"
-                          style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '4px 10px', fontSize: '9px', pointerEvents: 'none' }}
-                        >
-                          Resolve in Workshop
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  {conflicts.length === 0 && (
-                    <div style={{ textAlign: 'center', padding: '24px', fontSize: '11px', color: '#64748b' }}>
-                      No outstanding alignment conflicts. Full consensus achieved!
-                    </div>
-                  )}
+                
+                <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 900, lineHeight: '1.2', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+                  ITACS Oncology Command
+                </h1>
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--brand-cyan)' }}>
+                  Autonomous Compliance Gating & Evidence Grounding for Cancer Vaccine Launches
+                </h2>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                  ITACS is a state-of-the-art compliance intelligence platform designed to secure the global Merck-Moderna V940 personalized cancer vaccine launch. It automates scientific auditing, grounds HTA evidence, wargames competitor trials, and synchronizes downstream readiness across medical and commercial teams.
+                </p>
+                
+                <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                  <button 
+                    onClick={() => {
+                      setTourStep(0);
+                      setTourActive(true);
+                    }}
+                    style={{
+                      background: 'var(--brand-cyan)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '12px 24px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 14px rgba(6, 182, 212, 0.3)',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    Launch Onboarding Mission 🚀
+                  </button>
+                  <a 
+                    href="#matrix"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--glass-border)',
+                      borderRadius: '8px',
+                      padding: '12px 24px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    Explore Access Matrix 🧬
+                  </a>
                 </div>
               </div>
 
-              {/* Balances Grid: Truth Ledger & Recent System Activity */}
-              <div className="glass-card" style={{ marginTop: '16px' }}>
-                <h3 className="glass-card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <History size={16} style={{ color: 'var(--brand-cyan)' }} /> Truth Ledger & System Activity
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px' }}>
-                  {[
-                    { id: 1, agent: 'Medical Affairs Agent', text: 'Validated clinical efficacy implication for Opportunity-1', time: '2 mins ago', color: '#10b981' },
-                    { id: 2, agent: 'Market Access Agent', text: 'Flagged a payer contradiction on step-therapy CSF-3', time: '14 mins ago', color: '#f59e0b' },
-                    { id: 3, agent: 'Ingestion Pipeline', text: 'Synchronized 14 new clinical deck slides from Veeva Vault', time: '1 hour ago', color: '#06b6d4' }
-                  ].map(act => (
-                    <div key={act.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 12px', background: 'var(--bg-tertiary)', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
-                      <div>
-                        <span style={{ fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase', color: act.color, display: 'block', letterSpacing: '0.5px' }}>
-                          {act.agent}
-                        </span>
-                        <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-secondary)' }}>{act.text}</p>
-                      </div>
-                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: '12px' }}>{act.time}</span>
-                    </div>
-                  ))}
+              {/* Sleek AI-Generated Blueprint Graphic Frame */}
+              <div className="glass-card" style={{
+                borderRadius: '12px',
+                border: '1px solid var(--glass-border)',
+                overflow: 'hidden',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
+                height: '240px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#030407',
+                position: 'relative'
+              }}>
+                <img 
+                  src="/oncology_launch_blueprint.png" 
+                  alt="ITACS Oncology Launch Blueprint" 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    opacity: 0.85,
+                    transition: 'all 0.5s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.opacity = '1';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.opacity = '0.85';
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  bottom: '12px',
+                  right: '12px',
+                  background: 'rgba(3, 4, 7, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  fontSize: '9.5px',
+                  color: 'var(--brand-cyan)',
+                  fontWeight: 'bold',
+                  letterSpacing: '0.5px'
+                }}>
+                  SYSTEM SCHEMATIC V1.3
                 </div>
               </div>
-
             </div>
 
-            {/* Right Column: Grounded Strategic Chat Advisor */}
-            <div className="cockpit-right">
-              <div className="glass-card chat-container">
-                <div className="drawer-header" style={{ marginBottom: '14px' }}>
-                  <div className="drawer-header-title">
-                    <h3>Strategic Launch Advisor</h3>
-                    <p>Grounded strictly in validated OKF Memory. Powered by Gemini 1.5 Pro.</p>
+            {/* SECTION 2: THE DYNAMIC ONBOARDING ROADMAP (Subway Map) */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '18px' }}>🧬</span>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>ITACS End-to-End Onboarding Missions</h3>
+                </div>
+                <span style={{ fontSize: '11px', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
+                  Global Progress: {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)'}
+                </span>
+              </div>
+
+              {/* Horizontal Subway roadmap Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', position: 'relative' }}>
+                
+                {/* Mission 1 Station */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: `1px solid ${localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'rgba(16, 185, 129, 0.3)' : 'var(--brand-cyan)'}`,
+                  borderRadius: '12px',
+                  padding: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: '190px'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 1</span>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '#10b981' : 'var(--brand-cyan)' }}>
+                        {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'Completed 🏅' : 'Active 🚀'}
+                      </span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Launch Intelligence</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      Master Gantt indications, regulatory readouts, competitor wargaming timeline sliders, and HTA waves.
+                    </p>
                   </div>
-                  <div className="chat-header-status">
-                    <div className="chat-dot" />
-                    <span>Interactive Memory</span>
-                  </div>
+                  <button 
+                    onClick={() => {
+                      setTourStep(0);
+                      setTourActive(true);
+                    }}
+                    style={{
+                      width: '100%',
+                      background: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'transparent' : 'var(--brand-cyan)',
+                      border: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '1px solid var(--glass-border)' : 'none',
+                      color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--text-primary)' : '#ffffff',
+                      borderRadius: '6px',
+                      padding: '8px',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      marginTop: '12px'
+                    }}
+                  >
+                    {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'Replay Mission 🔄' : 'Start Mission 🚀'}
+                  </button>
                 </div>
 
-                {/* Messages Viewport */}
-                <div className="chat-viewport" ref={chatContainerRef}>
-                  {chatMessages.length === 1 ? (
-                    
-                    /* PROACTIVE INTELLIGENCE WIDGETS */
-                    <div className="proactive-advisor-canvas proactive-mode animate-fade-in">
-                      <div className="proactive-canvas-header">
-                        <h4>Strategic Command Intelligence</h4>
-                        <p>Select a proactive readout or simulate competitive pressure to begin.</p>
-                      </div>
+                {/* Mission 2 Station (Locked) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  opacity: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: '190px'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 2</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Insight Grounding & Gating</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                      Audit statements, verify slide OCR bounding boxes, verify Postgres ledgers, and approve memory bank promotions.
+                    </p>
+                  </div>
+                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                    Complete Mission 1 to Unlock
+                  </button>
+                </div>
 
-                      <div className="proactive-widgets-grid">
-                        <div 
-                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
-                          className="proactive-widget-card"
-                        >
-                          <div className="widget-card-header alert">
-                            <AlertTriangle size={12} />
-                            <h5>What changed since last week?</h5>
-                          </div>
-                          <p>Payer hurdles on KRAS G12C combinations are increasing. Click to evaluate access threats.</p>
-                        </div>
+                {/* Mission 3 Station (Locked) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  opacity: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: '190px'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 3</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Operational Field Telemetry</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                      Map strategic Kanban tasks, drag nodes on consensus canvas, map KOL target lists, and synchronize sales CRM.
+                    </p>
+                  </div>
+                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                    Complete Mission 2 to Unlock
+                  </button>
+                </div>
 
-                        <div 
-                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
-                          className="proactive-widget-card"
-                        >
-                          <div className="widget-card-header trend">
-                            <Sparkles size={12} />
-                            <h5>Simulate Competitor Pressure</h5>
-                          </div>
-                          <p>Analyze pre-mixed monotherapies threatening our personalized vaccine timelines.</p>
-                        </div>
-                      </div>
+                {/* Mission 4 Station (Locked) */}
+                <div style={{
+                  background: 'var(--bg-primary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  opacity: 0.5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: '190px'
+                }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 4</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                    </div>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Boardroom Strategy & Governance</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                      Compile boardroom slides, allocate budgets, wargame price-cuts in wargaming, and run AI simulations.
+                    </p>
+                  </div>
+                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                    Complete Mission 3 to Unlock
+                  </button>
+                </div>
+                
+              </div>
+            </div>
 
-                      <div className="prompt-chips-wrapper" style={{ marginTop: '20px' }}>
-                        <span className="prompt-chips-header">Launch Action Prompts</span>
-                        <button 
-                          onClick={() => handleSendMessage("Generate GOLT Executive Summary for March presentation.")}
-                          className="prompt-suggestion-btn"
-                        >
-                          → Generate Executive Summary for March GOLT presentation
-                        </button>
-                        <button 
-                          onClick={() => handleSendMessage("How do we reduce community oncology adoption lag for mRNA vaccines?")}
-                          className="prompt-suggestion-btn"
-                        >
-                          → Analyze community oncology operational hubs
-                        </button>
-                      </div>
+            {/* SECTION 3: TWO-COLUMN INTERACTIVE PANEL (VIDEO SIMULATOR & CLINICAL PARADIGM) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '28px' }}>
+              
+              {/* Column 1: Interactive Ingestion Terminal (Visual Video Demo) */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '16px',
+                padding: '24px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: isVideoPlaying ? '#ef4444' : '#64748b', animation: isVideoPlaying ? 'pulse 1.5s infinite' : 'none' }} />
+                    <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Live Data Ingestion & NLP Simulator</h3>
+                  </div>
+                  <button 
+                    id="play-ingestion-btn"
+                    onClick={() => setIsVideoPlaying(prev => !prev)}
+                    style={{
+                      background: isVideoPlaying ? 'rgba(239, 68, 68, 0.12)' : 'rgba(6, 182, 212, 0.12)',
+                      border: `1px solid ${isVideoPlaying ? 'rgba(239, 68, 68, 0.2)' : 'rgba(6, 182, 212, 0.2)'}`,
+                      color: isVideoPlaying ? '#ef4444' : 'var(--brand-cyan)',
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      fontSize: '11.5px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {isVideoPlaying ? "Pause Terminal ⏸" : "Play Ingestion Demo ▶"}
+                  </button>
+                </div>
+                
+                {/* Terminal screen container */}
+                <div style={{
+                  background: '#020408',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  borderRadius: '10px',
+                  padding: '16px',
+                  height: '180px',
+                  fontFamily: 'monospace',
+                  fontSize: '11px',
+                  overflowY: 'auto',
+                  boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px',
+                  color: '#38bdf8'
+                }}>
+                  {videoLogs.length === 0 ? (
+                    <div style={{ color: '#64748b', textAlign: 'center', marginTop: '70px', fontStyle: 'italic' }}>
+                      Click "Play Ingestion Demo" to run the live clinical data mapping pipeline simulator...
                     </div>
                   ) : (
-                    
-                    /* Regular chat message streams */
-                    chatMessages.map((msg, index) => {
-                      const isUser = msg.role === 'user';
-                      return (
-                        <div 
-                          key={index}
-                          className={`chat-bubble-row ${isUser ? 'user' : 'assistant'}`}
-                        >
-                          <div className={`chat-bubble-avatar ${isUser ? 'user' : 'assistant'}`}>
-                            {isUser ? 'ME' : '🤖'}
-                          </div>
-                          
-                          <div className="chat-speech-bubble">
-                            {renderMessageContent(msg.content)}
-
-                            {!isUser && index === chatMessages.length - 1 && (
-                              <div className="prompt-chips-wrapper" style={{ marginTop: '14px' }}>
-                                <span className="prompt-chips-header" style={{ fontSize: '9px', fontWeight: 700, color: 'var(--brand-cyan)', textTransform: 'uppercase', display: 'block', marginBottom: '6px', letterSpacing: '0.5px' }}>
-                                  Suggested Next Actions
-                                </span>
-                                
-                                {(() => {
-                                  const contentLower = msg.content.toLowerCase();
-                                  if (contentLower.includes("payer") || contentLower.includes("prior auth") || contentLower.includes("reimbursement") || contentLower.includes("access")) {
-                                    return (
-                                      <>
-                                        <button 
-                                          onClick={() => handleSendMessage("Run a simulation on payer prior authorization friction thresholds for customized immunotherapies.")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Simulate payer prior authorization friction thresholds
-                                        </button>
-                                        <button 
-                                          onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Analyze community operational delivery hubs
-                                        </button>
-                                      </>
-                                    );
-                                  } else if (contentLower.includes("logistics") || contentLower.includes("cold-chain") || contentLower.includes("delivery") || contentLower.includes("infrastructure")) {
-                                    return (
-                                      <>
-                                        <button 
-                                          onClick={() => handleSendMessage("Analyze the operational flowchart for regional delivery hubs to reduce community oncology lag.")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Analyze community operational delivery hubs
-                                        </button>
-                                        <button 
-                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Evaluate access threats and step-therapy gating
-                                        </button>
-                                      </>
-                                    );
-                                  } else if (contentLower.includes("executive summary") || contentLower.includes("summary") || contentLower.includes("presentation") || contentLower.includes("golt")) {
-                                    return (
-                                      <>
-                                        <button 
-                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Evaluate access threats and step-therapy gating
-                                        </button>
-                                        <button 
-                                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Simulate competitive wargaming pressure in Lung Cancer
-                                        </button>
-                                      </>
-                                    );
-                                  } else {
-                                    return (
-                                      <>
-                                        <button 
-                                          onClick={() => handleSendMessage("What changed in payer coverage timelines since last week?")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → What changed in payer coverage timelines since last week?
-                                        </button>
-                                        <button 
-                                          onClick={() => handleSendMessage("Simulate competitive pressure from pan-KRAS inhibitors in Lung Cancer.")}
-                                          className="prompt-suggestion-btn"
-                                        >
-                                          → Simulate competitive wargaming pressure in Lung Cancer
-                                        </button>
-                                      </>
-                                    );
-                                  }
-                                })()}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
+                    videoLogs.map((log, idx) => (
+                      <div 
+                        key={idx} 
+                        style={{
+                          color: log.includes('SUCCESS') ? '#34d399' : (log.includes('ERROR') ? '#f87171' : (log.includes('Slide') ? '#c084fc' : '#38bdf8')),
+                          animation: 'fadeIn 0.3s ease-out forwards',
+                          borderLeft: `2px solid ${log.includes('SUCCESS') ? '#10b981' : (log.includes('Slide') ? '#a855f7' : 'rgba(255,255,255,0.1)')}`,
+                          paddingLeft: '8px'
+                        }}
+                      >
+                        {log}
+                      </div>
+                    ))
                   )}
-                  {chatLoading && (
-                    <div style={{ fontSize: '10px', color: '#64748b', display: 'flex', gap: '6px', alignItems: 'center', margin: '8px 0' }}>
-                      <RefreshCw className="animate-spin" size={12} style={{ color: '#3b82f6' }} />
-                      Grounded advisor synthesizing oncology plans...
-                    </div>
-                  )}
-
                 </div>
+              </div>
 
-                {/* Grounding Context */}
-                {retrievedContext.length > 0 && (
-                  <div className="chat-grounding-chips">
-                    <div className="grounding-header">
-                      <Database size={12} /> Grounded Source Cards ({retrievedContext.length})
-                    </div>
-                    <div className="grounding-scroller">
-                      {retrievedContext.map((c, i) => (
-                        <span key={i} className="grounding-pill" onClick={() => handleVerifyCitation(c.id)} style={{ cursor: 'pointer' }}>
-                          {c.metadata.asset} {c.metadata.tumor}
-                        </span>
-                      ))}
+              {/* Column 2: The Oncology Launch Paradigm (Why ITACS is Required) */}
+              <div style={{
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '16px',
+                padding: '24px',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  The Oncology Launch Paradigm
+                </h3>
+                
+                <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                  Personalized cancer immunotherapies are radically different from standard monoclonal antibodies:
+                </p>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px' }}>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <span style={{ fontSize: '14px' }}>🧪</span>
+                    <div>
+                      <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>Vein-to-Vein Manufacturing</strong>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>Vaccines are custom-synthesized for each patient’s specific mutations, requiring tight, zero-fault timeline integrations.</p>
                     </div>
                   </div>
-                )}
+                  
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <span style={{ fontSize: '14px' }}>🔬</span>
+                    <div>
+                      <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>Reflex Biomarker Screening</strong>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>Rapid diagnostics installations at community pathology labs are mandatory before a patient can qualify for vaccine-combo therapy.</p>
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <span style={{ fontSize: '14px' }}>📊</span>
+                    <div>
+                      <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>Evidence Grounding</strong>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>Payers require cryptographic, slide-grounded clinical evidence folders before granting high-cost access approvals.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
 
-                {/* Chat Input */}
-                <div className="chat-input-row">
-                  <input 
-                    type="text" 
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="Ask about clinical adoption, access barriers, or competitive timeline alignment..."
-                    className="chat-text-input"
-                  />
-                  <button 
-                    onClick={() => handleSendMessage()}
-                    disabled={chatLoading}
-                    className="chat-send-icon-btn"
-                  >
-                    <Send size={14} />
-                  </button>
+            {/* SECTION 4: THE INTERACTIVE OPERATING PLAYBOOK (HOW TO OPERATE) */}
+            <div style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: '16px',
+              padding: '28px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>ITACS Platform Operating Playbook</h3>
+                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--text-muted)' }}>Master the key inputs and validations across the launch ecosystem.</p>
+                </div>
+                
+                {/* Playbook tab pills */}
+                <div style={{ display: 'flex', background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', borderRadius: '8px', padding: '3px', gap: '4px' }}>
+                  {[
+                    { id: 'input', label: '1. Provide Input' },
+                    { id: 'validate', label: '2. Validate Output' },
+                    { id: 'sync', label: '3. Sync Telemetry' }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setPlaybookTab(tab.id)}
+                      style={{
+                        background: playbookTab === tab.id ? 'var(--brand-cyan)' : 'transparent',
+                        border: 'none',
+                        color: playbookTab === tab.id ? '#ffffff' : 'var(--text-secondary)',
+                        borderRadius: '6px',
+                        padding: '6px 12px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Playbook tab content */}
+              <div style={{
+                background: 'var(--bg-primary)',
+                border: '1px solid var(--glass-border)',
+                borderRadius: '12px',
+                padding: '20px',
+                display: 'grid',
+                gridTemplateColumns: '1.3fr 0.7fr',
+                gap: '32px',
+                alignItems: 'center'
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {playbookTab === 'input' && (
+                    <>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>How to Provide Strategic Inputs:</h4>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                        As an ITACS administrator or launch lead, you provide strategic inputs in two primary areas:
+                      </p>
+                      <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li><strong>Competitive Timeline wargaming</strong>: Adjust competitor trials and pricing discount sliders under the <em>Competitive Wargaming</em> tab to dynamically simulate filing delays and risk indices.</li>
+                        <li><strong>Tactical Task Creation</strong>: Click <em>+ Add Task</em> under the <em>Workstream Tracker</em> to inject custom medical or commercial launch readiness tasks in real-time.</li>
+                      </ul>
+                    </>
+                  )}
+                  
+                  {playbookTab === 'validate' && (
+                    <>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>How to Audit & Validate Outputs:</h4>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                        Validation is key to building shareable, board-ready evidence packs:
+                      </p>
+                      <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li><strong>Grounding Coordinates</strong>: Click on any card in the <em>Commercial Matrix</em> to slide open the audit drawer. Review the verbatim slide quote coordinates to verify that the AI's claims are backed by solid clinical trial PDFs.</li>
+                        <li><strong>Compliance Timeline Gating</strong>: Review the cryptographic SHA-256 timeline blocks to verify the history of reviews, and click <em>Approve to Memory</em> to lock the card.</li>
+                      </ul>
+                    </>
+                  )}
+
+                  {playbookTab === 'sync' && (
+                    <>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>How to Synchronize Regional Forces:</h4>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                        Strategy is useless without execution. Syncing downstream forces closes the loop:
+                      </p>
+                      <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <li><strong>Workstream Progress Sliders</strong>: Adjust sliders in the <em>Workstream Tracker</em> to update task progress, dynamically updating the AI diagnostics charts.</li>
+                        <li><strong>Downstream Telemetry CRM Sync</strong>: Click <em>Synchronize Execution Teams</em> to push approved access recommendations and slide evidence packs straight to regional sales and medical field forces globally.</li>
+                      </ul>
+                    </>
+                  )}
+                </div>
+                
+                {/* Micro-graphic / Icon representational column */}
+                <div style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '10px',
+                  height: '140px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  boxShadow: 'inset 0 0 10px rgba(0,0,0,0.15)'
+                }}>
+                  {playbookTab === 'input' && (
+                    <>
+                      <span style={{ fontSize: '32px', filter: 'drop-shadow(0 4px 8px rgba(139, 92, 246, 0.3))' }}>⚔️</span>
+                      <span style={{ fontSize: '10.5px', fontWeight: 'bold', color: 'var(--brand-purple)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>SLIDERS & TASK MODALS</span>
+                    </>
+                  )}
+                  {playbookTab === 'validate' && (
+                    <>
+                      <span style={{ fontSize: '32px', filter: 'drop-shadow(0 4px 8px rgba(6, 182, 212, 0.3))' }}>🔒</span>
+                      <span style={{ fontSize: '10.5px', fontWeight: 'bold', color: 'var(--brand-cyan)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>OCR COORDINATES DRAWER</span>
+                    </>
+                  )}
+                  {playbookTab === 'sync' && (
+                    <>
+                      <span style={{ fontSize: '32px', filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3))' }}>⚡</span>
+                      <span style={{ fontSize: '10.5px', fontWeight: 'bold', color: '#10b981', letterSpacing: '0.5px', textTransform: 'uppercase' }}>CRM TELEMETRY SYNC</span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -7659,7 +7868,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     localStorage.setItem('itacs_tour_completed_w1', 'true');
                     setTourActive(false);
                     // Redirect back to cockpit so the reload lands them home!
-                    window.location.hash = 'cockpit';
+                    window.location.hash = 'home';
                     window.location.reload();
                   }
                 }}
