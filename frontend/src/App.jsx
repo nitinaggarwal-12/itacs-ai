@@ -450,6 +450,14 @@ export default function App() {
     localStorage.setItem('itacs_roadmap_milestone', selectedRoadmapMilestone);
   }, [selectedRoadmapMilestone]);
 
+  // 1. Competitive Wargaming States (Moved to top to prevent TDZ error!)
+  const [warTimeline, setWarTimeline] = useState(6); // months
+  const [warRebate, setWarRebate] = useState(15); // %
+  const [warOSMargin, setWarOSMargin] = useState(10); // %
+
+  // 3. Global Market Radar States (Moved to top to prevent TDZ error!)
+  const [selectedRegionFilter, setSelectedRegionFilter] = useState('ALL');
+
   // Workstream Tracker sync telemetry success notification state
   const [showSyncSuccess, setShowSyncSuccess] = useState(false);
 
@@ -605,19 +613,11 @@ export default function App() {
     };
   }, [theme]);
 
-  // 1. Competitive Wargaming States
-  const [warTimeline, setWarTimeline] = useState(6); // months
-  const [warRebate, setWarRebate] = useState(15); // %
-  const [warOSMargin, setWarOSMargin] = useState(10); // %
-
   // 2. Agent Skill Studio States
   const [forbiddenWords, setForbiddenWords] = useState(["ROI", "Market Share", "Revenue", "Off-Label"]);
   const [newWordInput, setNewWordInput] = useState("");
   const [testBenchInput, setTestBenchInput] = useState("");
   const [testBenchResult, setTestBenchResult] = useState(null);
-
-  // 3. Global Market Radar States
-  const [selectedRegionFilter, setSelectedRegionFilter] = useState('ALL');
 
   // 4. Executive Deck Studio States
   const [deckApprovedSlides, setDeckApprovedSlides] = useState([]);
