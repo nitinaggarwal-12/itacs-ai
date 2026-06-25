@@ -309,6 +309,252 @@ const DEFAULT_TASKS = [
   { id: "T-4", title: "Train MSLs on KRAS G12C clinical data packs", owner: "MSL Scientific Mgr", status: "In Progress", progress: 40, function: "Medical Affairs" }
 ];
 
+const OncologyBrainSimulator = () => {
+  const canvasRef = useRef(null);
+  const [hovered, setHovered] = useState(false);
+  const [logIndex, setLogIndex] = useState(0);
+  const logsRef = useRef([]);
+  const angleRef = useRef(0);
+
+  const LOG_LINES = [
+    "[SYSTEM] INGESTION ENGINE INITIALIZED... OK",
+    "[INGEST] Ingested 15 PubMed oncology abstracts... OK",
+    "[NLP] Grounding clinical trials metadata... SUCCESS",
+    "[COMPLIANCE] G-BA European reference pricing... ACTIVE",
+    "[CONFLICT] Detected combination pricing friction in Germany",
+    "[RESOLVE] Proactive rebate model pushed to Live Workshop",
+    "[INGEST] Ingested V940 stage III/IV Melanoma slides... OK",
+    "[NLP] Grounded V940 efficacy data (44% risk reduction)",
+    "[HTA AUDIT] FDA accelerated review timeline... ACTIVE",
+    "[SYNC] Synchronizing access slides with Veeva CRM... OK",
+    "[TELEMETRY] Live field MSL compliance checks... ACTIVE",
+    "[SYSTEM] Oncology Command Center state... 100% HEALTHY"
+  ];
+
+  useEffect(() => {
+    // Initialize logs
+    logsRef.current = [LOG_LINES[0], LOG_LINES[1], LOG_LINES[2]];
+    
+    const interval = setInterval(() => {
+      setLogIndex(prev => {
+        const nextIdx = (prev + 1) % LOG_LINES.length;
+        logsRef.current.shift();
+        logsRef.current.push(LOG_LINES[nextIdx]);
+        return nextIdx;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Particle system
+    const particles = [];
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        x: Math.random() * 400,
+        y: Math.random() * 240,
+        r: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() * 0.3 + 0.05) * (Math.random() > 0.5 ? 1 : -1),
+        vy: (Math.random() * 0.3 + 0.05) * (Math.random() > 0.5 ? 1 : -1),
+        alpha: Math.random() * 0.4 + 0.1
+      });
+    }
+
+    const render = () => {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      // Clear with deep-space background
+      ctx.fillStyle = '#030508';
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw subtle backing grid lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.015)';
+      ctx.lineWidth = 1;
+      const gridSpacing = 16;
+      for (let x = 0; x < w; x += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Update and draw particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(34, 211, 238, ${p.alpha})`;
+        ctx.fill();
+      });
+
+      // DNA Helix math
+      const centerX = w * 0.68;
+      const centerY = h * 0.5;
+      const R = 32; // Radius
+      const S = 9;  // Spacing
+      const N = 18; // Number of pairs
+      const speed = hovered ? 0.035 : 0.012;
+      angleRef.current += speed;
+
+      // Draw rungs
+      for (let i = 0; i < N; i++) {
+        const theta = angleRef.current + i * 0.35;
+        const y = centerY + (i - N / 2) * S;
+        const z1 = Math.cos(theta) * R;
+        const z2 = -Math.cos(theta) * R;
+        const x1 = centerX + Math.sin(theta) * R;
+        const x2 = centerX - Math.sin(theta) * R;
+
+        const avgZ = (z1 + z2) / 2;
+        const alpha = Math.max(0.1, 1 - (avgZ + R) / (2 * R));
+        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.12})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.stroke();
+      }
+
+      // Draw nodes
+      for (let i = 0; i < N; i++) {
+        const theta = angleRef.current + i * 0.35;
+        const y = centerY + (i - N / 2) * S;
+        const z1 = Math.cos(theta) * R;
+        const z2 = -Math.cos(theta) * R;
+        const x1 = centerX + Math.sin(theta) * R;
+        const x2 = centerX - Math.sin(theta) * R;
+
+        const scale1 = 1 - (z1 / (R * 4));
+        const scale2 = 1 - (z2 / (R * 4));
+
+        // Strand 1 (Cyan)
+        ctx.beginPath();
+        ctx.arc(x1, y, 3.5 * scale1, 0, Math.PI * 2);
+        ctx.fillStyle = z1 > 0 ? '#0891b2' : '#22d3ee';
+        ctx.shadowColor = '#06b6d4';
+        ctx.shadowBlur = hovered ? 12 * scale1 : 6 * scale1;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Strand 2 (Purple)
+        ctx.beginPath();
+        ctx.arc(x2, y, 3.5 * scale2, 0, Math.PI * 2);
+        ctx.fillStyle = z2 > 0 ? '#6d28d9' : '#a78bfa';
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = hovered ? 12 * scale2 : 6 * scale2;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Draw real-time scrolling compliance logs (Bottom Left terminal)
+      ctx.fillStyle = 'rgba(2, 4, 8, 0.75)';
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.2)';
+      ctx.lineWidth = 1;
+      const termW = 210;
+      const termH = 80;
+      const termX = 16;
+      const termY = h - termH - 16;
+
+      ctx.beginPath();
+      ctx.roundRect(termX, termY, termW, termH, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Terminal Header
+      ctx.fillStyle = '#22d3ee';
+      ctx.font = 'bold 8px monospace';
+      ctx.fillText("ITACS_BRAIN_FEED v1.6.5", termX + 8, termY + 12);
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(termX + 8, termY + 16, termW - 16, 1);
+
+      // Print logs
+      ctx.font = '7.5px monospace';
+      logsRef.current.forEach((log, lIdx) => {
+        let color = '#38bdf8';
+        if (log.includes('SUCCESS') || log.includes('RESOLVE') || log.includes('100%')) color = '#34d399';
+        if (log.includes('CONFLICT')) color = '#f87171';
+        if (log.includes('INGEST') || log.includes('INGESTED')) color = '#c084fc';
+
+        ctx.fillStyle = color;
+        ctx.fillText(log, termX + 8, termY + 28 + lIdx * 14);
+      });
+
+      // Blinking green indicator
+      ctx.beginPath();
+      ctx.arc(termX + termW - 12, termY + 10, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = (Date.now() % 1000 < 500) ? '#10b981' : 'rgba(16, 185, 129, 0.2)';
+      ctx.fill();
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [hovered]);
+
+  return (
+    <div 
+      style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <canvas 
+        ref={canvasRef} 
+        style={{ width: '100%', height: '100%', display: 'block' }} 
+      />
+      <div style={{
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
+        fontSize: '8.5px',
+        color: hovered ? '#22d3ee' : 'var(--text-muted)',
+        background: 'rgba(0,0,0,0.5)',
+        padding: '3px 8px',
+        borderRadius: '20px',
+        border: '1px solid var(--glass-border)',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
+        transition: 'all 0.3s ease',
+        userSelect: 'none',
+        pointerEvents: 'none'
+      }}>
+        {hovered ? "⚙️ Hyper-Rotation Active" : "🧬 Core Ingestion Visualizer"}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   // Zero-Dependency URL Hash Router for Bookmarkable Tabs and Refresh Resilience!
   const getInitialTab = () => {
@@ -2346,26 +2592,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 background: '#030407',
                 position: 'relative'
               }}>
-                <img 
-                  src="/oncology_launch_blueprint.png" 
-                  alt="ITACS Oncology Launch Blueprint" 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    opacity: 0.85,
-                    transition: 'all 0.5s ease',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.opacity = '1';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.opacity = '0.85';
-                  }}
-                />
+                <OncologyBrainSimulator />
                 <div style={{
                   position: 'absolute',
                   bottom: '12px',
