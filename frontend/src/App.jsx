@@ -471,6 +471,9 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Active region selection for the Global Rollout Command Hub (Premium interactive widget!)
+  const [selectedRegion, setSelectedRegion] = useState('EU');
+
   // Workstream Tracker sync telemetry success notification state
   const [showSyncSuccess, setShowSyncSuccess] = useState(false);
 
@@ -2923,6 +2926,147 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
 
             </div>
+
+            {/* SECTION 3: GLOBAL ROLLOUT COMMAND HUB (Premium Interactive Panel!) */}
+            {(() => {
+              const REGIONAL_LAUNCHES = {
+                US: {
+                  name: "United States (FDA)",
+                  status: "Approved",
+                  statusColor: "#10b981",
+                  progress: 100,
+                  date: "Q1 2026",
+                  risk: "Low Risk - Post-Market Surveillance Active",
+                  brief: "FDA approved V940 + Keytruda combination on accelerated timeline based on 44% recurrence risk reduction in stage III/IV Melanoma.",
+                  actions: [
+                    "Deploy US field MSLs with companion CDx kits",
+                    "Monitor Medicare reimbursement timelines and prior-auth templates"
+                  ]
+                },
+                EU: {
+                  name: "European Union (EMA)",
+                  status: "Under Active Review",
+                  statusColor: "#f59e0b",
+                  progress: 75,
+                  date: "Q3 2026",
+                  risk: "High Risk - German G-BA Benefit Advantage Dispute",
+                  brief: "EMA review in progress. German G-BA is disputing the 22% overall benefit advantage, threatening reference pricing thresholds.",
+                  actions: [
+                    "Generate proactive volume-based pricing models in key accounts",
+                    "Publish 3-year OS data highlights to regional HTA bodies"
+                  ]
+                },
+                APAC: {
+                  name: "Japan (PMDA)",
+                  status: "Filing Phase",
+                  statusColor: "#3b82f6",
+                  progress: 40,
+                  date: "Q1 2027",
+                  risk: "Medium Risk - Companion Diagnostics Installation Lag",
+                  brief: "Filing dossier prepared. PMDA bridge trials require companion diagnostic kit installations in regional oncology hubs.",
+                  actions: [
+                    "Accelerate IHC screening validation with local pathology labs",
+                    "Partner with Chugai for co-promotion planning and pricing briefs"
+                  ]
+                },
+                LATAM: {
+                  name: "Latin America (ANVISA/COFEPRIS)",
+                  status: "Strategic Planning",
+                  statusColor: "#64748b",
+                  progress: 10,
+                  date: "Q4 2027",
+                  risk: "Low Risk - Reference Pricing Dependent",
+                  brief: "Dossier translation and localization in progress. Access strategy relies heavily on US/EU reference pricing outcomes.",
+                  actions: [
+                    "Translate clinical trial decks to Spanish and Portuguese",
+                    "Engage regional KOL advisory panels for reflex screening"
+                  ]
+                }
+              };
+
+              return (
+                <div className="glass-card" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '8px' }}>
+                  <div className="card-header-premium" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="header-icon-bullet-cyan" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-cyan)' }} />
+                      <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Global Submission & Rollout Operations Map</h3>
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '3px 8px', borderRadius: '20px', fontWeight: 'bold' }}>Interactive Command</span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '0.95fr 1.05fr', gap: '28px' }}>
+                    
+                    {/* Left Column: Regional Submission List */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {Object.entries(REGIONAL_LAUNCHES).map(([key, reg]) => (
+                        <div 
+                          key={key}
+                          onClick={() => setSelectedRegion(key)}
+                          style={{ 
+                            background: selectedRegion === key ? 'rgba(6, 182, 212, 0.08)' : 'var(--bg-tertiary)', 
+                            border: selectedRegion === key ? '1px solid rgba(6, 182, 212, 0.25)' : '1px solid var(--glass-border)', 
+                            padding: '16px', 
+                            borderRadius: '10px', 
+                            cursor: 'pointer', 
+                            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                            outline: selectedRegion === key ? '1px solid var(--brand-cyan)' : 'none',
+                            boxShadow: selectedRegion === key ? '0 0 15px rgba(6, 182, 212, 0.15)' : 'none'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-primary)' }}>{reg.name}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: reg.statusColor, display: 'inline-block', boxShadow: `0 0 8px ${reg.statusColor}` }} />
+                              <span style={{ fontSize: '10px', fontWeight: 'bold', color: reg.statusColor }}>{reg.status}</span>
+                            </div>
+                          </div>
+                          {/* Progress bar */}
+                          <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ width: `${reg.progress}%`, height: '100%', background: reg.statusColor, borderRadius: '2px', transition: 'width 0.5s ease-out' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Right Column: Submission Detail Card */}
+                    <div style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', justifySelf: 'stretch' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)', paddingBottom: '10px' }}>
+                        <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                          {REGIONAL_LAUNCHES[selectedRegion].name} Dossier Briefing
+                        </h4>
+                        <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>Target Launch: <strong style={{ color: 'var(--text-primary)' }}>{REGIONAL_LAUNCHES[selectedRegion].date}</strong></span>
+                      </div>
+
+                      <div style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                        <span style={{ display: 'block', fontSize: '9.5px', fontWeight: 'bold', textTransform: 'uppercase', color: '#ef4444', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                          Risk Profile
+                        </span>
+                        <p style={{ margin: '0 0 12px 0', color: REGIONAL_LAUNCHES[selectedRegion].statusColor === '#64748b' ? 'var(--text-muted)' : REGIONAL_LAUNCHES[selectedRegion].statusColor, fontWeight: 'bold' }}>
+                          {REGIONAL_LAUNCHES[selectedRegion].risk}
+                        </p>
+
+                        <span style={{ display: 'block', fontSize: '9.5px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--brand-cyan)', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                          AI Strategic Assessment
+                        </span>
+                        <p style={{ margin: '0 0 16px 0' }}>
+                          {REGIONAL_LAUNCHES[selectedRegion].brief}
+                        </p>
+
+                        <span style={{ display: 'block', fontSize: '9.5px', fontWeight: 'bold', textTransform: 'uppercase', color: 'var(--brand-purple)', letterSpacing: '0.5px', marginBottom: '8px' }}>
+                          Critical Path Action Items
+                        </span>
+                        <ul style={{ margin: 0, paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {REGIONAL_LAUNCHES[selectedRegion].actions.map((act, aIdx) => (
+                            <li key={aIdx} style={{ color: 'var(--text-secondary)' }}>{act}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              );
+            })()}
 
           </main>
         )}
