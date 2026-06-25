@@ -1742,13 +1742,19 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
   };
 
   const filteredInsights = insights.filter(ins => {
+    const opportunitySpace = ins.opportunity_space || ins.opportunitySpace || "";
+    const insightText = ins.insight || "";
+    const tumor = ins.metadata?.tumor || ins.tumor || "";
+    const lane = ins.metadata?.function_lane || ins.function_lane || ins.owner || "";
+    const asset = ins.metadata?.asset || ins.asset || "";
+
     const matchesSearch = 
-      ins.opportunity_space.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ins.insight.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ins.metadata.tumor.toLowerCase().includes(searchTerm.toLowerCase());
+      opportunitySpace.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      insightText.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tumor.toLowerCase().includes(searchTerm.toLowerCase());
       
-    const matchesLane = filterLane === "All Functions" || ins.metadata.function_lane === filterLane;
-    const matchesAsset = filterAsset === "All Assets" || ins.metadata.asset === filterAsset;
+    const matchesLane = filterLane === "All Functions" || lane === filterLane;
+    const matchesAsset = filterAsset === "All Assets" || asset === filterAsset;
     
     return matchesSearch && matchesLane && matchesAsset;
   });
