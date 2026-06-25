@@ -474,6 +474,44 @@ export default function App() {
   // Active region selection for the Global Rollout Command Hub (Premium interactive widget!)
   const [selectedRegion, setSelectedRegion] = useState('EU');
 
+  // Dynamic state for Proactive Recommendations in the Cockpit (Premium UI!)
+  const [proactiveActions, setProactiveActions] = useState([
+    {
+      id: 1,
+      title: "Germany G-BA Dossier Conflict",
+      risk: "High Risk",
+      riskColor: "#ef4444",
+      bgOpacity: "rgba(239,68,68,0.08)",
+      desc: "German G-BA pricing pushback is predicted. AI recommends generating proactive volume-based pricing models in Europe to mitigate 22% benefit advantage disputes.",
+      btnLabel: "Model in Workshop",
+      actionType: 'workshop'
+    },
+    {
+      id: 2,
+      title: "VEVA CRM Slide Handoff Gap",
+      risk: "Medium Risk",
+      riskColor: "#f59e0b",
+      bgOpacity: "rgba(245,158,11,0.08)",
+      desc: "The approved access presentation slides for the US FDA launch have not been pushed to Salesforce/Veeva CRM, leaving field MSLs without grounded clinical evidence.",
+      btnLabel: "Sync Telemetry",
+      actionType: 'tracker'
+    },
+    {
+      id: 3,
+      title: "Japan PMDA Diagnostics Lag",
+      risk: "Low Risk",
+      riskColor: "#3b82f6",
+      bgOpacity: "rgba(59,130,246,0.08)",
+      desc: "Companion diagnostic kit installations in Japan are lagging behind patient enrollment speeds. PMDA bridge trials require immediate IHC screening validation.",
+      btnLabel: "View Gantt Gating",
+      actionType: 'cascade'
+    }
+  ]);
+
+  const handleDismissRecommendation = (id) => {
+    setProactiveActions(prev => prev.filter(act => act.id !== id));
+  };
+
   // Workstream Tracker sync telemetry success notification state
   const [showSyncSuccess, setShowSyncSuccess] = useState(false);
 
@@ -2763,8 +2801,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <AlertTriangle size={14} style={{ color: 'var(--brand-purple)' }} />
                 </div>
                 <div className="score-body">
-                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>3</h2>
-                  <span className="trend stable" style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Stable since ingestion</span>
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{openConflictsCount}</h2>
+                  <span className="trend stable" style={{ color: openConflictsCount > 0 ? '#ef4444' : '#10b981', fontSize: '11px', fontWeight: 'bold' }}>
+                    {openConflictsCount > 0 ? '⚠️ Action Required in Workshop' : '✓ Full Consensus Achieved'}
+                  </span>
                 </div>
               </div>
 
@@ -2774,8 +2814,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <History size={14} style={{ color: 'var(--brand-cyan)' }} />
                 </div>
                 <div className="score-body">
-                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>14 / 15</h2>
-                  <span className="trend positive" style={{ color: '#10b981', fontSize: '11px', fontWeight: 'bold' }}>▲ 95% validation complete</span>
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{validatedMemoryCount} / {insights.length}</h2>
+                  <span className="trend positive" style={{ color: '#10b981', fontSize: '11px', fontWeight: 'bold' }}>
+                    ▲ {Math.round((validatedMemoryCount / insights.length) * 100)}% validation complete
+                  </span>
                 </div>
               </div>
             </div>
@@ -2855,72 +2897,77 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <span className="header-icon-bullet-cyan" style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--brand-cyan)' }} />
                     <h3 style={{ margin: 0, fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Proactive Recommendations</h3>
                   </div>
-                  <span className="cognitive-action-badge" style={{ fontSize: '10px', color: '#ffffff', background: 'var(--brand-purple)', padding: '3px 8px', borderRadius: '20px', fontWeight: 'bold' }}>3 Actions</span>
+                  {proactiveActions.length > 0 && (
+                    <span className="cognitive-action-badge" style={{ fontSize: '10px', color: '#ffffff', background: 'var(--brand-purple)', padding: '3px 8px', borderRadius: '20px', fontWeight: 'bold' }}>
+                      {proactiveActions.length} Action{proactiveActions.length !== 1 ? 's' : ''}
+                    </span>
+                  )}
                 </div>
 
                 <div className="proactive-scroll-list" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '280px', paddingRight: '4px' }}>
                   
-                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Germany G-BA Dossier Conflict</strong>
-                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#ef4444', background: 'rgba(239,68,68,0.08)', padding: '2px 6px', borderRadius: '4px' }}>High Risk</span>
+                  {proactiveActions.map(act => (
+                    <div 
+                      key={act.id} 
+                      className="proactive-item animate-scale-in" 
+                      style={{ 
+                        background: 'var(--bg-tertiary)', 
+                        border: '1px solid var(--glass-border)', 
+                        padding: '14px', 
+                        borderRadius: '10px', 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        gap: '6px',
+                        position: 'relative'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{act.title}</strong>
+                        <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: act.riskColor, background: act.bgOpacity, padding: '2px 6px', borderRadius: '4px' }}>
+                          {act.risk}
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4', paddingRight: '20px' }}>
+                        {act.desc}
+                      </p>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '6px', alignItems: 'center' }}>
+                        <button 
+                          onClick={() => {
+                            if (act.actionType === 'workshop') {
+                              setSelectedRoadmapMilestone('nsclc_readout');
+                              setActiveTab('workshop');
+                            } else if (act.actionType === 'tracker') {
+                              setActiveTab('tracker');
+                            } else if (act.actionType === 'cascade') {
+                              setSelectedRoadmapMilestone('bladder_pdufa');
+                              setActiveTab('cascade');
+                            }
+                          }} 
+                          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease' }}
+                        >
+                          {act.btnLabel}
+                        </button>
+                        <button 
+                          onClick={() => handleDismissRecommendation(act.id)} 
+                          style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '10px', cursor: 'pointer', padding: '4px 8px', transition: 'color 0.2s ease' }}
+                          onMouseEnter={(e) => e.target.style.color = '#ef4444'}
+                          onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                        >
+                          Dismiss
+                        </button>
+                      </div>
                     </div>
-                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                      German G-BA pricing pushback is predicted. AI recommends generating proactive volume-based pricing models in Europe to mitigate 22% benefit advantage disputes.
-                    </p>
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                      <button 
-                        onClick={() => {
-                          setSelectedRoadmapMilestone('nsclc_readout');
-                          setActiveTab('workshop');
-                        }} 
-                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
-                      >
-                        Model in Workshop
-                      </button>
-                    </div>
-                  </div>
+                  ))}
 
-                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>VEVA CRM Slide Handoff Gap</strong>
-                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#f59e0b', background: 'rgba(245,158,11,0.08)', padding: '2px 6px', borderRadius: '4px' }}>Medium Risk</span>
+                  {proactiveActions.length === 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '32px' }}>🟢</span>
+                      <strong style={{ fontSize: '13px', color: '#10b981' }}>All Recommendations Resolved</strong>
+                      <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                        Compliance pipelines clear. V940 launch sequencing is synchronized and secure.
+                      </p>
                     </div>
-                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                      The approved access presentation slides for the US FDA launch have not been pushed to Salesforce/Veeva CRM, leaving field MSLs without grounded clinical evidence.
-                    </p>
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                      <button 
-                        onClick={() => {
-                          setActiveTab('tracker');
-                        }} 
-                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
-                      >
-                        Sync Telemetry
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="proactive-item" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', padding: '14px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Japan PMDA Diagnostics Lag</strong>
-                      <span style={{ fontSize: '9.5px', fontWeight: 'bold', color: '#3b82f6', background: 'rgba(59,130,246,0.08)', padding: '2px 6px', borderRadius: '4px' }}>Low Risk</span>
-                    </div>
-                    <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
-                      Companion diagnostic kit installations in Japan are lagging behind patient enrollment speeds. PMDA bridge trials require immediate IHC screening validation.
-                    </p>
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                      <button 
-                        onClick={() => {
-                          setSelectedRoadmapMilestone('bladder_pdufa');
-                          setActiveTab('cascade');
-                        }} 
-                        style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', borderRadius: '4px', padding: '4px 10px', fontSize: '10px', cursor: 'pointer' }}
-                      >
-                        View Gantt Gating
-                      </button>
-                    </div>
-                  </div>
+                  )}
 
                 </div>
               </div>
