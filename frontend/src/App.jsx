@@ -750,6 +750,14 @@ export default function App() {
   const [retrievedContext, setRetrievedContext] = useState([]);
 
   const chatContainerRef = useRef(null);
+  const chatEndRef = useRef(null);
+
+  // Auto-scroll chat advisor to bottom on new messages (Premium UI touch!)
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages]);
 
   // Dynamic State Counters (The World-Class State Sync!)
   const validatedMemoryCount = insights.filter(i => i.is_validated && !i.is_quarantined).length;
