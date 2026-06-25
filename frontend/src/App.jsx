@@ -458,6 +458,19 @@ export default function App() {
   // 3. Global Market Radar States (Moved to top to prevent TDZ error!)
   const [selectedRegionFilter, setSelectedRegionFilter] = useState('ALL');
 
+  // Live-fluctuating Launch Readiness Index telemetry state (Premium UI touch!)
+  const [liveReadiness, setLiveReadiness] = useState(94.24);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveReadiness(prev => {
+        const delta = (Math.random() * 0.06 - 0.03);
+        const next = parseFloat((prev + delta).toFixed(2));
+        return next > 94.8 ? 94.24 : (next < 93.8 ? 94.24 : next);
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Workstream Tracker sync telemetry success notification state
   const [showSyncSuccess, setShowSyncSuccess] = useState(false);
 
@@ -2736,7 +2749,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <Activity size={14} style={{ color: 'var(--brand-cyan)' }} />
                 </div>
                 <div className="score-body">
-                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>94.2%</h2>
+                  <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{liveReadiness}%</h2>
                   <span className="trend positive" style={{ color: '#10b981', fontSize: '11px', fontWeight: 'bold' }}>▲ +1.4% this month</span>
                 </div>
               </div>
@@ -2779,24 +2792,33 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 
                 <div className="advisor-chat-container" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div className="advisor-messages" style={{ height: '240px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '4px' }}>
-                    <div className="message system" style={{ display: 'flex', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
-                      <div className="avatar" style={{ fontSize: '16px' }}>🤖</div>
-                      <div className="bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                        Welcome, GOLT Team Lead. I have completed a differential compliance check across all active V940 slide decks. I detected 3 high-probability positioning conflicts with health authority guidelines in Europe. How would you like to proceed?
-                      </div>
-                    </div>
-                    
-                    {chatMessages.map(msg => (
-                      <div key={msg.id} className={`message ${msg.sender}`} style={{ display: 'flex', gap: '10px', background: msg.sender === 'user' ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '8px', border: msg.sender === 'user' ? '1px solid rgba(6, 182, 212, 0.15)' : '1px solid var(--glass-border)' }}>
-                        <div className="avatar" style={{ fontSize: '16px' }}>{msg.sender === 'user' ? 'GL' : '🤖'}</div>
-                        <div className="bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{msg.text}</div>
-                      </div>
-                    ))}
-                    
+                    {chatMessages.map((msg, msgIdx) => {
+                      const isUser = msg.role === 'user';
+                      return (
+                        <div 
+                          key={msgIdx} 
+                          className={`message ${isUser ? 'user' : 'assistant'}`} 
+                          style={{ 
+                            display: 'flex', 
+                            gap: '10px', 
+                            background: isUser ? 'rgba(6, 182, 212, 0.05)' : 'rgba(255, 255, 255, 0.02)', 
+                            padding: '12px', 
+                            borderRadius: '8px', 
+                            border: isUser ? '1px solid rgba(6, 182, 212, 0.15)' : '1px solid var(--glass-border)',
+                            alignItems: 'flex-start'
+                          }}
+                        >
+                          <div className="avatar" style={{ fontSize: '16px', userSelect: 'none' }}>{isUser ? 'GL' : '🤖'}</div>
+                          <div className="bubble markdown-bubble" style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', flex: 1 }}>
+                            {renderMessageContent(msg.content)}
+                          </div>
+                        </div>
+                      );
+                    })}
                     {chatLoading && (
-                      <div className="message assistant" style={{ display: 'flex', gap: '10px', padding: '12px' }}>
+                      <div className="message assistant" style={{ display: 'flex', gap: '10px', padding: '12px', alignItems: 'center' }}>
                         <div className="avatar">🤖</div>
-                        <div className="bubble" style={{ color: 'var(--text-muted)' }}>Synthesizing compliance mapping...</div>
+                        <div className="bubble" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Synthesizing compliance mapping...</div>
                       </div>
                     )}
                     <div ref={chatEndRef} />
