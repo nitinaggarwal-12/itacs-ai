@@ -2646,7 +2646,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.8)'
               }}>
                 <video 
-                  src="/Scaling_Pharma_AI.mp4" 
+                  src="https://media.githubusercontent.com/media/nitinaggarwal-12/itacs-ai/main/frontend/public/Scaling_Pharma_AI.mp4" 
                   controls 
                   preload="metadata"
                   style={{
