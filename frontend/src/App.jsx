@@ -1973,7 +1973,26 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
       
       {/* PERSISTENT LEFT-HAND NAVIGATION SIDEBAR */}
       <aside className="sidebar-navigation">
-        <div className="sidebar-brand">
+        <div 
+          className="sidebar-brand"
+          onClick={() => {
+            window.location.hash = '#home';
+            setActiveTab('home');
+          }}
+          style={{ 
+            cursor: 'pointer', 
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            userSelect: 'none'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.filter = 'brightness(1.15)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.filter = 'brightness(1)';
+          }}
+        >
           <div className="brand-badge">🧬</div>
           <div className="brand-text">
             <h1>ITACS Enterprise</h1>
