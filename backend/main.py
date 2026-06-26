@@ -711,6 +711,7 @@ async def upload_document(
     sub_tumor: str = Form("Stage III/IV"),
     sme_opportunity: Optional[str] = Form(None),
     sme_barrier: Optional[str] = Form(None),
+    scenario_type: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """
@@ -723,7 +724,7 @@ async def upload_document(
             detail="Too many upload requests. File ingestion is rate-limited to protect API quotas."
         )
 
-    logger.info(f"Uploading file {file.filename} in session {session_id}")
+    logger.info(f"Uploading file {file.filename} in session {session_id} with scenario {scenario_type}")
     file_bytes = await file.read()
     
     log_audit_trail(
@@ -732,7 +733,7 @@ async def upload_document(
         step_index=1,
         step_name="Upload",
         agent_name="System Ingestion",
-        user_input=f"Filename: {file.filename}, Size: {len(file_bytes)} bytes",
+        user_input=f"Filename: {file.filename}, Size: {len(file_bytes)} bytes, Scenario: {scenario_type}",
         model_output="File received and buffered."
     )
 
@@ -790,30 +791,80 @@ async def upload_document(
             api_success = False
 
     if not api_success or not extracted_json:
-        logger.info("Using high-fidelity simulated extraction data.")
-        extracted_json = {
-            "insights": [
-                {
-                    "opportunity_space": "Adjuvant Therapeutic Sequencing Optimization",
-                    "csf": "Establishing V940 + Keytruda as first-line adjuvant standard in high-risk stage III/IV Melanoma",
-                    "insight": "Physicians express concern over the operational complexity of personalized mRNA therapies in community clinics compared to standard monotherapy, despite a 44% reduction in recurrence risk.",
-                    "rationale": "Without structured clinical support pathways, community oncologists are likely to default to pembrolizumab monotherapy, delaying adoption and reducing market share by an estimated 15% in the first 12 months post-launch.",
-                    "implication": "Establish specialized regional operational hubs to manage logistics, patient screening, and scheduling, and launch a dedicated community-practice educational campaign.",
-                    "strength_of_evidence_score": 0.92,
-                    "quotes": [
-                        {"text": "The logistics of waiting for customized mRNA vaccines are challenging for community sites without dedicated care coordinators.", "location": "slide 12, top right interview callout"},
-                        {"text": "We need clear support systems, otherwise Pembrolizumab remains the path of least resistance.", "location": "slide 12, quote box B"}
-                    ],
-                    "slide_reference": f"{file.filename}, slide 12",
-                    "metadata": {
-                        "function_lane": function_lane,
-                        "asset": asset,
-                        "tumor": tumor,
-                        "sub_tumor": sub_tumor
+        logger.info(f"Using high-fidelity simulated extraction data (scenario: {scenario_type}).")
+        
+        if scenario_type == "ambitious":
+            extracted_json = {
+                "insights": [
+                    {
+                        "opportunity_space": "Melanoma Market Adjuvant Sequencing Domination",
+                        "csf": "Establishing V940 + Keytruda as first-line adjuvant standard in high-risk stage III/IV Melanoma",
+                        "insight": "SME predicts complete market domination and 100% first-year market share due to zero clinic friction.",
+                        "rationale": "Adjuvant adoption will be instantaneous since clinics face no cold-chain storage or operational logistics barriers, completely ignoring slide logistical warnings.",
+                        "implication": "Expand commercial launch velocity with zero regional support hubs needed, bypassing local distribution networks.",
+                        "strength_of_evidence_score": 0.65,
+                        "quotes": [
+                            {"text": "The logistics of waiting for customized mRNA vaccines are challenging for community sites.", "location": "slide 12, top right"},
+                            {"text": "We need clear support systems, otherwise Pembrolizumab remains the path of least resistance.", "location": "slide 12, quote box B"}
+                        ],
+                        "slide_reference": f"{file.filename}, slide 12",
+                        "metadata": {
+                            "function_lane": function_lane,
+                            "asset": asset,
+                            "tumor": tumor,
+                            "sub_tumor": sub_tumor
+                        }
                     }
-                }
-            ]
-        }
+                ]
+            }
+        elif scenario_type == "promotion":
+            extracted_json = {
+                "insights": [
+                    {
+                        "opportunity_space": "Direct-to-Consumer Biologics Demand Generation",
+                        "csf": "Bypassing clinical gatekeepers via direct-to-consumer digital campaigns to maximize sales growth.",
+                        "insight": "Medical Affairs team to launch digital patient-directed campaigns promoting V940 efficacy directly to consumers to accelerate revenue growth.",
+                        "rationale": "DTC promotion will create patient demand, forcing physicians to prescribe V940 and boosting our adjuvant market share.",
+                        "implication": "Redirect 40% of Medical Affairs R&D budget into social media advertising and consumer influencer partnerships.",
+                        "strength_of_evidence_score": 0.70,
+                        "quotes": [
+                            {"text": "We must communicate trial results to physicians.", "location": "slide 12"}
+                        ],
+                        "slide_reference": f"{file.filename}, slide 12",
+                        "metadata": {
+                            "function_lane": "Medical Affairs", # Force Medical Affairs for compliance check
+                            "asset": asset,
+                            "tumor": tumor,
+                            "sub_tumor": sub_tumor
+                        }
+                    }
+                ]
+            }
+        else: # Default: Grounded Logistics (Scenario 1)
+            extracted_json = {
+                "insights": [
+                    {
+                        "opportunity_space": "Adjuvant Therapeutic Sequencing Optimization",
+                        "csf": "Establishing V940 + Keytruda as first-line adjuvant standard in high-risk stage III/IV Melanoma",
+                        "insight": "Physicians express concern over the operational complexity of personalized mRNA therapies in community clinics compared to standard monotherapy, despite a 44% reduction in recurrence risk.",
+                        "rationale": "Without structured clinical support pathways, specifically addressing operational complexities such as community clinic ultra-cold storage gaps for personalized mRNA therapies, community oncologists are likely to default to pembrolizumab monotherapy, delaying adoption and reducing market share.",
+                        "implication": "Establish specialized regional operational hubs, incorporating automated regional cold-chain hub logistics, to manage overall logistics, patient screening, and scheduling, and launch a dedicated community-practice educational campaign.",
+                        "strength_of_evidence_score": 0.92,
+                        "quotes": [
+                            {"text": "The logistics of waiting for customized mRNA vaccines are challenging for community sites without dedicated care coordinators.", "location": "slide 12, top right interview callout"},
+                            {"text": "We need clear support systems, otherwise Pembrolizumab remains the path of least resistance.", "location": "slide 12, quote box B"},
+                            {"text": "Community clinics report lack of -70C freezers.", "location": "slide 12, bottom callout"}
+                        ],
+                        "slide_reference": f"{file.filename}, slide 12",
+                        "metadata": {
+                            "function_lane": function_lane,
+                            "asset": asset,
+                            "tumor": tumor,
+                            "sub_tumor": sub_tumor
+                        }
+                    }
+                ]
+            }
 
     log_audit_trail(
         db=db,

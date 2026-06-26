@@ -1060,8 +1060,9 @@ export default function App() {
   const [uploadAsset, setUploadAsset] = useState("V940");
   const [uploadTumor, setUploadTumor] = useState("Melanoma");
   const [uploadSubTumor, setUploadSubTumor] = useState("Stage III/IV");
-  const [smeOpportunity, setSmeOpportunity] = useState("");
-  const [smeBarrier, setSmeBarrier] = useState("");
+  const [smeOpportunity, setSmeOpportunity] = useState("Automated regional cold-chain hub logistics.");
+  const [smeBarrier, setSmeBarrier] = useState("Community clinic ultra-cold storage gaps.");
+  const [simulationScenario, setSimulationScenario] = useState("grounded");
 
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -1665,6 +1666,7 @@ export default function App() {
     formData.append("sub_tumor", uploadSubTumor);
     formData.append("sme_opportunity", smeOpportunity);
     formData.append("sme_barrier", smeBarrier);
+    formData.append("scenario_type", simulationScenario);
 
     const interval = setInterval(() => {
       setUploadProgress(prev => {
@@ -4938,6 +4940,81 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       onChange={(e) => setUploadSubTumor(e.target.value)}
                       className="select-box-input"
                     />
+                  </div>
+                </div>
+
+                {/* Simulation Scenario Selector (Phase 1) */}
+                <div style={{ marginBottom: '14px', background: 'rgba(255,255,255,0.01)', padding: '12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                  <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
+                    Select Simulation Scenario
+                  </span>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSimulationScenario("grounded");
+                        setSmeOpportunity("Automated regional cold-chain hub logistics.");
+                        setSmeBarrier("Community clinic ultra-cold storage gaps.");
+                      }}
+                      style={{
+                        flex: 1,
+                        fontSize: '9.5px',
+                        fontWeight: 'bold',
+                        padding: '6px 8px',
+                        borderRadius: '6px',
+                        border: `1px solid ${simulationScenario === 'grounded' ? 'var(--brand-cyan)' : 'var(--glass-border)'}`,
+                        background: simulationScenario === 'grounded' ? 'rgba(6, 182, 212, 0.08)' : 'transparent',
+                        color: simulationScenario === 'grounded' ? 'var(--brand-cyan)' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      🟢 Grounded
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSimulationScenario("ambitious");
+                        setSmeOpportunity("Instantaneous market adoption & 100% first-year share.");
+                        setSmeBarrier("None. Zero clinic friction expected.");
+                      }}
+                      style={{
+                        flex: 1,
+                        fontSize: '9.5px',
+                        fontWeight: 'bold',
+                        padding: '6px 8px',
+                        borderRadius: '6px',
+                        border: `1px solid ${simulationScenario === 'ambitious' ? '#f59e0b' : 'var(--glass-border)'}`,
+                        background: simulationScenario === 'ambitious' ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
+                        color: simulationScenario === 'ambitious' ? '#f59e0b' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      🟡 Ambitious
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSimulationScenario("promotion");
+                        setSmeOpportunity("Direct-to-consumer digital promotion to bypass clinics.");
+                        setSmeBarrier("High competitor pricing pressure.");
+                      }}
+                      style={{
+                        flex: 1,
+                        fontSize: '9.5px',
+                        fontWeight: 'bold',
+                        padding: '6px 8px',
+                        borderRadius: '6px',
+                        border: `1px solid ${simulationScenario === 'promotion' ? '#ef4444' : 'var(--glass-border)'}`,
+                        background: simulationScenario === 'promotion' ? 'rgba(239, 68, 68, 0.08)' : 'transparent',
+                        color: simulationScenario === 'promotion' ? '#ef4444' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      🔴 DTC Promo
+                    </button>
                   </div>
                 </div>
 
@@ -8869,20 +8946,22 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             </h3>
             <p style={{ margin: '0 0 16px 0', fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
               {(() => {
-                if (tourStep === 3) {
-                  return selectedRoadmapMilestone === 'melanoma_readout'
-                    ? "🎉 Perfect! Look at the Regulatory Briefing Card that has appeared at the bottom of your screen. It has dynamically loaded the KEYNOTE-940 trial parameters, including primary endpoints (RFS), RTOR channels, and companion diagnostic details!"
-                    : "This highlighted block represents the Phase 3 KEYNOTE-940 Efficacy Topline Readout (Q2 2026). 👉 CLICK directly on this block right now to sync our downstream regulatory briefs!";
-                }
-                if (tourStep === 4) {
-                  return hasDraggedTimeline
-                    ? "🎉 Excellent! Notice how adjusting the timeline dynamically recalculates our relative threat index and launch risk metrics in the wargaming charts below! Adjusting competitor timelines allows us to optimize filing speeds."
-                    : "This is the Competitor X FDA Approval Timeline slider. 👉 Try DRAGGING this slider right now to simulate Competitor X launching earlier or later!";
-                }
-                if (tourStep === 5) {
-                  return selectedRegionFilter === 'EU'
-                    ? "🎉 Sensational! Look at the cards in the center of the screen: they have dynamically filtered to display only European HTA strategies, and the overall sync telemetry at the bottom has updated to 75% for EMA!"
-                    : "This is the European Union (EMA) rollout tracker. 👉 CLICK directly on this card right now to filter our global launch insights database and see the G-BA pricing blockers in Europe!";
+                if (activeTourWorkflow === 1) {
+                  if (tourStep === 3) {
+                    return selectedRoadmapMilestone === 'melanoma_readout'
+                      ? "🎉 Perfect! Look at the Regulatory Briefing Card that has appeared at the bottom of your screen. It has dynamically loaded the KEYNOTE-940 trial parameters, including primary endpoints (RFS), RTOR channels, and companion diagnostic details!"
+                      : "This highlighted block represents the Phase 3 KEYNOTE-940 Efficacy Topline Readout (Q2 2026). 👉 CLICK directly on this block right now to sync our downstream regulatory briefs!";
+                  }
+                  if (tourStep === 4) {
+                    return hasDraggedTimeline
+                      ? "🎉 Excellent! Notice how adjusting the timeline dynamically recalculates our relative threat index and launch risk metrics in the wargaming charts below! Adjusting competitor timelines allows us to optimize filing speeds."
+                      : "This is the Competitor X FDA Approval Timeline slider. 👉 Try DRAGGING this slider right now to simulate Competitor X launching earlier or later!";
+                  }
+                  if (tourStep === 5) {
+                    return selectedRegionFilter === 'EU'
+                      ? "🎉 Sensational! Look at the cards in the center of the screen: they have dynamically filtered to display only European HTA strategies, and the overall sync telemetry at the bottom has updated to 75% for EMA!"
+                      : "This is the European Union (EMA) rollout tracker. 👉 CLICK directly on this card right now to filter our global launch insights database and see the G-BA pricing blockers in Europe!";
+                  }
                 }
                 return tourSteps[tourStep].description;
               })()}
@@ -8912,9 +8991,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               {/* Action Button (State-Aware Lock!) */}
               <button 
                 disabled={(() => {
-                  if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return true;
-                  if (tourStep === 4 && !hasDraggedTimeline) return true;
-                  if (tourStep === 5 && selectedRegionFilter !== 'EU') return true;
+                  if (activeTourWorkflow === 1) {
+                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return true;
+                    if (tourStep === 4 && !hasDraggedTimeline) return true;
+                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return true;
+                  }
                   return false;
                 })()}
                 onClick={() => {
@@ -8937,15 +9018,19 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   fontSize: '10.5px',
                   fontWeight: 'bold',
                   cursor: (() => {
-                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 'not-allowed';
-                    if (tourStep === 4 && !hasDraggedTimeline) return 'not-allowed';
-                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return 'not-allowed';
+                    if (activeTourWorkflow === 1) {
+                      if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 'not-allowed';
+                      if (tourStep === 4 && !hasDraggedTimeline) return 'not-allowed';
+                      if (tourStep === 5 && selectedRegionFilter !== 'EU') return 'not-allowed';
+                    }
                     return 'pointer';
                   })(),
                   opacity: (() => {
-                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 0.4;
-                    if (tourStep === 4 && !hasDraggedTimeline) return 0.4;
-                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return 0.4;
+                    if (activeTourWorkflow === 1) {
+                      if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 0.4;
+                      if (tourStep === 4 && !hasDraggedTimeline) return 0.4;
+                      if (tourStep === 5 && selectedRegionFilter !== 'EU') return 0.4;
+                    }
                     return 1;
                   })(),
                   display: 'flex',
@@ -8956,9 +9041,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 }}
               >
                 {(() => {
-                  if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return "Waiting for click... 🔒";
-                  if (tourStep === 4 && !hasDraggedTimeline) return "Waiting for drag... 🔒";
-                  if (tourStep === 5 && selectedRegionFilter !== 'EU') return "Waiting for click... 🔒";
+                  if (activeTourWorkflow === 1) {
+                    if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return "Waiting for click... 🔒";
+                    if (tourStep === 4 && !hasDraggedTimeline) return "Waiting for drag... 🔒";
+                    if (tourStep === 5 && selectedRegionFilter !== 'EU') return "Waiting for click... 🔒";
+                  }
                   return tourSteps[tourStep].buttonText;
                 })()}
               </button>
