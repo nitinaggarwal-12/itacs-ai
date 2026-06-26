@@ -2853,7 +2853,7 @@ def save_diagram_to_user_guide(req: SaveDiagramRequest):
         if not re.search(pattern, html_content):
             raise HTTPException(status_code=400, detail=f"Target diagram div for {req.diagram_type} not found in user_guide.html")
             
-        updated_content = re.sub(pattern, rf'\g<1>{escaped_config}\g<3>', html_content)
+        updated_content = re.sub(pattern, lambda m: m.group(1) + escaped_config + m.group(3), html_content)
         
         with open(html_path, "w", encoding="utf-8") as f:
             f.write(updated_content)
