@@ -934,11 +934,29 @@ export default function App() {
     {
       targetId: "radar-region-eu",
       title: "Global HTA Radar 📡",
-      description: "Finally, let's open the global market rollout radar. Here, we track country-by-country Health Technology Assessment (HTA) approval waves and launch windows in real-time.",
-      buttonText: "Go to Market Radar ➔",
+      description: "Next, let's open the global market rollout radar. Here, we track country-by-country Health Technology Assessment (HTA) approval waves and launch windows in real-time.",
+      buttonText: "Next Step ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter) => {
         setActiveTab('radar');
         if (setSelectedRegionFilter) setSelectedRegionFilter('ALL');
+      }
+    },
+    {
+      targetId: "nav-budget",
+      title: "Launch Budget Allocations 💰",
+      description: "Now, let's explore our Budget Strategy. Here, you can adjust the launch budget allocations for clinical, commercial, medical, and market access pillars using real-time proportional rebalancing sliders!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('budget');
+      }
+    },
+    {
+      targetId: "nav-logistics",
+      title: "Manufacturing Telemetry 🏭",
+      description: "Finally, let's check our Manufacturing Readiness. Here, you can audit active patient vaccine synthesis queues in real-time, simulate capacity loads, and prevent pipeline bottlenecks!",
+      buttonText: "Complete Mission ➔",
+      action: (setActiveTab) => {
+        setActiveTab('logistics');
       }
     },
     {
@@ -1122,9 +1140,27 @@ export default function App() {
       targetId: "workshop-actions-builder",
       title: "Tactical Actions Ledger 📋",
       description: "Draft concrete tactical actions, assign owners, and link them directly to validated source cards in the Memory Bank to preserve the cryptographic audit trail! Let's complete the workshop!",
-      buttonText: "Complete Mission ➔",
+      buttonText: "Next Step ➔",
       action: (setActiveTab) => {
         setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "nav-deck",
+      title: "Executive Slide Deliverables 🎨",
+      description: "Excellent! Now that you have formulated your imperatives, let's head to the Executive Deck Studio to assemble your presentation slide deck. Here, you can edit titles inline, verify approvals, and compile the final PowerPoint outline!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('deck');
+      }
+    },
+    {
+      targetId: "nav-skills",
+      title: "Compliance Sandbox & Guardrails 🧬",
+      description: "Finally, let's open the Agent Skill Studio. Here, compliance supervisors manage the active forbidden vocabulary dictionary and test drafts in the compliance sandbox to prevent commercial regressions!",
+      buttonText: "Complete Mission ➔",
+      action: (setActiveTab) => {
+        setActiveTab('skills');
       }
     },
     {
@@ -1289,6 +1325,44 @@ export default function App() {
     const link = document.createElement('a');
     link.href = url;
     link.download = `itacs_slide_${slideIdx}_draft.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadFullDeck = () => {
+    let content = `==================================================\n`;
+    content += `ITACS GLOBAL ONCOLOGY STRATEGIC ROADMAP\n`;
+    content += `Compiled Presentation Draft - Widescreen 16:9\n`;
+    content += `==================================================\n\n`;
+    
+    [1, 2, 3, 4, 5].forEach(slideIdx => {
+      const slide = deckSlides[slideIdx];
+      const isApproved = deckApprovedSlides.includes(slideIdx);
+      content += `--------------------------------------------------\n`;
+      content += `SLIDE ${slideIdx} • ${slideIdx === 1 ? 'Title Page' : 'Strategic Imperative'}\n`;
+      content += `Status: ${isApproved ? 'APPROVED' : 'PENDING REVIEW'}\n`;
+      content += `--------------------------------------------------\n`;
+      if (slideIdx === 1) {
+        content += `TITLE: ${slide.title}\n`;
+        content += `SUBTITLE: ${slide.subtitle}\n\n`;
+        content += `${slide.author}\n`;
+        content += `${slide.date}\n\n`;
+      } else {
+        content += `SLIDE TITLE: ${slide.title}\n\n`;
+        content += `[LEFT COLUMN: ${slide.leftHeader}]\n`;
+        content += `${slide.leftBody}\n\n`;
+        content += `[RIGHT COLUMN: ${slide.rightHeader}]\n`;
+        content += `${slide.rightBody}\n\n`;
+      }
+    });
+    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `itacs_full_golt_presentation.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -3073,18 +3147,21 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               gap: '4px'
             }}>
               <button 
+                id="nav-deck"
                 onClick={() => setActiveTab('deck')}
                 className={`sidebar-nav-btn ${activeTab === 'deck' ? 'active' : ''}`}
               >
                 <FileText size={16} style={{ color: 'var(--brand-blue)' }} /> Executive Deck Studio
               </button>
               <button 
+                id="nav-budget"
                 onClick={() => setActiveTab('budget')}
                 className={`sidebar-nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
               >
                 <PieChart size={16} style={{ color: 'var(--brand-purple)' }} /> Budget Strategy
               </button>
               <button 
+                id="nav-roleplay"
                 onClick={() => setActiveTab('roleplay')}
                 className={`sidebar-nav-btn ${activeTab === 'roleplay' ? 'active' : ''}`}
               >
@@ -3138,18 +3215,21 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               gap: '4px'
             }}>
               <button 
+                id="nav-ingest"
                 onClick={() => setActiveTab('ingest')}
                 className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
               >
                 <Database size={16} /> Ingestion Factory
               </button>
               <button 
+                id="nav-logistics"
                 onClick={() => setActiveTab('logistics')}
                 className={`sidebar-nav-btn ${activeTab === 'logistics' ? 'active' : ''}`}
               >
                 <Activity size={16} style={{ color: 'var(--brand-purple)' }} /> Manufacturing Readiness
               </button>
               <button 
+                id="nav-skills"
                 onClick={() => setActiveTab('skills')}
                 className={`sidebar-nav-btn ${activeTab === 'skills' ? 'active' : ''}`}
               >
@@ -8124,6 +8204,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     setTimeout(() => setCompilationStep(3), 3000);
                     setTimeout(() => {
                       setIsCompilingDeck(false);
+                      handleDownloadFullDeck();
                       alert("⚡ GOLT Strategic Presentation compiled successfully! Download dispatched.");
                     }, 4500);
                   }}
@@ -9342,6 +9423,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 1: Dr. Sarah Patel */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Sarah Patel")}
+                  className={`kol-node ${selectedKol === 'Dr. Sarah Patel' ? 'active' : ''}`}
+                  data-kol-name="Dr. Sarah Patel"
                   style={{
                     position: 'absolute',
                     top: '30%', left: '25%',
@@ -9367,6 +9450,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 2: Dr. Marcus Vance */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Marcus Vance")}
+                  className={`kol-node ${selectedKol === 'Dr. Marcus Vance' ? 'active' : ''}`}
+                  data-kol-name="Dr. Marcus Vance"
                   style={{
                     position: 'absolute',
                     top: '30%', right: '25%',
@@ -9392,6 +9477,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 3: Dr. Aris Thorne */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Aris Thorne")}
+                  className={`kol-node ${selectedKol === 'Dr. Aris Thorne' ? 'active' : ''}`}
+                  data-kol-name="Dr. Aris Thorne"
                   style={{
                     position: 'absolute',
                     bottom: '25%', left: '30%',
@@ -9417,6 +9504,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 4: Dr. Evelyn Chen */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Evelyn Chen")}
+                  className={`kol-node ${selectedKol === 'Dr. Evelyn Chen' ? 'active' : ''}`}
+                  data-kol-name="Dr. Evelyn Chen"
                   style={{
                     position: 'absolute',
                     bottom: '25%', right: '30%',
@@ -9442,6 +9531,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 5: Dr. Helen Ross (NEW!) */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Helen Ross")}
+                  className={`kol-node ${selectedKol === 'Dr. Helen Ross' ? 'active' : ''}`}
+                  data-kol-name="Dr. Helen Ross"
                   style={{
                     position: 'absolute',
                     top: '12%', left: '46%',
@@ -9467,6 +9558,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 {/* Node 6: Dr. Sanjay Gupta (NEW!) */}
                 <div 
                   onClick={() => setSelectedKol("Dr. Sanjay Gupta")}
+                  className={`kol-node ${selectedKol === 'Dr. Sanjay Gupta' ? 'active' : ''}`}
+                  data-kol-name="Dr. Sanjay Gupta"
                   style={{
                     position: 'absolute',
                     bottom: '10%', left: '46%',
