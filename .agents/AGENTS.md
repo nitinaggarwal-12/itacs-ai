@@ -44,3 +44,16 @@ You must **always** pause and present a comprehensive validation/review step (in
 * **Seed Verification**: When writing E2E tests, always verify state pre-seeding (like localStorage or database values) to ensure tests can run independently and reliably in clean browser sessions.
 * **Visual Gallery Review**: Offer a walkthrough of captured screenshots and code changes during the validation step so the user can visually confirm design integrity before moving forward.
 
+## 🧪 RULE: E2E Testing Synchronization & Animation Settling
+
+### 1. The Constraint
+When writing automated E2E test scripts (using Puppeteer, Playwright, or Selenium) inside the ITACS workspace, you **must never** execute a screenshot capture or a downstream click immediately after triggering a UI state transition (such as tab switching, next button clicks, drawer openings, or modal closures). Doing so causes visual race conditions, capturing the UI in a stale, half-rendered state due to React state scheduling and CSS transition timings.
+
+### 2. The Protocol
+* **Inject Mandatory Settling Delays**: Always inject a minimum **800ms synchronization delay** immediately after:
+  1. Clicking `#tour-next-btn` or any tour navigation controllers.
+  2. Switching active tabs (`setActiveTab`).
+  3. Clicking elements that trigger drawer opening/closing animations.
+* **Animation Cooldowns**: For heavy holographic animations (like the clinical scanner), always wait at least **4500ms** to allow the visual timeline to reach completion and display success badges before attempting to close the modal.
+* **DOM-Level Clicks for Spots**: Always prefer direct DOM-level clicks (`page.$eval(selector, el => el.click())`) over physical mouse coordinate clicks for spotlighted elements to prevent overlay interception blocks.
+
