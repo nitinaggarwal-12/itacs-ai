@@ -1025,10 +1025,10 @@ export default function App() {
       }
     },
     {
-      targetId: "wargame-evolved-card",
-      title: "Evolved Strategic Imperative 🧠",
-      description: "Finally, look at the AI-synthesized Evolved Card! It expands your strategy from a simple freezer purchase to a bulletproof launch plan covering community clinic onboarding, nurse training, and patient journey management.",
-      buttonText: "Complete Wargame Review ➔",
+      targetId: "approve-to-memory-btn",
+      title: "Approve and Promote to Memory 🔵",
+      description: "Outstanding! You have wargamed your launch strategy and evolved it. Now, click the 'Approve to Memory' button at the bottom of the drawer to officially validate this risk-mitigated strategy, lock in the evolved fields, and write a new block to the Postgres Memory Bank Ledger!",
+      buttonText: "Approve Strategy... 🔒",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
         setActiveTab('matrix');
         if (setDetailTab) setDetailTab('wargaming');
@@ -1037,7 +1037,7 @@ export default function App() {
     {
       targetId: null,
       title: "Wargaming Certified! 🎉🏆",
-      description: "Outstanding! You have successfully wargamed your first strategic card and evolved it into a bulletproof launch imperative! You have been awarded the AI Challenger Badge! Your progress has been saved.",
+      description: "Incredible work! You have successfully wargamed your strategic card, approved it, and promoted it to the Merck Memory Bank. Your progress has been cryptographically signed and archived. The AI Challenger Badge is yours!",
       buttonText: "Complete Mission 🏅",
       action: () => {}
     }
@@ -4613,7 +4613,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <button onClick={() => setShowConflictForm(true)} className="btn btn-warn" style={{ padding: '8px 14px', fontSize: '12px' }}>
                       <AlertTriangle size={14} /> Flag Contradiction
                     </button>
-                    <button onClick={handleApprove} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                    <button id="approve-to-memory-btn" onClick={handleApprove} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
                       <Check size={14} /> Approve to Memory
                     </button>
                   </div>
@@ -9782,6 +9782,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 1 && !selectedInsight) return true;
                     if (tourStep === 2 && detailTab !== 'wargaming') return true;
                     if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return true;
+                    if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return true;
                   }
                   return false;
                 })()}
@@ -9819,6 +9820,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 1 && !selectedInsight) return 'not-allowed';
                       if (tourStep === 2 && detailTab !== 'wargaming') return 'not-allowed';
                       if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 'not-allowed';
+                      if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return 'not-allowed';
                     }
                     return 'pointer';
                   })(),
@@ -9837,6 +9839,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 1 && !selectedInsight) return 0.4;
                       if (tourStep === 2 && detailTab !== 'wargaming') return 0.4;
                       if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 0.4;
+                      if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return 0.4;
                     }
                     return 1;
                   })(),
@@ -9862,6 +9865,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 1 && !selectedInsight) return "Select a card... 🔒";
                     if (tourStep === 2 && detailTab !== 'wargaming') return "Open Wargaming tab... 🔒";
                     if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return "Run Stress-Test... 🔒";
+                    if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return "Approve Strategy... 🔒";
                   }
                   return tourSteps[tourStep].buttonText;
                 })()}
