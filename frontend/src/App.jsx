@@ -3217,7 +3217,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       onClick={() => {
                         setActiveTourWorkflow(3);
                         setTourActive(true);
-                        setTourStepIndex(0);
+                        setTourStep(0);
                         setSelectedInsight(null);
                       }}
                       style={{
@@ -3287,7 +3287,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       onClick={() => {
                         setActiveTourWorkflow(4);
                         setTourActive(true);
-                        setTourStepIndex(0);
+                        setTourStep(0);
                       }}
                       style={{
                         width: '100%',

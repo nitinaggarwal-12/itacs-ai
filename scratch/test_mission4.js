@@ -37,6 +37,40 @@ const path = require('path');
     const targetUrl = 'https://itacs-frontend-production.up.railway.app';
     const apiUrl = 'https://itacs-ai-production.up.railway.app';
 
+    // Programmatically clear all existing strategic imperatives & validate the first insight in Node context (bypassing browser CORS!)
+    console.log("🔄 Resetting database in Node context (purging imperatives & validating first insight)...");
+    try {
+      // 1. Purge all imperatives
+      const resList = await fetch(`${apiUrl}/api/imperatives`);
+      if (resList.ok) {
+        const imps = await resList.json();
+        for (const imp of imps) {
+          await fetch(`${apiUrl}/api/imperatives/${imp.id}`, {
+            method: 'DELETE',
+            headers: { 'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator' }
+          });
+        }
+      }
+      // 2. Validate the first insight in the DB to use as grounded evidence
+      const resIns = await fetch(`${apiUrl}/api/insights`);
+      if (resIns.ok) {
+        const insights = await resIns.json();
+        if (insights.length > 0) {
+          await fetch(`${apiUrl}/api/insights/${insights[0].id}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator'
+            },
+            body: JSON.stringify({ is_validated: true })
+          });
+        }
+      }
+      console.log("✅ Database reset complete!");
+    } catch (err) {
+      console.error("❌ Reset error:", err);
+    }
+
     console.log(`🔗 Navigating to ITACS Production: ${targetUrl}...`);
     await page.goto(`${targetUrl}/#home`, { waitUntil: 'networkidle2' });
     
@@ -49,49 +83,9 @@ const path = require('path');
       localStorage.removeItem('itacs_tour_completed_w4');
     });
 
-    // Reload page to apply the unlocked state
+    // Reload page to apply the unlocked state & database reset
     await page.reload({ waitUntil: 'networkidle2' });
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Programmatically clear all existing strategic imperatives & validate the first insight to ensure clean test isolation!
-    console.log("🔄 Resetting database: purging imperatives & validating first insight...");
-    await page.evaluate(async (api) => {
-      try {
-        // 1. Purge all imperatives
-        const resList = await fetch(`${api}/api/imperatives`);
-        if (resList.ok) {
-          const imps = await resList.json();
-          for (const imp of imps) {
-            await fetch(`${api}/api/imperatives/${imp.id}`, {
-              method: 'DELETE',
-              headers: { 'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator' }
-            });
-          }
-        }
-        // 2. Validate the first insight in the DB to use as grounded evidence
-        const resIns = await fetch(`${api}/api/insights`);
-        if (resIns.ok) {
-          const insights = await resIns.json();
-          if (insights.length > 0) {
-            await fetch(`${api}/api/insights/${insights[0].id}`, {
-              method: 'PATCH',
-              headers: { 
-                'Content-Type': 'application/json',
-                'X-Agent-Identity': 'spiffe://itacs.merck.com/ns/production/sa/golt-coordinator'
-              },
-              body: JSON.stringify({ is_validated: true })
-            });
-          }
-        }
-        console.log("✅ Database reset complete!");
-      } catch (err) {
-        console.error("❌ Reset error:", err);
-      }
-    }, apiUrl);
-
-    // Reload again to pull clean, purged database state
-    await page.reload({ waitUntil: 'networkidle2' });
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
     // Helper function to assert popover position and prevent clipping
     const assertPopoverIntegrity = async (stepNum) => {
