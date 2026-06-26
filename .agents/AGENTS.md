@@ -60,3 +60,13 @@ When writing automated E2E test scripts (using Puppeteer, Playwright, or Seleniu
 * **DOM-Level Clicks for Spots**: Always prefer direct DOM-level clicks (`page.$eval(selector, el => el.click())`) over physical mouse coordinate clicks for spotlighted elements and tour control buttons (like `#tour-next-btn`). Physical coordinate clicks are highly vulnerable to being intercepted by the wargaming spotlight mask overlay, causing lost inputs and desynchronized tour states.
 * **Node-Level Sleep for Reloads**: When a tour action triggers a page reload (`window.location.reload()`) or navigation, never use `page.evaluate` to pause or sleep the script immediately after. The page reload will destroy the execution context, causing `page.evaluate` to crash. Instead, always use Node.js-level timeouts (`await new Promise(resolve => setTimeout(resolve, N))`) to allow the browser to reload in peace before taking screenshots or querying the DOM.
 
+## 📐 RULE: High-Fidelity Diagram Ingestion & HTML Attribute Escaping
+
+### 1. The Constraint
+When embedding complex, nested XML strings (such as Draw.io diagram configurations) inside HTML data-attributes (such as `data-mxgraph`), you **must never** use simple string replacements or manual quote-only escapes. Doing so leaves raw XML tag brackets (`<` and `>`) inside the attribute, which tricks the browser's HTML parser into treating the XML as active DOM elements. This truncates the attribute value and results in a fatal `"Not a diagram file"` error on client-side rendering.
+
+### 2. The Protocol
+* **Strict HTML Escaping**: Always serialize the configuration dictionary containing the XML string into a JSON string first. Then, run a comprehensive HTML-escaping utility (like Python's `html.escape(json_str, quote=True)`) before writing the attribute to the template. This guarantees all brackets (`&lt;`, `&gt;`), quotes (`&quot;`), and ampersands (`&amp;`) are safely encoded.
+* **Index-Based Query Selectors**: Always query diagram containers in associated Javascript controllers using index-based selectors (e.g., `document.querySelectorAll('.mxgraph')[index]`) rather than static DOM IDs. This prevents namespace conflicts and ID collisions with nested Draw.io iframe loaders.
+* **Structural Diffing Verification**: Before declaring diagram modifications complete, you must run a structural XML validation script to verify that the parsed XML structure remains 100% identical to the working base template (excluding the translated cell text values).
+
