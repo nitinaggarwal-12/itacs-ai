@@ -7950,7 +7950,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Executive Deck Studio
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                   Assemble, review, and compile the final Oncology Launch Strategy slide deck. Approve imperatives slide-by-slide.
                 </p>
               </div>
@@ -7965,6 +7965,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   { index: 5, type: 'Strategic Imperative', title: 'Optimize Operational Launch Readiness Timeline', pillar: 'Optimize Launch Readiness' }
                 ].map(slide => {
                   const isActive = activePreviewSlide === slide.index;
+                  const isApproved = deckApprovedSlides.includes(slide.index);
                   return (
                     <div
                       key={slide.index}
@@ -7972,22 +7973,28 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       style={{
                         padding: '12px',
                         borderRadius: '10px',
-                        background: isActive ? 'rgba(99, 102, 241, 0.08)' : 'rgba(255,255,255,0.01)',
-                        border: isActive ? '1.5px solid var(--brand-cyan)' : '1px solid rgba(255,255,255,0.04)',
+                        background: isActive 
+                          ? (theme === 'light' ? 'rgba(99, 102, 241, 0.06)' : 'rgba(99, 102, 241, 0.08)')
+                          : (theme === 'light' ? '#ffffff' : 'rgba(255,255,255,0.01)'),
+                        border: isActive 
+                          ? '1.5px solid var(--brand-cyan)' 
+                          : `1px solid ${theme === 'light' ? '#e2e8f0' : 'rgba(255,255,255,0.04)'}`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         gap: '10px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        boxShadow: isActive ? '0 0 12px rgba(6, 182, 212, 0.15)' : 'none'
+                        boxShadow: isActive 
+                          ? '0 4px 12px rgba(6, 182, 212, 0.08)' 
+                          : 'none'
                       }}
                     >
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                         <span style={{ fontSize: '7.5px', color: isActive ? 'var(--brand-cyan)' : 'var(--text-muted)', fontWeight: 'bold' }}>
                           SLIDE {slide.index} • {slide.type}
                         </span>
-                        <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 700 }}>
+                        <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', fontWeight: 700 }}>
                           {slide.title.substring(0, 32)}...
                         </h4>
                       </div>
@@ -7995,7 +8002,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       {/* Slide approval checkbox */}
                       <input
                         type="checkbox"
-                        checked={deckApprovedSlides.includes(slide.index)}
+                        checked={isApproved}
                         onClick={(e) => e.stopPropagation()} // Prevent triggering slide selection when toggling checkbox
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -8005,8 +8012,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           }
                         }}
                         style={{
-                          width: '16px',
-                          height: '16px',
+                          width: '15px',
+                          height: '15px',
                           accentColor: 'var(--brand-cyan)',
                           cursor: 'pointer'
                         }}
@@ -8042,13 +8049,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '6px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    border: 'none'
                   }}
                 >
                   <Sparkles size={14} fill="white" />
                   {isCompilingDeck ? 'Compiling presentation deck...' : '⚡ Auto-Generate GOLT Deck'}
                 </button>
-                <div style={{ fontSize: '8.5px', color: 'var(--text-muted)', textAlign: 'center' }}>
+                <div style={{ fontSize: '9.5px', color: 'var(--text-muted)', textAlign: 'center' }}>
                   Approved Slides: {deckApprovedSlides.length} of 5 selected
                 </div>
               </div>
@@ -8063,11 +8071,15 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               boxSizing: 'border-box',
               overflow: 'hidden'
             }}>
-              {/* PPTX slide mockup container */}
-              <div className="glass-card" style={{
+              {/* PPTX slide mockup container (Stunning High-Fidelity Holographic Slide Template!) */}
+              <div className="glass-card animate-fade-in" style={{
                 flex: 1,
-                background: 'var(--bg-canvas)',
-                border: '1px solid var(--glass-border)',
+                background: theme === 'light' 
+                  ? 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' 
+                  : 'var(--bg-canvas)',
+                border: theme === 'light'
+                  ? '1.5px solid rgba(99, 102, 241, 0.15)'
+                  : '1px solid var(--glass-border)',
                 borderRadius: '16px',
                 padding: '40px',
                 display: 'flex',
@@ -8076,7 +8088,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 aspectRatio: '16/9',
                 position: 'relative',
                 overflow: 'hidden',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                boxShadow: theme === 'light' 
+                  ? '0 15px 35px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.6)' 
+                  : '0 15px 35px rgba(0,0,0,0.4)'
               }}>
                 {/* PPTX Border Badge */}
                 <div style={{
@@ -8084,7 +8099,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   top: '20px', right: '24px',
                   fontSize: '8px',
                   color: 'var(--text-muted)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  border: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.08)',
                   padding: '2px 8px',
                   borderRadius: '10px',
                   textTransform: 'uppercase',
@@ -8097,7 +8112,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '18px' }}>🧬</span>
                   <div>
-                    <h5 style={{ margin: 0, fontSize: '13px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 800 }}>
+                    <h5 style={{ margin: 0, fontSize: '12.5px', color: 'var(--brand-cyan)', textTransform: 'uppercase', fontWeight: 800 }}>
                       ITACS GOLT STRATEGIC ROADMAP
                     </h5>
                     <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)' }}>
@@ -8107,68 +8122,129 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </div>
 
                 {/* Slide content area */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px', marginTop: '15px' }}>
                   {activePreviewSlide === 1 ? (
                     /* Slide 1: Premium Title Page Layout */
                     <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center', height: '100%' }}>
-                      <h1 style={{ margin: 0, fontSize: '32px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: '1.25' }}>
+                      <h1 style={{ 
+                        margin: 0, 
+                        fontSize: '30px', 
+                        fontWeight: 800, 
+                        color: theme === 'light' ? '#0f172a' : '#f8fafc', 
+                        letterSpacing: '-1px', 
+                        lineHeight: '1.2' 
+                      }}>
                         ITACS Adjuvant Oncology Launch Strategy
                       </h1>
-                      <p style={{ margin: 0, fontSize: '15px', color: 'var(--brand-cyan)', fontWeight: 600 }}>
+                      <p style={{ 
+                        margin: 0, 
+                        fontSize: '15px', 
+                        color: 'var(--brand-indigo)', 
+                        fontWeight: 700 
+                      }}>
                         Cross-Functional Alignment & Strategic Execution Roadmap for V940/MK-940
                       </p>
-                      <div style={{ marginTop: '24px', fontSize: '11.5px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div style={{ marginTop: '20px', fontSize: '11px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <span>Presented by: Global Oncology Leadership Team (GOLT)</span>
                         <span>Date: March 2026 Presentation Ready</span>
                       </div>
                     </div>
                   ) : (
-                    /* Slides 2, 3, 4, 5: Dynamic Imperative Slide Layout */
+                    /* Slides 2, 3, 4, 5: Dynamic Split-Card Slide Layout (Stunning & High Contrast!) */
                     <>
-                      <h1 style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+                      <h1 style={{ 
+                        margin: 0, 
+                        fontSize: '22px', 
+                        fontWeight: 800, 
+                        color: theme === 'light' ? '#0f172a' : '#f8fafc', 
+                        letterSpacing: '-0.5px' 
+                      }}>
                         {activePreviewSlide === 2 && "MK-940 Adjuvant Recurrence Risk Reduction Plan"}
                         {activePreviewSlide === 3 && "Payer Access Strategy & HEOR Value Realization"}
                         {activePreviewSlide === 4 && "Companion Diagnostic Scaling & Molecular Screening"}
                         {activePreviewSlide === 5 && "Vein-to-Vein Logistics & Practice Support Operations"}
                       </h1>
                       
-                      {/* Grid showing bullets mapping to active Postgres memory */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginTop: '10px' }}>
-                        <div style={{ borderLeft: '3px solid var(--brand-indigo)', paddingLeft: '14px' }}>
-                          <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-indigo)', fontWeight: 700 }}>
+                      {/* Grid showing gorgeous split cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '5px' }}>
+                        
+                        {/* Left Card: Clinical/Efficacy */}
+                        <div className="glass-card" style={{ 
+                          padding: '16px',
+                          borderRadius: '10px',
+                          background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.01)',
+                          border: `1.5px solid ${theme === 'light' ? '#e2e8f0' : 'rgba(99, 102, 241, 0.15)'}`,
+                          borderLeft: `4px solid var(--brand-indigo)`,
+                          boxShadow: 'none'
+                        }}>
+                          <h4 style={{ 
+                            margin: '0 0 8px 0', 
+                            fontSize: '11px', 
+                            color: theme === 'light' ? '#312e81' : '#a5b4fc', 
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                          }}>
                             {activePreviewSlide === 2 && "CLINICAL DIFFERENTIATION STRATEGY"}
                             {activePreviewSlide === 3 && "RISK-SHARING AGREEMENTS"}
                             {activePreviewSlide === 4 && "RAPID IHC TESTING ROLLOUT"}
                             {activePreviewSlide === 5 && "ULTRA-COLD CHAIN HUBS"}
                           </h4>
-                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '11.5px', 
+                            color: theme === 'light' ? '#334155' : '#cbd5e1', 
+                            lineHeight: '1.5' 
+                          }}>
                             {activePreviewSlide === 2 && "Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch."}
                             {activePreviewSlide === 3 && "Formulate performance milestone-based rebate contracts with commercial insurers to bypass national step-therapy thresholds."}
                             {activePreviewSlide === 4 && "Deploy rapid IHC companion assay kits to 250+ community hospital pathology labs by Q4 to avoid chemotherapy misrouting."}
                             {activePreviewSlide === 5 && "Establish leased -70°C deep-freezer placement programs targeting tier-1 community oncology practices to secure storage capacity."}
                           </p>
                         </div>
-                        <div style={{ borderLeft: '3px solid var(--brand-purple)', paddingLeft: '14px' }}>
-                          <h4 style={{ margin: '0 0 6px 0', fontSize: '12px', color: 'var(--brand-purple)', fontWeight: 700 }}>
+
+                        {/* Right Card: Market Access/Operations */}
+                        <div className="glass-card" style={{ 
+                          padding: '16px',
+                          borderRadius: '10px',
+                          background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.01)',
+                          border: `1.5px solid ${theme === 'light' ? '#e2e8f0' : 'rgba(139, 92, 246, 0.15)'}`,
+                          borderLeft: `4px solid var(--brand-purple)`,
+                          boxShadow: 'none'
+                        }}>
+                          <h4 style={{ 
+                            margin: '0 0 8px 0', 
+                            fontSize: '11px', 
+                            color: theme === 'light' ? '#4c1d95' : '#c084fc', 
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                          }}>
                             {activePreviewSlide === 2 && "MARKET ACCESS REIMBURSEMENT ROADMAP"}
                             {activePreviewSlide === 3 && "SUBCUTANEOUS VALUE ARGUMENT"}
                             {activePreviewSlide === 4 && "NGS REFLEX PROTOCOLS"}
                             {activePreviewSlide === 5 && "ONCOLOGY PATIENT NAVIGATORS"}
                           </h4>
-                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '11.5px', 
+                            color: theme === 'light' ? '#334155' : '#cbd5e1', 
+                            lineHeight: '1.5' 
+                          }}>
                             {activePreviewSlide === 2 && "Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance."}
                             {activePreviewSlide === 3 && "Highlight the 20% clinical throughput gain and nursing chair-time savings of the subcutaneous adjuvant formulation."}
                             {activePreviewSlide === 4 && "Standardize reflex testing protocols at surgical resection to ensure patient biomarker results are returned within 7 days."}
                             {activePreviewSlide === 5 && "Deploy dedicated clinical navigators to manage patient scheduling, biopsy routing, and prior-authorization approvals."}
                           </p>
                         </div>
+
                       </div>
                     </>
                   )}
                 </div>
 
                 {/* Footer brand block */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)', paddingTop: '16px' }}>
                   <span style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
                     Author: Global Oncology Leadership Team (GOLT)
                   </span>
@@ -8182,15 +8258,16 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               {isCompilingDeck && (
                 <div className="glass-card animate-scale-in" style={{
                   padding: '16px 20px',
-                  background: 'rgba(5, 7, 12, 0.95)',
+                  background: theme === 'light' ? '#ffffff' : 'rgba(5, 7, 12, 0.95)',
                   border: '1px solid rgba(99, 102, 241, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '16px'
+                  gap: '16px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
                 }}>
                   <RefreshCw className="animate-spin" style={{ color: 'var(--brand-indigo)' }} size={20} />
                   <div style={{ flex: 1 }}>
-                    <h5 style={{ margin: 0, fontSize: '12px', color: 'white', fontWeight: 'bold' }}>
+                    <h5 style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       {compilationStep === 1 && "Ingesting approved OKF memory pillars..."}
                       {compilationStep === 2 && "Mapping strategic timelines and JSON metrics..."}
                       {compilationStep === 3 && "Injecting corporate slide templates & compiling PPTX..."}
@@ -9254,8 +9331,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
         {/* 2. MANUFACTURING READINESS (VEIN-TO-VEIN LOGISTICS) */}
         {activeTab === 'logistics' && (
           <div className="logistics-container animate-fade-in" style={{
-            display: 'grid',
-            gridTemplateRows: 'auto 1fr',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '24px',
             padding: '24px 32px',
             height: 'calc(100vh - 80px)',
@@ -9264,10 +9341,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           }}>
             {/* Top Row: Logistics Overview */}
             <div className="glass-card" style={{
-              padding: '24px',
+              padding: '20px 24px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px'
+              gap: '12px',
+              flexShrink: 0
             }}>
               <div>
                 <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -9276,125 +9354,244 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Vein-to-Vein Logistics Radar
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
                   Personalized cancer vaccines (V940) require biopsy extraction, rapid sequencing, custom manufacturing, and cold-chain clinic infusion within 22 days.
                 </p>
               </div>
 
-              {/* Dynamic Warning Alert */}
-              {logisticsManufacturing >= 95 && (
+              {/* Dynamic Capacity Warning Alert (Healed Contrast!) */}
+              {logisticsManufacturing >= 95 ? (
                 <div className="animate-pulse" style={{
-                  padding: '12px 16px',
-                  background: 'rgba(239,68,68,0.08)',
-                  border: '1px solid rgba(239,68,68,0.2)',
-                  borderRadius: '10px',
+                  padding: '10px 16px',
+                  background: 'rgba(239,68,68,0.05)',
+                  border: '1px solid rgba(239,68,68,0.25)',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px'
                 }}>
-                  <span style={{ fontSize: '16px' }}>🔴</span>
+                  <span style={{ fontSize: '14px', color: 'var(--color-error)' }}>🔴</span>
                   <div style={{ flex: 1 }}>
-                    <strong style={{ fontSize: '11px', color: '#fca5a5' }}>
-                      CAPACITY BOTTLE-NECK WARNING: Custom vaccine manufacturing slots are at {logisticsManufacturing}% capacity.
+                    <strong style={{ fontSize: '11px', color: 'var(--text-primary)' }}>
+                      CAPACITY BOTTLE-NECK WARNING: <span style={{ color: 'var(--color-error)' }}>Custom vaccine manufacturing slots are at {logisticsManufacturing}% capacity.</span>
                     </strong>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#fca5a5' }}>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
                       Patient Turnaround Time (TAT) is projected to slip from 18 days to 24 days. Action required: Allocate backup manufacturing lines in Merck Jersey Hub.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="animate-scale-in" style={{
+                  padding: '10px 16px',
+                  background: 'rgba(16,185,129,0.05)',
+                  border: '1px solid rgba(16,185,129,0.25)',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}>
+                  <span style={{ fontSize: '14px', color: 'var(--color-success)' }}>✓</span>
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ fontSize: '11px', color: 'var(--text-primary)' }}>
+                      SUPPLY CHAIN CAPACITY STABLE: <span style={{ color: 'var(--color-success)' }}>All manufacturing nodes operating within safe throughput thresholds.</span>
+                    </strong>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
+                      Patient Turnaround Time (TAT) is stable at 18 days. Manufacturing slots are available for immediate custom synthesis.
                     </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Bottom Row: Pipeline Diagram Mockup & Node Sliders */}
-            <div className="glass-card" style={{
-              padding: '24px',
+            {/* Bottom Row: Splitting Pipeline, Telemetry, and Load Sliders */}
+            <div style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 340px',
-              gap: '32px'
+              gridTemplateColumns: '1fr 320px',
+              gap: '24px',
+              flex: 1,
+              minHeight: '420px',
+              marginBottom: '10px'
             }}>
               
-              {/* Left: Pipeline Diagram Flow */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', justifyContent: 'center' }}>
-                <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Vein-to-Vein Pipeline Flow Chart
-                </h3>
+              {/* Left Column: Telemetry (Top) & Flow Chart (Bottom) - Fills the massive empty space! */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', height: '100%' }}>
                 
-                {/* Horizontal nodes list representing flow */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto 1fr auto 1fr', alignItems: 'center', gap: '8px', padding: '20px 0' }}>
-                  
-                  {/* Node 1: Biopsy */}
-                  <div style={{
-                    background: 'var(--bg-primary)',
-                    border: `1px solid ${logisticsBiopsy >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
-                    padding: '16px',
-                    borderRadius: '12px',
-                    textAlign: 'center'
-                  }}>
-                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🩸</span>
-                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>1. Biopsy Extraction</strong>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Clinic Capacity: {logisticsBiopsy}%</span>
+                {/* 1. Live Patient TAT & Queue Telemetry Dashboard */}
+                <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', flex: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                      📋 Active Vein-to-Vein Patient Queue Telemetry
+                    </h3>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <span style={{ fontSize: '10.5px', color: 'var(--text-secondary)' }}>
+                        Average TAT: <strong style={{ color: logisticsManufacturing >= 95 ? 'var(--color-error)' : 'var(--color-success)' }}>{logisticsManufacturing >= 95 ? '24 Days' : '18 Days'}</strong>
+                      </span>
+                      <span style={{ fontSize: '10.5px', color: 'var(--text-secondary)' }}>
+                        Target TAT: <strong style={{ color: 'var(--text-primary)' }}>22 Days</strong>
+                      </span>
+                    </div>
                   </div>
 
-                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
+                  {/* Patient Queue Cards Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', flex: 1 }}>
+                    
+                    {/* Patient 1: Biopsy Stage */}
+                    <div className="glass-card" style={{ padding: '12px', background: 'rgba(0,0,0,0.05)', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', justifyBetween: 'space-between', borderRadius: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Patient #1088</span>
+                        <span style={{ fontSize: '8px', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--brand-indigo)', padding: '1px 5px', borderRadius: '3px', fontWeight: 'bold' }}>
+                          Biopsy Stage
+                        </span>
+                      </div>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>Adjuvant melanoma candidate. Extraction completed.</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', fontSize: '10px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Node Load: {logisticsBiopsy}%</span>
+                        <span style={{ color: 'var(--color-success)', fontWeight: 'bold' }}>🟢 On Track</span>
+                      </div>
+                    </div>
 
-                  {/* Node 2: Sequencing */}
-                  <div style={{
-                    background: 'var(--bg-primary)',
-                    border: `1px solid ${logisticsSequencing >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
-                    padding: '16px',
-                    borderRadius: '12px',
-                    textAlign: 'center'
-                  }}>
-                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🧬</span>
-                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>2. Tumor Sequencing</strong>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Lab Capacity: {logisticsSequencing}%</span>
-                  </div>
+                    {/* Patient 2: Sequencing Stage */}
+                    <div className="glass-card" style={{ padding: '12px', background: 'rgba(0,0,0,0.05)', border: '1px solid var(--glass-border)', display: 'flex', flexDirection: 'column', justifyBetween: 'space-between', borderRadius: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Patient #1089</span>
+                        <span style={{ fontSize: '8px', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--brand-purple)', padding: '1px 5px', borderRadius: '3px', fontWeight: 'bold' }}>
+                          Sequencing Stage
+                        </span>
+                      </div>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>DNA extraction & reflex sequencing alignment active.</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', fontSize: '10px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Node Load: {logisticsSequencing}%</span>
+                        <span style={{ color: logisticsSequencing >= 90 ? 'var(--color-warning)' : 'var(--color-success)', fontWeight: 'bold' }}>
+                          {logisticsSequencing >= 90 ? '⚠️ High Queue' : '🟢 On Track'}
+                        </span>
+                      </div>
+                    </div>
 
-                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
+                    {/* Patient 3: Manufacturing Stage (Directly reacts to Manufacturing Load!) */}
+                    <div className="glass-card" style={{ 
+                      padding: '12px', 
+                      background: 'rgba(0,0,0,0.05)', 
+                      border: `1px solid ${logisticsManufacturing >= 95 ? 'var(--color-error)' : 'var(--glass-border)'}`, 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      justifyBetween: 'space-between', 
+                      borderRadius: '8px',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'var(--text-primary)' }}>Patient #1090</span>
+                        <span style={{ 
+                          fontSize: '8px', 
+                          background: logisticsManufacturing >= 95 ? 'rgba(239,68,68,0.1)' : 'rgba(6, 182, 212, 0.1)', 
+                          color: logisticsManufacturing >= 95 ? 'var(--color-error)' : 'var(--brand-cyan)', 
+                          padding: '1px 5px', 
+                          borderRadius: '3px', 
+                          fontWeight: 'bold' 
+                        }}>
+                          Synthesis Stage
+                        </span>
+                      </div>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '9.5px', color: 'var(--text-muted)' }}>
+                        {logisticsManufacturing >= 95 ? '🚨 Manufacturing slots saturated. Synthesis queue stalled.' : 'mRNA custom vaccine synthesis in progress.'}
+                      </p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', fontSize: '10px' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Node Load: {logisticsManufacturing}%</span>
+                        <span style={{ color: logisticsManufacturing >= 95 ? 'var(--color-error)' : 'var(--color-success)', fontWeight: 'bold' }}>
+                          {logisticsManufacturing >= 95 ? '🚨 Delay: +6 Days' : '🟢 On Track'}
+                        </span>
+                      </div>
+                    </div>
 
-                  {/* Node 3: Manufacturing */}
-                  <div style={{
-                    background: logisticsManufacturing >= 95 ? 'rgba(239, 68, 68, 0.05)' : 'var(--bg-primary)',
-                    border: `2px solid ${logisticsManufacturing >= 95 ? '#ef4444' : 'var(--glass-border)'}`,
-                    boxShadow: logisticsManufacturing >= 95 ? '0 0 15px rgba(239,68,68,0.2)' : 'none',
-                    padding: '16px',
-                    borderRadius: '12px',
-                    textAlign: 'center',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>🏭</span>
-                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>3. Manufacturing</strong>
-                    <span style={{ fontSize: '10px', color: logisticsManufacturing >= 95 ? '#fca5a5' : 'var(--text-muted)' }}>Slot Capacity: {logisticsManufacturing}%</span>
-                  </div>
-
-                  <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>➔</span>
-
-                  {/* Node 4: Infusion */}
-                  <div style={{
-                    background: 'var(--bg-primary)',
-                    border: `1px solid ${logisticsInfusion >= 90 ? '#ef4444' : 'var(--glass-border)'}`,
-                    padding: '16px',
-                    borderRadius: '12px',
-                    textAlign: 'center'
-                  }}>
-                    <span style={{ fontSize: '18px', display: 'block', marginBottom: '6px' }}>💉</span>
-                    <strong style={{ fontSize: '12px', color: 'var(--text-primary)', display: 'block' }}>4. Infusion Clinic</strong>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Slot Capacity: {logisticsInfusion}%</span>
                   </div>
                 </div>
+
+                {/* 2. Vein-to-Vein Pipeline Flow Chart */}
+                <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', flexShrink: 0 }}>
+                  <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    Vein-to-Vein Pipeline Flow Chart
+                  </h3>
+                  
+                  {/* Horizontal nodes list representing flow */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr auto 1fr auto 1fr', alignItems: 'center', gap: '8px', padding: '10px 0' }}>
+                    
+                    {/* Node 1: Biopsy */}
+                    <div style={{
+                      background: 'var(--bg-primary)',
+                      border: `1px solid ${logisticsBiopsy >= 90 ? 'var(--color-warning)' : 'var(--glass-border)'}`,
+                      padding: '12px',
+                      borderRadius: '10px',
+                      textAlign: 'center',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <span style={{ fontSize: '16px', display: 'block', marginBottom: '4px' }}>🩸</span>
+                      <strong style={{ fontSize: '11px', color: 'var(--text-primary)', display: 'block' }}>1. Biopsy Extraction</strong>
+                      <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Clinic Capacity: {logisticsBiopsy}%</span>
+                    </div>
+
+                    <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>➔</span>
+
+                    {/* Node 2: Sequencing */}
+                    <div style={{
+                      background: 'var(--bg-primary)',
+                      border: `1px solid ${logisticsSequencing >= 90 ? 'var(--color-warning)' : 'var(--glass-border)'}`,
+                      padding: '12px',
+                      borderRadius: '10px',
+                      textAlign: 'center',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <span style={{ fontSize: '16px', display: 'block', marginBottom: '4px' }}>🧬</span>
+                      <strong style={{ fontSize: '11px', color: 'var(--text-primary)', display: 'block' }}>2. Tumor Sequencing</strong>
+                      <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Lab Capacity: {logisticsSequencing}%</span>
+                    </div>
+
+                    <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>➔</span>
+
+                    {/* Node 3: Manufacturing */}
+                    <div style={{
+                      background: logisticsManufacturing >= 95 ? 'rgba(239, 68, 68, 0.05)' : 'var(--bg-primary)',
+                      border: `2px solid ${logisticsManufacturing >= 95 ? 'var(--color-error)' : 'var(--glass-border)'}`,
+                      boxShadow: logisticsManufacturing >= 95 ? '0 0 12px rgba(239,68,68,0.15)' : 'none',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      textAlign: 'center',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <span style={{ fontSize: '16px', display: 'block', marginBottom: '4px' }}>🏭</span>
+                      <strong style={{ fontSize: '11px', color: 'var(--text-primary)', display: 'block' }}>3. Manufacturing</strong>
+                      <span style={{ fontSize: '9px', color: logisticsManufacturing >= 95 ? '#fca5a5' : 'var(--text-muted)' }}>Slot Capacity: {logisticsManufacturing}%</span>
+                    </div>
+
+                    <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>➔</span>
+
+                    {/* Node 4: Infusion */}
+                    <div style={{
+                      background: 'var(--bg-primary)',
+                      border: `1px solid ${logisticsInfusion >= 90 ? 'var(--color-warning)' : 'var(--glass-border)'}`,
+                      padding: '12px',
+                      borderRadius: '10px',
+                      textAlign: 'center',
+                      transition: 'all 0.3s ease'
+                    }}>
+                      <span style={{ fontSize: '16px', display: 'block', marginBottom: '4px' }}>💉</span>
+                      <strong style={{ fontSize: '11px', color: 'var(--text-primary)', display: 'block' }}>4. Infusion Clinic</strong>
+                      <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>Slot Capacity: {logisticsInfusion}%</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               {/* Right: Simulated capacity controls */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: '1px solid var(--glass-border)', paddingLeft: '24px' }}>
+              <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '20px' }}>
                 <h4 style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
                   Simulate Capacity Loads
                 </h4>
                 
                 {[
-                  { label: 'Biopsy Slot Load', state: logisticsBiopsy, setter: setLogisticsBiopsy },
-                  { label: 'DNA Sequencing Load', state: logisticsSequencing, setter: setLogisticsSequencing },
-                  { label: 'mRNA Manufacturing Load', state: logisticsManufacturing, setter: setLogisticsManufacturing },
-                  { label: 'Adjuvant Infusion Load', state: logisticsInfusion, setter: setLogisticsInfusion }
+                  { label: 'Biopsy Slot Load', state: logisticsBiopsy, setter: setLogisticsBiopsy, activeColor: 'var(--brand-indigo)' },
+                  { label: 'DNA Sequencing Load', state: logisticsSequencing, setter: setLogisticsSequencing, activeColor: 'var(--brand-purple)' },
+                  { label: 'mRNA Manufacturing Load', state: logisticsManufacturing, setter: setLogisticsManufacturing, activeColor: 'var(--color-error)' },
+                  { label: 'Adjuvant Infusion Load', state: logisticsInfusion, setter: setLogisticsInfusion, activeColor: 'var(--brand-cyan)' }
                 ].map((ctrl, ctrlIdx) => (
                   <div key={ctrlIdx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px' }}>
@@ -9407,11 +9604,15 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       max="100"
                       value={ctrl.state}
                       onChange={(e) => ctrl.setter(parseInt(e.target.value))}
-                      style={{ width: '100%', accentColor: 'var(--brand-purple)' }}
+                      style={{ 
+                        width: '100%', 
+                        accentColor: ctrl.state >= 90 ? 'var(--color-warning)' : (ctrl.state >= 95 ? 'var(--color-error)' : ctrl.activeColor) 
+                      }}
                     />
                   </div>
                 ))}
               </div>
+
             </div>
           </div>
         )}
