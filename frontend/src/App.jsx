@@ -2889,6 +2889,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </p>
                   </div>
                   <button 
+                    id="start-mission-1-btn"
                     onClick={() => {
                       setActiveTourWorkflow(1);
                       setTourStep(0);
@@ -2938,6 +2939,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </div>
                   {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? (
                     <button 
+                      id="start-mission-2-btn"
                       onClick={() => {
                         setActiveTourWorkflow(2);
                         setTourStep(0);
@@ -2994,6 +2996,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </div>
                   {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? (
                     <button 
+                      id="start-mission-3-btn"
                       onClick={() => {
                         setActiveTourWorkflow(3);
                         setTourStep(0);
