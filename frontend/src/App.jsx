@@ -5044,8 +5044,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
             {/* Slide-out Strategic Workshop Drawer */}
             {isImperativeDrawerOpen && selectedImperative && (
-              <div className="drawer-overlay" onClick={() => setIsImperativeDrawerOpen(false)} style={{ display: 'block' }}>
-                <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ width: '460px', padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+              <div className="drawer-overlay open" onClick={() => setIsImperativeDrawerOpen(false)}>
+                <div className="slide-out-drawer open" onClick={(e) => e.stopPropagation()} style={{ width: '460px', boxSizing: 'border-box' }}>
                   
                   {/* Drawer Header */}
                   <div className="drawer-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '16px', marginBottom: '16px', flexShrink: 0 }}>
