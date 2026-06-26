@@ -1,4 +1,4 @@
-// ITACS Enterprise Insights Platform - Automated Webhook Trigger V1.6.5
+// ITACS Enterprise Insights Platform - Automated Webhook Trigger V1.6.6
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, Download,
@@ -1219,25 +1219,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Keyboard navigation for global slideshow presentation modal!
-  useEffect(() => {
-    if (!isPresentationViewOpen) return;
 
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') {
-        e.preventDefault();
-        setPresentationActiveSlide(prev => Math.min(5, prev + 1));
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        setPresentationActiveSlide(prev => Math.max(1, prev - 1));
-      } else if (e.key === 'Escape') {
-        setIsPresentationViewOpen(false);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPresentationViewOpen]);
 
   useEffect(() => {
     // Synchronize initial body class to respect theme state
@@ -1390,6 +1372,26 @@ export default function App() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+
+  // Keyboard navigation for global slideshow presentation modal!
+  useEffect(() => {
+    if (!isPresentationViewOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        setPresentationActiveSlide(prev => Math.min(5, prev + 1));
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setPresentationActiveSlide(prev => Math.max(1, prev - 1));
+      } else if (e.key === 'Escape') {
+        setIsPresentationViewOpen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPresentationViewOpen]);
 
   // 5. KOL Network Graph States
   const [selectedKol, setSelectedKol] = useState("Dr. Sarah Patel");
