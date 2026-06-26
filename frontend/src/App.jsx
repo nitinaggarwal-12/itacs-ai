@@ -1012,6 +1012,8 @@ export default function App() {
   const [uploadAsset, setUploadAsset] = useState("V940");
   const [uploadTumor, setUploadTumor] = useState("Melanoma");
   const [uploadSubTumor, setUploadSubTumor] = useState("Stage III/IV");
+  const [smeOpportunity, setSmeOpportunity] = useState("");
+  const [smeBarrier, setSmeBarrier] = useState("");
 
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -1613,6 +1615,8 @@ export default function App() {
     formData.append("asset", uploadAsset);
     formData.append("tumor", uploadTumor);
     formData.append("sub_tumor", uploadSubTumor);
+    formData.append("sme_opportunity", smeOpportunity);
+    formData.append("sme_barrier", smeBarrier);
 
     const interval = setInterval(() => {
       setUploadProgress(prev => {
@@ -3600,7 +3604,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                       <div className="matrix-card-footer">
                         <span>Asset: <strong>{ins.metadata.asset}</strong> ({ins.metadata.tumor})</span>
-                        <span>Compliance: <strong style={{ color: ins.compliance_score >= 0.8 ? '#34d399' : '#ef4444' }}>{Math.round(ins.compliance_score * 100)}%</strong></span>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <span>Compliance: <strong style={{ color: ins.compliance_score >= 0.8 ? '#34d399' : '#ef4444' }}>{Math.round(ins.compliance_score * 100)}%</strong></span>
+                          {ins.evidence_score !== undefined && (
+                            <span>Evidence: <strong style={{ color: ins.evidence_score >= 0.8 ? '#06b6d4' : (ins.evidence_score >= 0.6 ? '#f59e0b' : '#ef4444') }}>{Math.round(ins.evidence_score * 100)}%</strong></span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -3723,6 +3732,56 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     {detailTab === 'framework' && (
                       <div className="cascade-flow-matrix animate-fade-in">
                         
+                        {/* Phase 1 Trust & Gating indicators */}
+                        {selectedInsight.fact_check_status === 'Flagged' && (
+                          <div style={{
+                            background: 'rgba(239, 68, 68, 0.06)',
+                            border: '1px solid rgba(239, 68, 68, 0.25)',
+                            padding: '12px 14px',
+                            borderRadius: '8px',
+                            marginBottom: '16px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            boxShadow: '0 0 12px rgba(239, 68, 68, 0.05)'
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ef4444', fontWeight: 'bold', fontSize: '11.5px' }}>
+                              <ShieldAlert size={14} /> Fact-Check Agent Alert
+                            </div>
+                            <p style={{ margin: 0, fontSize: '10.5px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                              <strong>Discrepancies Detected:</strong> {selectedInsight.fact_check_details || "Potential hallucination or extrapolation from source material."}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Evidence Score Indicator */}
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          background: 'var(--bg-primary)',
+                          border: '1px solid var(--glass-border)',
+                          padding: '10px 14px',
+                          borderRadius: '8px',
+                          marginBottom: '16px'
+                        }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span style={{ fontSize: '10.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Strength of Evidence</span>
+                            <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>Based on PixelRAG coordinate density & quote precision</span>
+                          </div>
+                          <div style={{
+                            background: selectedInsight.evidence_score >= 0.8 ? 'rgba(6, 182, 212, 0.1)' : (selectedInsight.evidence_score >= 0.6 ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)'),
+                            border: `1px solid ${selectedInsight.evidence_score >= 0.8 ? 'rgba(6, 182, 212, 0.3)' : (selectedInsight.evidence_score >= 0.6 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(239, 68, 68, 0.3)')}`,
+                            color: selectedInsight.evidence_score >= 0.8 ? 'var(--brand-cyan)' : (selectedInsight.evidence_score >= 0.6 ? '#f59e0b' : '#ef4444'),
+                            padding: '4px 10px',
+                            borderRadius: '20px',
+                            fontSize: '12px',
+                            fontWeight: 'bold'
+                          }}>
+                            {selectedInsight.evidence_score !== undefined ? `${Math.round(selectedInsight.evidence_score * 100)}%` : '100%'}
+                          </div>
+                        </div>
+
                         <div className="cascade-flow-node">
                           <div className="cascade-node-marker" />
                           <div className="cascade-node-content">
@@ -3782,6 +3841,34 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             />
                           </div>
                         </div>
+
+                        {/* SME Expectations Blending Panel (Phase 1) */}
+                        {(selectedInsight.sme_opportunity || selectedInsight.sme_barrier) && (
+                          <div style={{
+                            marginTop: '16px',
+                            background: 'var(--bg-primary)',
+                            border: '1px dashed var(--glass-border)',
+                            padding: '12px 14px',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '6px'
+                          }}>
+                            <span style={{ fontSize: '9.5px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              Merged SME Expectations
+                            </span>
+                            {selectedInsight.sme_opportunity && (
+                              <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                                <strong style={{ color: 'var(--text-primary)' }}>Anticipated Opportunity:</strong> "{selectedInsight.sme_opportunity}"
+                              </div>
+                            )}
+                            {selectedInsight.sme_barrier && (
+                              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                                <strong style={{ color: 'var(--text-primary)' }}>Anticipated Risk/Barrier:</strong> "{selectedInsight.sme_barrier}"
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                       </div>
                     )}
@@ -4775,6 +4862,33 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       value={uploadSubTumor}
                       onChange={(e) => setUploadSubTumor(e.target.value)}
                       className="select-box-input"
+                    />
+                  </div>
+                </div>
+
+                {/* SME Initial Expectations Inputs (Phase 1) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '10px', fontWeight: 'bold', color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SME Initial Expectations</h4>
+                  <div className="select-box-group" style={{ width: '100%' }}>
+                    <label style={{ fontSize: '9px', display: 'block', marginBottom: '2px' }}>Anticipated Strategic Opportunity</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Rapid 1st-line sequencing standard..." 
+                      value={smeOpportunity} 
+                      onChange={(e) => setSmeOpportunity(e.target.value)} 
+                      className="select-box-input" 
+                      style={{ fontSize: '11px', padding: '6px' }}
+                    />
+                  </div>
+                  <div className="select-box-group" style={{ width: '100%', marginTop: '6px' }}>
+                    <label style={{ fontSize: '9px', display: 'block', marginBottom: '2px' }}>Anticipated Risk / Operational Barrier</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Clinic cold-chain logistics friction..." 
+                      value={smeBarrier} 
+                      onChange={(e) => setSmeBarrier(e.target.value)} 
+                      className="select-box-input" 
+                      style={{ fontSize: '11px', padding: '6px' }}
                     />
                   </div>
                 </div>

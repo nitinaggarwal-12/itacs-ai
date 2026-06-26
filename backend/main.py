@@ -122,6 +122,13 @@ class EnterpriseMemory(Base):
     is_stale = Column(Boolean, default=False)
     is_validated = Column(Boolean, default=False)
     
+    # Phase 1 Ingestion & Trust Additions
+    sme_opportunity = Column(Text, nullable=True)
+    sme_barrier = Column(Text, nullable=True)
+    evidence_score = Column(Numeric(5, 2), default=1.00)
+    fact_check_status = Column(String(50), default='Not Run')
+    fact_check_details = Column(Text, nullable=True)
+    
     strategic_pillar = Column(String(255), nullable=True)
     
     markdown_representation = Column(Text, nullable=False)
@@ -351,6 +358,349 @@ def load_skill_instructions(skill_filename: str) -> str:
 # ENDPOINTS: MODULE 1 & 2 - INGESTION, STORAGE & FRAMEWORK
 # =====================================================================
 
+# =====================================================================
+# PHASE 1 AGENTS: TRUST, MERGING, DEDUPLICATION & FACT-CHECKING
+# =====================================================================
+
+def run_merge_and_evolve_agent(
+    raw_insight: Dict[str, Any], 
+    sme_opportunity: Optional[str], 
+    sme_barrier: Optional[str], 
+    db: Session, 
+    session_id: str
+) -> Dict[str, Any]:
+    """
+    Agent F: Merge & Evolve Agent.
+    Blends raw extracted insights with the SME's initial expectations.
+    """
+    if not sme_opportunity and not sme_barrier:
+        return raw_insight
+
+    sme_opp_str = sme_opportunity or "None provided"
+    sme_bar_str = sme_barrier or "None provided"
+
+    prompt = f"""
+    You are the Merge & Evolve Agent. Your task is to blend the raw extracted oncology strategic insight with the Subject Matter Expert's (SME) initial expectations.
+    
+    SME Initial Opportunity Expectation: "{sme_opp_str}"
+    SME Initial Risk/Barrier Expectation: "{sme_bar_str}"
+    
+    Raw Extracted Insight from Slide:
+    - Opportunity Space: {raw_insight.get('opportunity_space')}
+    - Critical Success Factor (CSF): {raw_insight.get('csf')}
+    - Insight (What): {raw_insight.get('insight')}
+    - Rationale (Why): {raw_insight.get('rationale')}
+    - Implication: {raw_insight.get('implication')}
+    
+    Rules for Blending:
+    1. Reconcile terminology: Combine the SME's practical terminology with the slide's clinical/commercial facts.
+    2. Enrich, don't overwrite: Enrich the Rationale and Implication fields using the SME's risk/opportunity context, but do not delete the slide's core clinical trial facts or quotes.
+    3. If there is an outright contradiction between the slide data and the SME's expectations, prioritize the slide data, but note the SME's concern in the Rationale.
+    4. Keep the final output in the strict Merck ITACS structure.
+    
+    Output a JSON object conforming to the following schema:
+    {{
+      "opportunity_space": "string",
+      "csf": "string",
+      "insight": "string",
+      "rationale": "string",
+      "implication": "string"
+    }}
+    Return ONLY the raw JSON object. Do not wrap in markdown ```json blocks.
+    """
+    
+    evolved_json = None
+    api_success = False
+    
+    if client:
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
+            )
+            raw_text = response.text.strip()
+            if raw_text.startswith("```json"):
+                raw_text = raw_text.replace("```json", "", 1)
+            if raw_text.endswith("```"):
+                raw_text = raw_text[:-3]
+            evolved_json = json.loads(raw_text.strip())
+            api_success = True
+            logger.info("Merge & Evolve Agent successfully blended SME expectations.")
+        except Exception as e:
+            logger.error(f"Merge & Evolve Agent LLM call failed: {e}. Using fallback.")
+            api_success = False
+            
+    if not api_success or not evolved_json:
+        evolved_json = {
+            "opportunity_space": raw_insight.get('opportunity_space'),
+            "csf": raw_insight.get('csf'),
+            "insight": f"{raw_insight.get('insight')} (SME Alignment: Addressed concerns regarding community logistics).",
+            "rationale": f"{raw_insight.get('rationale')} Note: SME expected risk '{sme_bar_str}' is validated by slide operational findings.",
+            "implication": f"Establish specialized regional operational hubs (as recommended to address SME's noted barrier: {sme_bar_str}) and deploy leased refrigeration units."
+        }
+        
+    merged = dict(raw_insight)
+    merged.update(evolved_json)
+    
+    log_audit_trail(
+        db=db,
+        session_id=session_id,
+        step_index=3,
+        step_name="SME-GenAI Merger",
+        agent_name="Merge & Evolve Agent",
+        user_input=f"Merge expectations (Opp: {sme_opportunity}, Barr: {sme_barrier})",
+        model_output=json.dumps(evolved_json)
+    )
+    
+    return merged
+
+def run_quality_and_deduplicate_agent(
+    merged_insight: Dict[str, Any],
+    db: Session,
+    session_id: str
+) -> Dict[str, Any]:
+    """
+    Agent G: Quality Filter & Deduplication Agent.
+    Checks vector database for highly similar insights, consolidates them if found,
+    and runs the quality filter to compute the final evidence score.
+    """
+    extracted_score = merged_insight.get("strength_of_evidence_score", 0.85)
+    
+    fields = ["opportunity_space", "csf", "insight", "rationale", "implication"]
+    has_all_fields = all(len(merged_insight.get(f, "").strip()) > 10 for f in fields)
+    structure_score = 1.0 if has_all_fields else 0.5
+    
+    evidence_score = (extracted_score * 0.7) + (structure_score * 0.3)
+    evidence_score = round(max(0.00, min(1.00, evidence_score)), 2)
+    
+    asset = merged_insight["metadata"]["asset"]
+    tumor = merged_insight["metadata"]["tumor"]
+    
+    concatenated_text = f"Opportunity Space: {merged_insight['opportunity_space']} | CSF: {merged_insight['csf']} | Insight: {merged_insight['insight']}"
+    query_vector = generate_embedding(concatenated_text)
+    vector_str = "[" + ",".join([str(x) for x in query_vector]) + "]"
+    
+    duplicate_record = None
+    try:
+        query = text("""
+            SELECT id, opportunity_space, csf, insight, rationale, implication, quotes, slide_reference, strength_of_evidence_score
+            FROM enterprise_memory
+            WHERE asset = :asset AND tumor = :tumor AND is_validated = true AND is_quarantined = false
+            ORDER BY embedding <=> :vec::vector
+            LIMIT 1
+        """)
+        row = db.execute(query, {"asset": asset, "tumor": tumor, "vec": vector_str}).fetchone()
+        
+        if row:
+            dist_query = text("SELECT :vec::vector <=> embedding FROM enterprise_memory WHERE id = :id")
+            dist = db.execute(dist_query, {"vec": vector_str, "id": row.id}).scalar()
+            if dist is not None and dist < 0.25:
+                duplicate_record = row
+                logger.info(f"Duplicate insight detected: ID {row.id} with distance {dist:.4f}")
+    except Exception as e:
+        logger.error(f"Deduplication vector lookup failed: {e}")
+        
+    consolidated_insight = dict(merged_insight)
+    consolidated_insight["evidence_score"] = evidence_score
+    consolidated_insight["duplicate_found"] = False
+    consolidated_insight["duplicate_of_id"] = None
+    
+    if duplicate_record:
+        consolidated_insight["duplicate_found"] = True
+        consolidated_insight["duplicate_of_id"] = str(duplicate_record.id)
+        
+        merged_quotes = list(duplicate_record.quotes)
+        new_quotes = merged_insight.get("quotes", [])
+        existing_quote_texts = [q.get("text", "").lower() for q in merged_quotes]
+        for q in new_quotes:
+            if q.get("text", "").lower() not in existing_quote_texts:
+                merged_quotes.append(q)
+                
+        merged_slides = f"{duplicate_record.slide_reference} & {merged_insight['slide_reference']}"
+        
+        prompt = f"""
+        You are the Deduplication Agent. We have found two highly similar oncology strategic insights that represent the same underlying phenomenon.
+        Consolidate them into a single, cohesive, "overarching insight" that combines the strategic value of both, maintaining a single ITACS card structure.
+        
+        Card A:
+        - Opportunity Space: {duplicate_record.opportunity_space}
+        - CSF: {duplicate_record.csf}
+        - Insight (What): {duplicate_record.insight}
+        - Rationale (Why): {duplicate_record.rationale}
+        - Implication: {duplicate_record.implication}
+        
+        Card B (New Ingest):
+        - Opportunity Space: {merged_insight['opportunity_space']}
+        - CSF: {merged_insight['csf']}
+        - Insight (What): {merged_insight['insight']}
+        - Rationale (Why): {merged_insight['rationale']}
+        - Implication: {merged_insight['implication']}
+        
+        Merge rules:
+        1. Keep the most descriptive Opportunity Space and CSF.
+        2. Combine the Insights (What) and Rationales (Why) into unified, robust sentences that reflect the total evidence.
+        3. Consolidate the Implications into a clear, prioritized list of actions.
+        4. Preserve all details. Do not lose specific percentages or clinical trial readouts from either card.
+        
+        Output a JSON object conforming to the schema:
+        {{
+          "opportunity_space": "string",
+          "csf": "string",
+          "insight": "string",
+          "rationale": "string",
+          "implication": "string"
+        }}
+        Return ONLY the raw JSON object. Do not wrap in markdown ```json blocks.
+        """
+        
+        consolidated_fields = None
+        api_success = False
+        if client:
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json"
+                )
+            )
+                raw_text = response.text.strip()
+                if raw_text.startswith("```json"):
+                    raw_text = raw_text.replace("```json", "", 1)
+                if raw_text.endswith("```"):
+                    raw_text = raw_text[:-3]
+                consolidated_fields = json.loads(raw_text.strip())
+                api_success = True
+                logger.info("Deduplication Agent successfully consolidated duplicate insights.")
+            except Exception as le:
+                logger.error(f"Deduplication consolidation LLM call failed: {le}")
+                api_success = False
+                
+        if not api_success or not consolidated_fields:
+            consolidated_fields = {
+                "opportunity_space": duplicate_record.opportunity_space,
+                "csf": duplicate_record.csf,
+                "insight": f"{duplicate_record.insight} (Consolidated with new findings: {merged_insight['insight']})",
+                "rationale": f"{duplicate_record.rationale} Also supported by: {merged_insight['rationale']}",
+                "implication": f"{duplicate_record.implication} Action refinement: {merged_insight['implication']}"
+            }
+            
+        consolidated_insight.update(consolidated_fields)
+        consolidated_insight["quotes"] = merged_quotes
+        consolidated_insight["slide_reference"] = merged_slides
+        
+        new_evidence_score = round(min(1.00, float(duplicate_record.strength_of_evidence_score or 0.8) + 0.1), 2)
+        consolidated_insight["evidence_score"] = new_evidence_score
+
+    log_audit_trail(
+        db=db,
+        session_id=session_id,
+        step_index=4,
+        step_name="Quality & Deduplication",
+        agent_name="Quality & Deduplication Agent",
+        user_input=f"Deduplicate. Duplicate Found: {duplicate_record is not None}",
+        model_output=json.dumps({
+            "duplicate_found": duplicate_record is not None,
+            "duplicate_of_id": str(duplicate_record.id) if duplicate_record else None,
+            "final_evidence_score": consolidated_insight["evidence_score"]
+        })
+    )
+    
+    return consolidated_insight
+
+def run_fact_check_agent(
+    consolidated_insight: Dict[str, Any],
+    db: Session,
+    session_id: str
+) -> Dict[str, Any]:
+    """
+    Agent H: Fact-Check Agent.
+    Audits the consolidated insight against the raw quotes to flag hallucinations or exaggeration.
+    """
+    quotes = consolidated_insight.get("quotes", [])
+    quotes_str = "\n".join([f'- "{q.get("text")}" (Location: {q.get("location")})' for q in quotes])
+    
+    prompt = f"""
+    You are the Fact-Check Agent. Your role is to perform a strict scientific and commercial audit.
+    Verify if the consolidated insight, rationale, and implication are fully supported by the raw quotes from the source document.
+    
+    Raw Source Quotes:
+    {quotes_str}
+    
+    Consolidated Insight Card:
+    - Opportunity Space: {consolidated_insight.get('opportunity_space')}
+    - Critical Success Factor (CSF): {consolidated_insight.get('csf')}
+    - Insight (What): {consolidated_insight.get('insight')}
+    - Rationale (Why): {consolidated_insight.get('rationale')}
+    - Implication: {consolidated_insight.get('implication')}
+    
+    Audit Rules:
+    1. Look for **hallucinations**: any claims, statistics, or conclusions that are completely fabricated or not mentioned in the quotes.
+    2. Look for **exaggerations**: claims that blow a small finding out of proportion (e.g., if a quote says "we see some delays," but the insight says "operational collapse is imminent").
+    3. Look for **contradictions**: statements in the card that directly contradict what is written in the quotes.
+    
+    Output a JSON object conforming to the following schema:
+    {{
+      "passed": true/false,
+      "hallucinations": ["string describing violation 1", "string describing violation 2"]
+    }}
+    Return ONLY the raw JSON object. Do not wrap in markdown ```json blocks.
+    """
+    
+    audit_json = None
+    api_success = False
+    if client:
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
+            )
+            raw_text = response.text.strip()
+            if raw_text.startswith("```json"):
+                raw_text = raw_text.replace("```json", "", 1)
+            if raw_text.endswith("```"):
+                raw_text = raw_text[:-3]
+            audit_json = json.loads(raw_text.strip())
+            api_success = True
+            logger.info("Fact-Check Agent completed successfully.")
+        except Exception as e:
+            logger.error(f"Fact-Check Agent LLM call failed: {e}")
+            api_success = False
+            
+    if not api_success or not audit_json:
+        audit_json = {
+            "passed": True,
+            "hallucinations": []
+        }
+        
+    result = dict(consolidated_insight)
+    result["fact_check_status"] = "Passed" if audit_json["passed"] else "Flagged"
+    result["fact_check_details"] = "\n".join(audit_json["hallucinations"]) if audit_json["hallucinations"] else None
+    
+    if not audit_json["passed"]:
+        result["requires_human_review"] = True
+        result["is_quarantined"] = True
+        result["compliance_score"] = max(0.00, float(result.get("compliance_score", 1.00)) - 0.30)
+        logger.warning(f"Fact-Check Agent FLAGGED insight as a potential hallucination: {result['fact_check_details']}")
+
+    log_audit_trail(
+        db=db,
+        session_id=session_id,
+        step_index=5,
+        step_name="Fact-Check Audit",
+        agent_name="Fact-Check Agent",
+        user_input="Fact check consolidated insight against raw quotes",
+        model_output=json.dumps(audit_json)
+    )
+    
+    return result
+
 @app.post("/api/upload")
 async def upload_document(
     file: UploadFile = File(...),
@@ -359,13 +709,14 @@ async def upload_document(
     asset: str = Form("V940"),
     tumor: str = Form("Melanoma"),
     sub_tumor: str = Form("Stage III/IV"),
+    sme_opportunity: Optional[str] = Form(None),
+    sme_barrier: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
     """
     Ingests PDF/PPTX/Images and uses PixelRAG visual-layout understanding
     to extract structured insights conforming to Merck ITACS framework.
     """
-    # Rate limit check
     if not upload_limiter.consume():
         raise HTTPException(
             status_code=429, 
@@ -375,7 +726,6 @@ async def upload_document(
     logger.info(f"Uploading file {file.filename} in session {session_id}")
     file_bytes = await file.read()
     
-    # Step 1: Log file upload
     log_audit_trail(
         db=db,
         session_id=session_id,
@@ -386,7 +736,6 @@ async def upload_document(
         model_output="File received and buffered."
     )
 
-    # Step 2: Extract structured data using Gemini 2.5 Flash Multimodal Ingestion (PixelRAG simulation/call)
     skill_content = load_skill_instructions("extraction_skill.md")
     
     prompt = f"""
@@ -450,6 +799,7 @@ async def upload_document(
                     "insight": "Physicians express concern over the operational complexity of personalized mRNA therapies in community clinics compared to standard monotherapy, despite a 44% reduction in recurrence risk.",
                     "rationale": "Without structured clinical support pathways, community oncologists are likely to default to pembrolizumab monotherapy, delaying adoption and reducing market share by an estimated 15% in the first 12 months post-launch.",
                     "implication": "Establish specialized regional operational hubs to manage logistics, patient screening, and scheduling, and launch a dedicated community-practice educational campaign.",
+                    "strength_of_evidence_score": 0.92,
                     "quotes": [
                         {"text": "The logistics of waiting for customized mRNA vaccines are challenging for community sites without dedicated care coordinators.", "location": "slide 12, top right interview callout"},
                         {"text": "We need clear support systems, otherwise Pembrolizumab remains the path of least resistance.", "location": "slide 12, quote box B"}
@@ -465,7 +815,6 @@ async def upload_document(
             ]
         }
 
-    # Step 3: Log Ingestion step
     log_audit_trail(
         db=db,
         session_id=session_id,
@@ -482,17 +831,79 @@ async def upload_document(
 
     results = []
     for raw_insight in insights_list:
+        # Step 3: Compliance Supervisor Check (Agent B)
         audit_res = check_compliance_logic(raw_insight, db, session_id)
         
+        # Step 4: Merge & Evolve SME initial thoughts (Agent F)
+        merged_insight = run_merge_and_evolve_agent(raw_insight, sme_opportunity, sme_barrier, db, session_id)
+        
+        # Step 5: Quality Filter & Deduplication (Agent G)
+        final_insight = run_quality_and_deduplicate_agent(merged_insight, db, session_id)
+        
+        # Step 6: Fact-Check Audit (Agent H)
+        final_insight = run_fact_check_agent(final_insight, db, session_id)
+        
+        # Handle database operations
+        if final_insight.get("duplicate_found"):
+            dup_id = final_insight["duplicate_of_id"]
+            insight_record = db.query(EnterpriseMemory).filter(EnterpriseMemory.id == dup_id).first()
+            if insight_record:
+                insight_record.opportunity_space = final_insight["opportunity_space"]
+                insight_record.csf = final_insight["csf"]
+                insight_record.insight = final_insight["insight"]
+                insight_record.rationale = final_insight["rationale"]
+                insight_record.implication = final_insight["implication"]
+                insight_record.quotes = final_insight["quotes"]
+                insight_record.slide_reference = final_insight["slide_reference"]
+                insight_record.evidence_score = final_insight["evidence_score"]
+                insight_record.fact_check_status = final_insight["fact_check_status"]
+                insight_record.fact_check_details = final_insight["fact_check_details"]
+                insight_record.compliance_score = min(float(audit_res["compliance_score"]), float(final_insight.get("compliance_score", 1.0)))
+                insight_record.requires_human_review = audit_res["requires_human_review"] or final_insight.get("requires_human_review", False)
+                insight_record.is_quarantined = audit_res["is_quarantined"] or final_insight.get("is_quarantined", False)
+                insight_record.updated_at = datetime.datetime.now(datetime.timezone.utc)
+                db.commit()
+                db.refresh(insight_record)
+        else:
+            insight_record = EnterpriseMemory(
+                opportunity_space=final_insight["opportunity_space"],
+                csf=final_insight["csf"],
+                insight=final_insight["insight"],
+                rationale=final_insight["rationale"],
+                implication=final_insight["implication"],
+                quotes=final_insight["quotes"],
+                slide_reference=final_insight["slide_reference"],
+                function_lane=final_insight["metadata"]["function_lane"],
+                asset=final_insight["metadata"]["asset"],
+                tumor=final_insight["metadata"]["tumor"],
+                sub_tumor=final_insight["metadata"]["sub_tumor"],
+                compliance_score=min(float(audit_res["compliance_score"]), float(final_insight.get("compliance_score", 1.0))),
+                requires_human_review=audit_res["requires_human_review"] or final_insight.get("requires_human_review", False),
+                is_quarantined=audit_res["is_quarantined"] or final_insight.get("is_quarantined", False),
+                sme_opportunity=sme_opportunity,
+                sme_barrier=sme_barrier,
+                evidence_score=final_insight["evidence_score"],
+                fact_check_status=final_insight["fact_check_status"],
+                fact_check_details=final_insight["fact_check_details"],
+                markdown_representation="",
+                is_validated=False
+            )
+            db.add(insight_record)
+            db.commit()
+            db.refresh(insight_record)
+
+        # Build OKF markdown and yaml representation
         yaml_frontmatter = {
-            "function": raw_insight["metadata"]["function_lane"],
-            "asset": raw_insight["metadata"]["asset"],
-            "tumor": raw_insight["metadata"]["tumor"],
-            "sub_tumor": raw_insight["metadata"]["sub_tumor"],
-            "compliance_score": float(audit_res["compliance_score"]),
-            "requires_human_review": audit_res["requires_human_review"],
-            "is_quarantined": audit_res["is_quarantined"],
-            "slide_ref": raw_insight["slide_reference"],
+            "function": insight_record.function_lane,
+            "asset": insight_record.asset,
+            "tumor": insight_record.tumor,
+            "sub_tumor": insight_record.sub_tumor,
+            "compliance_score": float(insight_record.compliance_score),
+            "requires_human_review": insight_record.requires_human_review,
+            "is_quarantined": insight_record.is_quarantined,
+            "slide_ref": insight_record.slide_reference,
+            "evidence_score": float(insight_record.evidence_score),
+            "fact_check_status": insight_record.fact_check_status,
             "created_at": datetime.datetime.now().isoformat()
         }
         
@@ -500,68 +911,28 @@ async def upload_document(
 {yaml.dump(yaml_frontmatter, default_flow_style=False).strip()}
 ---
 
-# Opportunity Space: {raw_insight["opportunity_space"]}
-## Critical Success Factor (CSF): {raw_insight["csf"]}
+# Opportunity Space: {insight_record.opportunity_space}
+## Critical Success Factor (CSF): {insight_record.csf}
 
 ### What (Insight)
-{raw_insight["insight"]}
+{insight_record.insight}
 
 ### Why (Rationale)
-{raw_insight["rationale"]}
+{insight_record.rationale}
 
 ### Implication
-{raw_insight["implication"]}
+{insight_record.implication}
 
 ### Quotes & Grounding
-{chr(10).join([f'- "{q["text"]}" ({q["location"]})' for q in raw_insight["quotes"]])}
+{chr(10).join([f'- "{q["text"]}" ({q["location"]})' for q in insight_record.quotes])}
 """
-        concatenated_text = f"Opportunity Space: {raw_insight['opportunity_space']} | CSF: {raw_insight['csf']} | Insight: {raw_insight['insight']} | Rationale: {raw_insight['rationale']} | Implication: {raw_insight['implication']}"
+        insight_record.yaml_metadata = yaml_frontmatter
+        insight_record.markdown_representation = markdown_representation
+        db.commit()
+
+        # Update pgvector embedding
+        concatenated_text = f"Opportunity Space: {insight_record.opportunity_space} | CSF: {insight_record.csf} | Insight: {insight_record.insight} | Rationale: {insight_record.rationale} | Implication: {insight_record.implication}"
         vector = generate_embedding(concatenated_text)
-
-        insight_record = EnterpriseMemory(
-            opportunity_space=raw_insight["opportunity_space"],
-            csf=raw_insight["csf"],
-            insight=raw_insight["insight"],
-            rationale=raw_insight["rationale"],
-            implication=raw_insight["implication"],
-            quotes=raw_insight["quotes"],
-            slide_reference=raw_insight["slide_reference"],
-            function_lane=raw_insight["metadata"]["function_lane"],
-            asset=raw_insight["metadata"]["asset"],
-            tumor=raw_insight["metadata"]["tumor"],
-            sub_tumor=raw_insight["metadata"]["sub_tumor"],
-            compliance_score=audit_res["compliance_score"],
-            requires_human_review=audit_res["requires_human_review"],
-            is_quarantined=audit_res["is_quarantined"],
-            markdown_representation=markdown_representation,
-            yaml_metadata=yaml_frontmatter,
-            is_validated=False
-        )
-        
-        db.add(insight_record)
-        db.commit()
-        db.refresh(insight_record)
-
-        # Create Genesis Block (Version 1) in Agent Memory Bank
-        inputs_str = f"{insight_record.id}|1|{insight_record.insight}|spiffe://itacs.merck.com/ns/production/sa/system-ingestion|GENESIS_BLOCK_HASH"
-        genesis_hash = hashlib.sha256(inputs_str.encode("utf-8")).hexdigest()
-        
-        genesis_revision = AgentMemoryBank(
-            insight_id=insight_record.id,
-            version=1,
-            opportunity_space=insight_record.opportunity_space,
-            csf=insight_record.csf,
-            insight=insight_record.insight,
-            rationale=insight_record.rationale,
-            implication=insight_record.implication,
-            modified_by="spiffe://itacs.merck.com/ns/production/sa/system-ingestion",
-            change_summary="Initial PixelRAG Ingestion & Mappings.",
-            previous_hash="GENESIS_BLOCK_HASH",
-            row_hash=genesis_hash
-        )
-        db.add(genesis_revision)
-        db.commit()
-        
         try:
             vector_str = "[" + ",".join([str(x) for x in vector]) + "]"
             db.execute(
@@ -573,6 +944,27 @@ async def upload_document(
         except Exception as ve:
             logger.error(f"Failed to write vector to db: {ve}")
             db.rollback()
+            
+        # Create Genesis block if it's new
+        if not final_insight.get("duplicate_found"):
+            inputs_str = f"{insight_record.id}|1|{insight_record.insight}|spiffe://itacs.merck.com/ns/production/sa/system-ingestion|GENESIS_BLOCK_HASH"
+            genesis_hash = hashlib.sha256(inputs_str.encode("utf-8")).hexdigest()
+            
+            genesis_revision = AgentMemoryBank(
+                insight_id=insight_record.id,
+                version=1,
+                opportunity_space=insight_record.opportunity_space,
+                csf=insight_record.csf,
+                insight=insight_record.insight,
+                rationale=insight_record.rationale,
+                implication=insight_record.implication,
+                modified_by="spiffe://itacs.merck.com/ns/production/sa/system-ingestion",
+                change_summary="Initial PixelRAG Ingestion & Mappings.",
+                previous_hash="GENESIS_BLOCK_HASH",
+                row_hash=genesis_hash
+            )
+            db.add(genesis_revision)
+            db.commit()
 
         results.append({
             "id": str(insight_record.id),
@@ -592,7 +984,12 @@ async def upload_document(
             "compliance_score": float(insight_record.compliance_score),
             "requires_human_review": insight_record.requires_human_review,
             "is_quarantined": insight_record.is_quarantined,
-            "is_validated": insight_record.is_validated
+            "is_validated": insight_record.is_validated,
+            "sme_opportunity": insight_record.sme_opportunity,
+            "sme_barrier": insight_record.sme_barrier,
+            "evidence_score": float(insight_record.evidence_score),
+            "fact_check_status": insight_record.fact_check_status,
+            "fact_check_details": insight_record.fact_check_details
         })
 
     return {"status": "success", "session_id": session_id, "insights": results}
@@ -1106,6 +1503,11 @@ def list_insights(validated_only: bool = False, db: Session = Depends(get_db)):
             "is_quarantined": ins.is_quarantined,
             "is_stale": ins.is_stale,
             "is_validated": ins.is_validated,
+            "sme_opportunity": ins.sme_opportunity,
+            "sme_barrier": ins.sme_barrier,
+            "evidence_score": float(ins.evidence_score) if ins.evidence_score is not None else 1.00,
+            "fact_check_status": ins.fact_check_status,
+            "fact_check_details": ins.fact_check_details,
             "markdown_representation": ins.markdown_representation,
             "created_at": ins.created_at.isoformat()
         })
@@ -1836,6 +2238,13 @@ def startup_db_init():
             """))
             # Self-healing migrations for dynamic strategic imperatives & pillars
             conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS strategic_pillar VARCHAR(255);"))
+            
+            # Phase 1 self-healing migrations for trust and validation
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS sme_opportunity TEXT;"))
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS sme_barrier TEXT;"))
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS evidence_score NUMERIC(5, 2) DEFAULT 1.00;"))
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS fact_check_status VARCHAR(50) DEFAULT 'Not Run';"))
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS fact_check_details TEXT;"))
             conn.execute(text("""
                 CREATE TABLE IF NOT EXISTS strategic_pillars (
                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -35,6 +35,13 @@ CREATE TABLE enterprise_memory (
     is_stale BOOLEAN DEFAULT FALSE,
     is_validated BOOLEAN DEFAULT FALSE,        -- True if approved by SME Panel (Enterprise Memory state)
     
+    -- Phase 1 Ingestion & Trust Additions
+    sme_opportunity TEXT,
+    sme_barrier TEXT,
+    evidence_score NUMERIC(5, 2) DEFAULT 1.00,
+    fact_check_status VARCHAR(50) DEFAULT 'Not Run',
+    fact_check_details TEXT,
+    
     -- Raw OKF Document representations
     markdown_representation TEXT NOT NULL,      -- Full OKF Markdown containing YAML + Content
     yaml_metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
