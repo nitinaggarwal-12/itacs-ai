@@ -34,3 +34,13 @@ This prevents false-positives caused by silent cloud rollbacks, Docker build cac
   1. A global keydown listener that closes the tour/modal instantly when the **`Escape` key** is pressed.
   2. A clickable backdrop/mask (for centered steps) that closes the tour when clicked.
 
+## 🛡️ RULE: Validation-First & Quality Gate Protocol
+
+### 1. The Constraint
+You must **always** pause and present a comprehensive validation/review step (including E2E test script walkthroughs, visual screenshots, and database schema audits) to the user before moving on to the next mission, feature, or implementation phase. 
+
+### 2. The Protocol
+* **No Auto-Advancing**: Never automatically start writing code or executing tasks for the next phase without explicit, manual user approval of the current phase.
+* **Seed Verification**: When writing E2E tests, always verify state pre-seeding (like localStorage or database values) to ensure tests can run independently and reliably in clean browser sessions.
+* **Visual Gallery Review**: Offer a walkthrough of captured screenshots and code changes during the validation step so the user can visually confirm design integrity before moving forward.
+
