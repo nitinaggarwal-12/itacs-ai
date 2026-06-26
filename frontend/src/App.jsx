@@ -674,6 +674,13 @@ export default function App() {
   const [newActionOwnerRole, setNewActionOwnerRole] = useState("Medical Affairs Lead");
   const [newActionEvidenceCardId, setNewActionEvidenceCardId] = useState("");
 
+  // Interactive Strategic Synergy & Consensus States
+  const [isAnalyzingSynergy, setIsAnalyzingSynergy] = useState(false);
+  const [synergyReport, setSynergyReport] = useState(null);
+  const [isSimulatingConsensus, setIsSimulatingConsensus] = useState(false);
+  const [consensusScores, setConsensusScores] = useState({});
+  const [consensusLogs, setConsensusLogs] = useState([]);
+
   // Dynamic Tasks State (Fully interactive project board!)
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -1740,6 +1747,99 @@ export default function App() {
     } catch (e) {
       console.error("Failed to persist imperative details:", e);
     }
+  };
+
+  // Interactive Strategic Synergy & Gap Analyzer
+  const handleAnalyzeSynergies = () => {
+    setIsAnalyzingSynergy(true);
+    setSynergyReport(null);
+    
+    // Simulate a multi-phase cybernetic scan animation!
+    setTimeout(() => {
+      // Analyze the board state dynamically!
+      const counts = {
+        low: imperatives.filter(i => i.resource_tier === 'low').length,
+        medium: imperatives.filter(i => i.resource_tier === 'medium').length,
+        high: imperatives.filter(i => i.resource_tier === 'high').length
+      };
+      
+      const categories = imperatives.map(i => i.category);
+      const totalCards = imperatives.length;
+      
+      let score = 50;
+      let keySynergy = "";
+      let strategicGap = "";
+      
+      // Calculate dynamic high-fidelity advice based on actual cards!
+      if (totalCards === 0) {
+        score = 0;
+        keySynergy = "No strategies active. The command engine is completely idle.";
+        strategicGap = "Strategic Gap: Please formulate at least one clinical or operational imperative to begin synergy mapping.";
+      } else {
+        // Evaluate column balance
+        if (counts.low > 0 && counts.medium > 0 && counts.high > 0) {
+          score += 25;
+          keySynergy = "Excellent Balance: You have active initiatives across Low, Medium, and High resource tiers, ensuring immediate execution and long-term vision.";
+        } else if (counts.high > 0 && counts.low === 0) {
+          score += 5;
+          keySynergy = "Visionary Focus: High-commitment initiatives are active, but they lack low-resource tactical supports.";
+          strategicGap = "Strategic Gap: Formulate Low Resource Initiatives to support your heavy capital campaigns with quick operational wins.";
+        } else if (counts.low > 0 && counts.high === 0) {
+          score += 10;
+          keySynergy = "Agile Core: Strong focus on low-commitment, high-speed regional optimizations.";
+          strategicGap = "Strategic Gap: Lacks a flagship national campaign (High Commitment) to drive national clinical adoption and market share.";
+        }
+        
+        // Evaluate categories
+        if (categories.includes('clinical') && categories.includes('operational')) {
+          score += 15;
+          keySynergy += " Clinical-Operational Alignment: Your operational support channels (coordinators) perfectly buffer your clinical delivery (cold-chain, education).";
+        } else if (categories.includes('clinical')) {
+          strategicGap += " Operational Gap: Clinical mandates are active, but lack dedicated clinic coordinator resources (Operational) to manage patient onboarding.";
+        }
+        
+        if (categories.includes('payer')) {
+          score += 10;
+          keySynergy += " Value-Driven Framework: Payer alignment strategies are actively securing reimbursement thresholds.";
+        } else {
+          strategicGap += " Payer Gap: No active payer value initiatives, risking step-edit friction or reimbursement delays.";
+        }
+      }
+      
+      setSynergyReport({
+        score: Math.min(score, 100),
+        synergy: keySynergy || "Operational strategies are aligned, but await deeper inter-functional verification.",
+        gap: strategicGap || "All major functional gaps resolved. Board is highly aligned for launch!"
+      });
+      setIsAnalyzingSynergy(false);
+    }, 2200); // 2.2 second scan duration for visual wow factor!
+  };
+
+  // Interactive Drawer Consensus Alignment Simulator
+  const handleRunConsensusSimulation = (impId) => {
+    setIsSimulatingConsensus(true);
+    setConsensusLogs([]);
+    
+    const logsList = [
+      { t: 0, text: "🔮 [Consensus Engine] Initializing Inter-Functional Alignment Loop..." },
+      { t: 600, text: "🩺 [Clinical Affairs] Evaluating clinical evidence grounding... APPROVED (95% Alignment)" },
+      { t: 1400, text: "💰 [Market Access] Checking pricing thresholds and rebate structures... APPROVED (90% Alignment)" },
+      { t: 2200, text: "📢 [Commercial Lane] Auditing local sales force readiness... APPROVED (85% Alignment)" },
+      { t: 3000, text: "🛡️ [Compliance Guard] Scanning promotional terminology... CLEAN ✓" },
+      { t: 3600, text: "🎉 [Consensus Engine] Consensus achieved! Alignment Score: 92% (Optimal)" }
+    ];
+    
+    // Stream logs one by one
+    logsList.forEach(log => {
+      setTimeout(() => {
+        setConsensusLogs(prev => [...prev, log.text]);
+        if (log.text.includes("Consensus achieved!")) {
+          setIsSimulatingConsensus(false);
+          // Persist score
+          setConsensusScores(prev => ({ ...prev, [impId]: 92 }));
+        }
+      }, log.t);
+    });
   };
 
   const handleAddTacticalAction = async (impId, actionText, ownerRole, evidenceCardId) => {
@@ -5248,6 +5348,85 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
             </div>
 
+            {/* Interactive Resource Capacity & Budget HUD */}
+            {(() => {
+              const counts = {
+                low: imperatives.filter(i => i.resource_tier === 'low').length,
+                medium: imperatives.filter(i => i.resource_tier === 'medium').length,
+                high: imperatives.filter(i => i.resource_tier === 'high').length
+              };
+              const currentLoad = (counts.low * 10) + (counts.medium * 30) + (counts.high * 60);
+              
+              return (
+                <div className="glass-card" style={{ 
+                  background: 'rgba(15, 23, 42, 0.45)', 
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  padding: '16px 20px', 
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '24px',
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  flexShrink: 0
+                }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        ⚡ Real-Time Resource Capacity Meter (GOLT Engine)
+                      </span>
+                      <span style={{ 
+                        fontSize: '11px', 
+                        fontWeight: 800, 
+                        color: currentLoad > 160 ? '#fca5a5' : (currentLoad > 100 ? '#fde047' : '#6ee7b7') 
+                      }}>
+                        {currentLoad} / 200 Units ({Math.round((currentLoad / 200) * 100)}% Load)
+                      </span>
+                    </div>
+                    
+                    <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div style={{ 
+                        width: `${Math.min((currentLoad / 200) * 100, 100)}%`, 
+                        height: '100%', 
+                        background: currentLoad > 160 
+                          ? 'linear-gradient(90deg, #ef4444, #f87171)' 
+                          : (currentLoad > 100 ? 'linear-gradient(90deg, #3b82f6, #f59e0b)' : 'linear-gradient(90deg, #10b981, #34d399)'),
+                        boxShadow: currentLoad > 160 
+                          ? '0 0 10px rgba(239, 68, 68, 0.5)' 
+                          : (currentLoad > 100 ? '0 0 10px rgba(245, 158, 11, 0.4)' : '0 0 10px rgba(16, 185, 129, 0.4)'),
+                        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }} />
+                    </div>
+                  </div>
+                  
+                  <div style={{ 
+                    background: currentLoad > 160 ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.05)',
+                    border: currentLoad > 160 ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(16, 185, 129, 0.15)',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minWidth: '130px'
+                  }}>
+                    <span style={{ fontSize: '8px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Engine Status</span>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      fontWeight: 800, 
+                      color: currentLoad > 160 ? '#fca5a5' : '#6ee7b7',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      marginTop: '2px'
+                    }}>
+                      {currentLoad > 160 ? '⚠️ Overload Risk' : '🟢 Optimal Load'}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* 3-Column Resource Kanban Board */}
             <main id="builder-kanban-board" className="kanban-board" style={{ gridTemplateColumns: 'repeat(3, 1fr)', height: 'calc(100vh - 220px)', padding: 0 }}>
               
@@ -5338,6 +5517,151 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               })}
             </main>
 
+            {/* AI Synergy & Gap Analyzer HUD */}
+            <div className="glass-card" style={{ 
+              background: 'rgba(15, 23, 42, 0.35)', 
+              border: '1px solid rgba(255, 255, 255, 0.05)', 
+              padding: '20px', 
+              borderRadius: '12px',
+              width: '100%',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              flexShrink: 0
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles size={16} style={{ color: 'var(--brand-purple)' }} />
+                  <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    AI-Powered Strategic Synergy & Conflict Inspector
+                  </h4>
+                </div>
+                
+                <button 
+                  onClick={handleAnalyzeSynergies}
+                  disabled={isAnalyzingSynergy}
+                  className="btn btn-secondary"
+                  style={{ 
+                    padding: '6px 14px', 
+                    fontSize: '11px', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px',
+                    cursor: 'pointer',
+                    background: isAnalyzingSynergy ? 'rgba(255,255,255,0.02)' : 'rgba(99, 102, 241, 0.1)',
+                    border: isAnalyzingSynergy ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(99, 102, 241, 0.25)',
+                    color: isAnalyzingSynergy ? 'var(--text-muted)' : 'var(--brand-purple)'
+                  }}
+                >
+                  {isAnalyzingSynergy ? (
+                    <>
+                      <RefreshCw size={12} className="animate-spin" style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }} /> Scanning Board...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={12} /> Run Synergy Scan
+                    </>
+                  )}
+                </button>
+              </div>
+              
+              {/* Scan Results Display */}
+              {isAnalyzingSynergy ? (
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: '30px 10px',
+                  gap: '12px'
+                }}>
+                  <div className="telemetry-loader" style={{ 
+                    border: '2px solid rgba(255,255,255,0.05)', 
+                    borderTop: '2px solid var(--brand-purple)', 
+                    borderRadius: '50%', 
+                    width: '24px', 
+                    height: '24px', 
+                    animation: 'spin 1s linear infinite' 
+                  }} />
+                  <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic', letterSpacing: '0.3px' }}>
+                    Auditing inter-imperative resource balance, cross-functional lanes, and evidence weight...
+                  </p>
+                </div>
+              ) : synergyReport ? (
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '120px 1fr 1fr', 
+                  gap: '24px',
+                  background: 'rgba(0,0,0,0.1)',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.02)'
+                }}>
+                  {/* Gauge Display */}
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    borderRight: '1px solid rgba(255,255,255,0.05)',
+                    paddingRight: '12px'
+                  }}>
+                    <span style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Alignment</span>
+                    <span style={{ 
+                      fontSize: '28px', 
+                      fontWeight: 900, 
+                      color: synergyReport.score > 75 ? '#6ee7b7' : '#fde047',
+                      marginTop: '4px'
+                    }}>
+                      {synergyReport.score}%
+                    </span>
+                    <span style={{ 
+                      fontSize: '8px', 
+                      fontWeight: 800, 
+                      textTransform: 'uppercase', 
+                      color: synergyReport.score > 75 ? '#6ee7b7' : '#fde047',
+                      marginTop: '2px'
+                    }}>
+                      {synergyReport.score > 75 ? 'Strong Synergy' : 'Moderate Gaps'}
+                    </span>
+                  </div>
+                  
+                  {/* Synergies Column */}
+                  <div>
+                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      🟢 Active Strategic Synergies
+                    </h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      {synergyReport.synergy}
+                    </p>
+                  </div>
+                  
+                  {/* Gaps Column */}
+                  <div>
+                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      ⚠️ Gaps & Conflict Risks
+                    </h5>
+                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                      {synergyReport.gap}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '16px', 
+                  fontSize: '11px', 
+                  color: 'var(--text-muted)',
+                  border: '1px dashed rgba(255,255,255,0.04)',
+                  borderRadius: '8px',
+                  background: 'rgba(0,0,0,0.05)'
+                }}>
+                  💡 Click <strong>"Run Synergy Scan"</strong> to analyze your active strategic board for gaps, resource conflicts, and clinical alignment.
+                </div>
+              )}
+            </div>
+
             {/* Slide-out Strategic Workshop Drawer */}
             {isImperativeDrawerOpen && selectedImperative && (
               <div className="drawer-overlay open" onClick={() => setIsImperativeDrawerOpen(false)}>
@@ -5398,6 +5722,77 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11.5px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
                         />
                       </div>
+                    </div>
+
+                    {/* Section: Interactive Consensus Loop Simulator */}
+                    <div className="glass-card" style={{ 
+                      background: 'rgba(255,255,255,0.01)', 
+                      border: '1px solid rgba(255,255,255,0.04)', 
+                      padding: '14px', 
+                      borderRadius: '12px', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: '10px' 
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h4 style={{ margin: 0, fontSize: '11px', fontWeight: 900, color: 'var(--brand-indigo)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          🤝 Inter-Functional Consensus Alignment
+                        </h4>
+                        
+                        {/* Rating Badge */}
+                        <div style={{ 
+                          fontSize: '10px', 
+                          fontWeight: 800, 
+                          color: '#6ee7b7', 
+                          background: 'rgba(16, 185, 129, 0.1)', 
+                          padding: '2px 8px', 
+                          borderRadius: '4px' 
+                        }}>
+                          {consensusScores[selectedImperative.id] ? `${consensusScores[selectedImperative.id]}% Align` : 'Pending'}
+                        </div>
+                      </div>
+                      
+                      {isSimulatingConsensus ? (
+                        <div style={{ 
+                          background: '#090d16', 
+                          border: '1px solid rgba(255,255,255,0.05)', 
+                          borderRadius: '6px', 
+                          padding: '8px 10px', 
+                          height: '80px', 
+                          overflowY: 'auto',
+                          fontFamily: 'monospace',
+                          fontSize: '9.5px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '4px'
+                        }}>
+                          {consensusLogs.map((log, i) => (
+                            <div key={i} style={{ color: log.includes('✓') || log.includes('achieved') ? '#6ee7b7' : '#94a3b8', textAlign: 'left' }}>
+                              {log}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={() => handleRunConsensusSimulation(selectedImperative.id)}
+                          className="btn btn-secondary"
+                          style={{ 
+                            width: '100%', 
+                            fontSize: '10px', 
+                            padding: '6px', 
+                            cursor: 'pointer',
+                            background: 'rgba(99, 102, 241, 0.1)',
+                            border: '1px solid rgba(99, 102, 241, 0.25)',
+                            color: 'var(--brand-purple)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          <RefreshCw size={11} style={{ display: 'inline-block', animation: isSimulatingConsensus ? 'spin 1s linear infinite' : 'none' }} /> Trigger Alignment Simulation Loop
+                        </button>
+                      )}
                     </div>
 
                     {/* Section: Tactical Actions Builder */}
