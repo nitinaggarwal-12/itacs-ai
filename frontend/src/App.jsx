@@ -560,7 +560,7 @@ const OncologyBrainSimulator = () => {
 export default function App() {
   // Zero-Dependency URL Hash Router for Bookmarkable Tabs and Refresh Resilience!
   const getInitialTab = () => {
-    const hash = window.location.hash.replace('#', '');
+    const hash = window.location.hash.replace('#', '').replace(/^\//, '');
     const validTabs = [
       'home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
       'matrix', 'builder', 'workshop', 'kol', 'deck', 
@@ -576,7 +576,7 @@ export default function App() {
   // Effect 1: Handle browser back/forward and hash changes reactively updating the state
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
+      const hash = window.location.hash.replace('#', '').replace(/^\//, '');
       const validTabs = [
         'home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker', 
         'matrix', 'builder', 'workshop', 'kol', 'deck', 
