@@ -9,7 +9,9 @@ import {
 } from 'lucide-react';
 
 // API Configuration
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = window.location.hostname.includes('railway.app') 
+  ? 'https://itacs-backend-production.up.railway.app' 
+  : (import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
 // =====================================================================
 // HIGH-FIDELITY DEFAULT MOCK DATA (Kills the empty state!)
@@ -4313,6 +4315,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             </div>
                             
                             <button
+                              id="run-challenger-btn"
                               type="button"
                               onClick={async () => {
                                 setIsWargamingCard(true);
@@ -4418,7 +4421,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                         {/* Wargaming Results Panel */}
                         {selectedInsight.wargame_status === 'Completed' && !isWargamingCard && (
-                          <div className="wargame-results-details animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
+                          <div id="wargame-results-hud" className="wargame-results-details animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
                             
                             {/* Consensus Score Gauge */}
                             <div style={{
