@@ -1063,6 +1063,7 @@ export default function App() {
   const [smeOpportunity, setSmeOpportunity] = useState("Automated regional cold-chain hub logistics.");
   const [smeBarrier, setSmeBarrier] = useState("Community clinic ultra-cold storage gaps.");
   const [simulationScenario, setSimulationScenario] = useState("grounded");
+  const [tourIngestionCompleted, setTourIngestionCompleted] = useState(false);
 
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -1704,6 +1705,7 @@ export default function App() {
         fetchData();
         setActiveTab("matrix");
         setDetailTab("framework");
+        setTourIngestionCompleted(true);
       } else {
         throw new Error("Upload failed");
       }
@@ -2590,6 +2592,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                   <button 
                     onClick={() => {
+                      setActiveTourWorkflow(1);
                       setTourStep(0);
                       setTourActive(true);
                     }}
@@ -2762,6 +2765,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </div>
                   <button 
                     onClick={() => {
+                      setActiveTourWorkflow(1);
                       setTourStep(0);
                       setTourActive(true);
                     }}
@@ -2813,6 +2817,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         setActiveTourWorkflow(2);
                         setTourStep(0);
                         setTourActive(true);
+                        setTourIngestionCompleted(false);
+                        setSelectedInsight(null);
                       }}
                       style={{
                         width: '100%',
@@ -9016,6 +9022,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 4 && !hasDraggedTimeline) return true;
                     if (tourStep === 5 && selectedRegionFilter !== 'EU') return true;
                   }
+                  if (activeTourWorkflow === 2) {
+                    if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return true;
+                    if (tourStep === 2 && !tourIngestionCompleted) return true;
+                    if (tourStep === 3 && !selectedInsight) return true;
+                  }
                   return false;
                 })()}
                 onClick={() => {
@@ -9043,6 +9054,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 4 && !hasDraggedTimeline) return 'not-allowed';
                       if (tourStep === 5 && selectedRegionFilter !== 'EU') return 'not-allowed';
                     }
+                    if (activeTourWorkflow === 2) {
+                      if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return 'not-allowed';
+                      if (tourStep === 2 && !tourIngestionCompleted) return 'not-allowed';
+                      if (tourStep === 3 && !selectedInsight) return 'not-allowed';
+                    }
                     return 'pointer';
                   })(),
                   opacity: (() => {
@@ -9050,6 +9066,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return 0.4;
                       if (tourStep === 4 && !hasDraggedTimeline) return 0.4;
                       if (tourStep === 5 && selectedRegionFilter !== 'EU') return 0.4;
+                    }
+                    if (activeTourWorkflow === 2) {
+                      if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return 0.4;
+                      if (tourStep === 2 && !tourIngestionCompleted) return 0.4;
+                      if (tourStep === 3 && !selectedInsight) return 0.4;
                     }
                     return 1;
                   })(),
@@ -9065,6 +9086,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return "Waiting for click... 🔒";
                     if (tourStep === 4 && !hasDraggedTimeline) return "Waiting for drag... 🔒";
                     if (tourStep === 5 && selectedRegionFilter !== 'EU') return "Waiting for click... 🔒";
+                  }
+                  if (activeTourWorkflow === 2) {
+                    if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return "Enter expectations... 🔒";
+                    if (tourStep === 2 && !tourIngestionCompleted) return "Waiting for Ingestion... 🔒";
+                    if (tourStep === 3 && !selectedInsight) return "Select a card... 🔒";
                   }
                   return tourSteps[tourStep].buttonText;
                 })()}
