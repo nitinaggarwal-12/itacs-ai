@@ -2327,29 +2327,35 @@ def diagnose_seed(db: Session = Depends(get_db)):
             
         # 2. Run inserts
         db.execute(text("""
-            INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks) VALUES
+            INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks, is_archived) VALUES
             ('a0e8d8d3-575d-4f30-8c22-79919f2f8111', 
              'Optimize Regional Cold-Chain Distribution Channels', 
              'Mitigate temperature fluctuation risks by deploying IoT-enabled smart sensors across regional distributor warehouses.', 
              'clinical', 'medium', 'low', 
              'Increases minor operational overhead for local warehouse staff, but avoids costly batch failures.', 
-             'Potential sensor battery failures or connection dropouts in older facilities.'),
+             'Potential sensor battery failures or connection dropouts in older facilities.', 
+             FALSE),
              
             ('b1f9e9e4-686e-5041-9d33-8aa2af3f9222', 
              'Establish Dedicated Regional Care Coordinators', 
              'Hire specialized oncology nurse coordinators in high-volume community clinics to streamline personalized mRNA vaccine scheduling and patient onboarding.', 
              'operational', 'high', 'medium', 
              'Requires direct headcount budget reallocation, but reduces patient scheduling delays by 35%.', 
-             'Slower hiring cycles in rural markets might delay regional launch timelines.'),
+             'Slower hiring cycles in rural markets might delay regional launch timelines.', 
+             FALSE),
              
             ('c2a0faf5-797f-6152-ae44-9bb3bf4fa333', 
              'Launch Community Practicing Educational Campaign', 
              'Deploy a nationwide medical affairs field campaign targeting community oncologists to build confidence in customized vaccine safety and sequencing protocols.', 
              'clinical', 'high', 'high', 
              'Demands significant travel and marketing capital, but directly counters competitor monotherapy market share gains.', 
-             'Oncologist scheduling fatigue might limit engagement; requires highly polished, brief materials.')
+             'Oncologist scheduling fatigue might limit engagement; requires highly polished, brief materials.', 
+             FALSE)
             ON CONFLICT (id) DO NOTHING;
         """))
+        
+        # Run self-healing update to repair any existing NULLs in the database
+        db.execute(text("UPDATE strategic_imperatives SET is_archived = FALSE WHERE is_archived IS NULL;"))
         
         db.execute(text("""
             INSERT INTO tactical_actions (id, imperative_id, action_text, owner_role, strength_of_evidence) VALUES
@@ -2896,29 +2902,35 @@ def startup_db_init():
             
             # Pre-seed default strategic imperatives and tactical actions using ON CONFLICT for absolute resilience
             conn.execute(text("""
-                INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks) VALUES
+                INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks, is_archived) VALUES
                 ('a0e8d8d3-575d-4f30-8c22-79919f2f8111', 
                  'Optimize Regional Cold-Chain Distribution Channels', 
                  'Mitigate temperature fluctuation risks by deploying IoT-enabled smart sensors across regional distributor warehouses.', 
                  'clinical', 'medium', 'low', 
                  'Increases minor operational overhead for local warehouse staff, but avoids costly batch failures.', 
-                 'Potential sensor battery failures or connection dropouts in older facilities.'),
+                 'Potential sensor battery failures or connection dropouts in older facilities.',
+                 FALSE),
                  
                 ('b1f9e9e4-686e-5041-9d33-8aa2af3f9222', 
                  'Establish Dedicated Regional Care Coordinators', 
                  'Hire specialized oncology nurse coordinators in high-volume community clinics to streamline personalized mRNA vaccine scheduling and patient onboarding.', 
                  'operational', 'high', 'medium', 
                  'Requires direct headcount budget reallocation, but reduces patient scheduling delays by 35%.', 
-                 'Slower hiring cycles in rural markets might delay regional launch timelines.'),
+                 'Slower hiring cycles in rural markets might delay regional launch timelines.',
+                 FALSE),
                  
                 ('c2a0faf5-797f-6152-ae44-9bb3bf4fa333', 
                  'Launch Community Practicing Educational Campaign', 
                  'Deploy a nationwide medical affairs field campaign targeting community oncologists to build confidence in customized vaccine safety and sequencing protocols.', 
                  'clinical', 'high', 'high', 
                  'Demands significant travel and marketing capital, but directly counters competitor monotherapy market share gains.', 
-                 'Oncologist scheduling fatigue might limit engagement; requires highly polished, brief materials.')
+                 'Oncologist scheduling fatigue might limit engagement; requires highly polished, brief materials.',
+                 FALSE)
                 ON CONFLICT (id) DO NOTHING;
             """))
+            
+            # Run self-healing update to repair any existing NULLs in the database
+            conn.execute(text("UPDATE strategic_imperatives SET is_archived = FALSE WHERE is_archived IS NULL;"))
             
             # Insert their associated tactical actions
             conn.execute(text("""
