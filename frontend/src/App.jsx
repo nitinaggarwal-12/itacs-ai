@@ -3841,7 +3841,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               <div id="insight-card-list" className="matrix-grid">
                 {filteredInsights.map(ins => {
                   const isSelected = selectedInsight && selectedInsight.id === ins.id;
-                  const laneClass = getFunctionBadgeClass(ins.metadata.function_lane);
+                  const laneClass = getFunctionBadgeClass(ins.function_lane || ins.metadata?.function_lane || 'Global Lead');
                   
                   // AAA Status pills (low opacity bg, desaturated contrasting text)
                   let statusClass = "flagged";
@@ -3856,7 +3856,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       className={`matrix-card ${isSelected ? 'selected' : ''}`}
                     >
                       <div className="matrix-card-header">
-                        <span className={`matrix-lane-tag ${laneClass}`}>{ins.metadata.function_lane}</span>
+                        <span className={`matrix-lane-tag ${laneClass}`}>{ins.function_lane || ins.metadata?.function_lane || 'Global Lead'}</span>
                         <span className={`status-pill ${statusClass}`}>{statusText}</span>
                       </div>
 
@@ -3868,7 +3868,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       </div>
 
                       <div className="matrix-card-footer">
-                        <span>Asset: <strong>{ins.metadata.asset}</strong> ({ins.metadata.tumor})</span>
+                        <span>Asset: <strong>{ins.asset || ins.metadata?.asset || 'V940'}</strong> ({ins.tumor || ins.metadata?.tumor || 'Melanoma'})</span>
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <span>Compliance: <strong style={{ color: ins.compliance_score >= 0.8 ? '#34d399' : '#ef4444' }}>{Math.round(ins.compliance_score * 100)}%</strong></span>
                           {ins.evidence_score !== undefined && (
