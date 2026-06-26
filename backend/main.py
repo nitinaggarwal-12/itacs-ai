@@ -2818,6 +2818,7 @@ def save_diagram_to_user_guide(req: SaveDiagramRequest):
         import os
         import re
         import json
+        import html
         
         # Paths
         base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -2839,15 +2840,15 @@ def save_diagram_to_user_guide(req: SaveDiagramRequest):
             "xml": req.xml
         }
         
-        # Serialize to JSON and escape quotes for HTML insertion
+        # Serialize to JSON and run robust HTML escaping
         config_json = json.dumps(config)
-        escaped_config = config_json.replace('"', '&quot;')
+        escaped_config = html.escape(config_json, quote=True)
         
-        # Surgical replacement regex based on diagram ID
-        if req.diagram_type == "architecture":
-            pattern = r'(<div\s+id="diagram-architecture"[^>]*data-mxgraph=")([^"]*)(")'
+        # Surgical replacement regex based on diagram type (supports architecture, gateway, sequence)
+        if req.diagram_type in ["architecture", "gateway", "sequence"]:
+            pattern = rf'(<div\s+id="diagram-{req.diagram_type}"[^>]*data-mxgraph=")([^"]*)(")'
         else:
-            pattern = r'(<div\s+id="diagram-gateway"[^>]*data-mxgraph=")([^"]*)(")'
+            raise HTTPException(status_code=400, detail=f"Invalid diagram type: {req.diagram_type}")
             
         if not re.search(pattern, html_content):
             raise HTTPException(status_code=400, detail=f"Target diagram div for {req.diagram_type} not found in user_guide.html")
@@ -2857,9 +2858,11 @@ def save_diagram_to_user_guide(req: SaveDiagramRequest):
         with open(html_path, "w", encoding="utf-8") as f:
             f.write(updated_content)
             
-        logger.info("Diagram XML successfully updated in user_guide.html")
+        logger.info(f"Diagram {req.diagram_type} XML successfully updated in user_guide.html")
         return {"status": "success", "message": f"Diagram {req.diagram_type} saved successfully"}
         
+    except HTTPException as he:
+        raise he
     except Exception as e:
         logger.error(f"Failed to save diagram: {e}")
         raise HTTPException(status_code=500, detail=str(e))

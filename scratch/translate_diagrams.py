@@ -669,7 +669,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML1__"></div>
+                    <div id="diagram-architecture" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML1__"></div>
                 </div>
                 
                 <div class="alert-box alert-note" style="margin-top: 1rem;">
@@ -692,7 +692,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML2__"></div>
+                    <div id="diagram-gateway" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML2__"></div>
                 </div>
             </section>
 
@@ -708,7 +708,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 940px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML3__"></div>
+                    <div id="diagram-sequence" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML3__"></div>
                 </div>
             </section>
 
