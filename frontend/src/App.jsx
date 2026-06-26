@@ -923,14 +923,14 @@ export default function App() {
       title: "SME Strategic Expectations 🧠",
       description: "This is the SME Expectations portal. Here, you enter your anticipated opportunities and operational risks. Our Merge & Evolve Agent will automatically blend these with the clinical facts from the slides!",
       buttonText: "Next Step ➔",
-      action: (setActiveTab) => setActiveTab('home')
+      action: (setActiveTab) => setActiveTab('ingest')
     },
     {
       targetId: "ingestion-dropzone",
       title: "Trigger Ingestion ⚡",
       description: "Use this dropzone to upload slide presentations, or click 'Trigger Ingestion Demo' below to ingest a mock clinical trial slide. This will run the multi-agent trust loop in the background!",
       buttonText: "Next Step ➔",
-      action: (setActiveTab) => setActiveTab('home')
+      action: (setActiveTab) => setActiveTab('ingest')
     },
     {
       targetId: "insight-card-list",
