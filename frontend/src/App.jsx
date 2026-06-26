@@ -2981,6 +2981,28 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   >
                     Explore Access Matrix 🧬
                   </a>
+                  <a 
+                    href="/user_guide.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%)',
+                      color: 'var(--brand-cyan)',
+                      border: '1px solid rgba(6, 182, 212, 0.25)',
+                      borderRadius: '8px',
+                      padding: '12px 24px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 4px 12px rgba(6, 182, 212, 0.08)'
+                    }}
+                  >
+                    View Platform User Guide 📖
+                  </a>
                 </div>
               </div>
 
