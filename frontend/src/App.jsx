@@ -964,14 +964,71 @@ export default function App() {
     }
   ];
 
-  const tourSteps = activeTourWorkflow === 1 ? tourStepsW1 : tourStepsW2;
+  const tourStepsW3 = [
+    {
+      targetId: null,
+      title: "AI Wargaming & Challenger Tour ⚔️",
+      description: "Welcome to the AI Wargaming & Challenger Simulator! In this mission, you will learn how to stress-test your launch strategies against the Challenger Agent, analyze clinical/commercial critiques, and review AI-evolved imperatives. Let's begin!",
+      buttonText: "Start Wargaming Mission ➔",
+      action: (setActiveTab) => setActiveTab('matrix')
+    },
+    {
+      targetId: "insight-card-list",
+      title: "Select a Strategic Card 📊",
+      description: "This is your Commercial Intelligence Matrix. To wargame a strategic imperative, first select any card from your active strategy list to open its validation details drawer!",
+      buttonText: "Select a card... 🔒",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight) => {
+        setActiveTab('matrix');
+        if (setSelectedInsight) setSelectedInsight(null);
+      }
+    },
+    {
+      targetId: "detail-tab-wargaming-btn",
+      title: "Open AI Wargaming Tab ⚡",
+      description: "Excellent! Now, open the '⚡ AI Wargaming' sub-tab inside the details drawer. This is where you connect to the Challenger Agent's stress-test cores!",
+      buttonText: "Open Wargaming tab... 🔒",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
+        setActiveTab('matrix');
+        if (setDetailTab) setDetailTab('framework');
+      }
+    },
+    {
+      targetId: "run-challenger-btn",
+      title: "Run Challenger Stress-Test ⚡",
+      description: "This is the wargaming console. Click 'Run Challenger Stress-Test' to initiate the clinical, competitive, and cognitive wargame simulation!",
+      buttonText: "Run Stress-Test... 🔒",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
+        setActiveTab('matrix');
+        if (setDetailTab) setDetailTab('wargaming');
+      }
+    },
+    {
+      targetId: "wargame-results-hud",
+      title: "Stress-Test Results & Evolved Card 🧠",
+      description: "Wargame complete! Observe the Alignment Consensus Score showing how grounded your expectations are. Review the Skeptic (clinical), Counter-Factualist (competitive), and Bias-Detector (cognitive) critiques on the left, and check out the AI-synthesized Evolved Strategy Card on the right!",
+      buttonText: "Complete Wargame Review ➔",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
+        setActiveTab('matrix');
+        if (setDetailTab) setDetailTab('wargaming');
+      }
+    },
+    {
+      targetId: null,
+      title: "Wargaming Certified! 🎉🏆",
+      description: "Outstanding! You have successfully wargamed your first strategic card and evolved it into a bulletproof launch imperative! You have been awarded the AI Challenger Badge! Your progress has been saved.",
+      buttonText: "Complete Mission 🏅",
+      action: () => {}
+    }
+  ];
+
+  const tourSteps = activeTourWorkflow === 1 ? tourStepsW1 : (activeTourWorkflow === 2 ? tourStepsW2 : tourStepsW3);
 
   useEffect(() => {
     if (!tourActive) return;
 
     const step = tourSteps[tourStep];
     if (step.action) {
-      step.action(setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline);
+      step.action(setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab);
     }
 
     if (!step.targetId) {
@@ -2760,7 +2817,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>ITACS End-to-End Onboarding Missions</h3>
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
-                  Global Progress: {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? '50% Complete (2/4 Badges)' : (localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)')}
+                  Global Progress: {
+                    localStorage.getItem('itacs_tour_completed_w3') === 'true' 
+                      ? '75% Complete (3/4 Badges)' 
+                      : (localStorage.getItem('itacs_tour_completed_w2') === 'true' 
+                        ? '50% Complete (2/4 Badges)' 
+                        : (localStorage.getItem('itacs_tour_completed_w1') === 'true' 
+                          ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)'))
+                  }
                 </span>
               </div>
 
@@ -2870,13 +2934,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   )}
                 </div>
 
-                {/* Mission 3 Station (Locked) */}
+                {/* Mission 3 Station (Dynamic) */}
                 <div style={{
                   background: 'var(--bg-primary)',
-                  border: '1px solid var(--glass-border)',
+                  border: `1px solid ${localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'rgba(16, 185, 129, 0.3)' : (localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--brand-cyan)' : 'var(--glass-border)')}`,
                   borderRadius: '12px',
                   padding: '20px',
-                  opacity: 0.5,
+                  opacity: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 1 : 0.5,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -2884,17 +2948,45 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 }}>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 3</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)', background: 'rgba(6, 182, 212, 0.08)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 3</span>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? '#10b981' : (localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)') }}>
+                        {localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'Completed 🏅' : (localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'Active 🚀' : 'Locked 🔒')}
+                      </span>
                     </div>
-                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Operational Field Telemetry</h4>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--text-primary)' : 'var(--text-muted)' }}>Operational Field Telemetry</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--text-secondary)' : 'var(--text-muted)', lineHeight: '1.4' }}>
                       Map strategic Kanban tasks, drag nodes on consensus canvas, map KOL target lists, and synchronize sales CRM.
                     </p>
                   </div>
-                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
-                    Complete Mission 2 to Unlock
-                  </button>
+                  {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? (
+                    <button 
+                      onClick={() => {
+                        setActiveTourWorkflow(3);
+                        setTourStep(0);
+                        setTourActive(true);
+                        setSelectedInsight(null);
+                      }}
+                      style={{
+                        width: '100%',
+                        background: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'transparent' : 'var(--brand-cyan)',
+                        border: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? '1px solid var(--glass-border)' : 'none',
+                        color: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--text-primary)' : '#ffffff',
+                        borderRadius: '6px',
+                        padding: '8px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        marginTop: '12px'
+                      }}
+                    >
+                      {localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'Replay Mission 🔄' : 'Start Mission 🚀'}
+                    </button>
+                  ) : (
+                    <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                      Complete Mission 2 to Unlock
+                    </button>
+                  )}
                 </div>
 
                 {/* Mission 4 Station (Locked) */}
@@ -3873,6 +3965,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         Slide Grounding
                       </button>
                       <button 
+                        id="detail-tab-wargaming-btn"
                         onClick={() => setDetailTab('wargaming')} 
                         style={{
                           fontSize: '10px',
@@ -9638,6 +9731,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 2 && !tourIngestionCompleted) return true;
                     if (tourStep === 3 && !selectedInsight) return true;
                   }
+                  if (activeTourWorkflow === 3) {
+                    if (tourStep === 1 && !selectedInsight) return true;
+                    if (tourStep === 2 && detailTab !== 'wargaming') return true;
+                    if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return true;
+                  }
                   return false;
                 })()}
                 onClick={() => {
@@ -9670,6 +9768,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 2 && !tourIngestionCompleted) return 'not-allowed';
                       if (tourStep === 3 && !selectedInsight) return 'not-allowed';
                     }
+                    if (activeTourWorkflow === 3) {
+                      if (tourStep === 1 && !selectedInsight) return 'not-allowed';
+                      if (tourStep === 2 && detailTab !== 'wargaming') return 'not-allowed';
+                      if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 'not-allowed';
+                    }
                     return 'pointer';
                   })(),
                   opacity: (() => {
@@ -9682,6 +9785,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return 0.4;
                       if (tourStep === 2 && !tourIngestionCompleted) return 0.4;
                       if (tourStep === 3 && !selectedInsight) return 0.4;
+                    }
+                    if (activeTourWorkflow === 3) {
+                      if (tourStep === 1 && !selectedInsight) return 0.4;
+                      if (tourStep === 2 && detailTab !== 'wargaming') return 0.4;
+                      if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 0.4;
                     }
                     return 1;
                   })(),
@@ -9702,6 +9810,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 1 && (!smeOpportunity.trim() || !smeBarrier.trim())) return "Enter expectations... 🔒";
                     if (tourStep === 2 && !tourIngestionCompleted) return "Waiting for Ingestion... 🔒";
                     if (tourStep === 3 && !selectedInsight) return "Select a card... 🔒";
+                  }
+                  if (activeTourWorkflow === 3) {
+                    if (tourStep === 1 && !selectedInsight) return "Select a card... 🔒";
+                    if (tourStep === 2 && detailTab !== 'wargaming') return "Open Wargaming tab... 🔒";
+                    if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return "Run Stress-Test... 🔒";
                   }
                   return tourSteps[tourStep].buttonText;
                 })()}
