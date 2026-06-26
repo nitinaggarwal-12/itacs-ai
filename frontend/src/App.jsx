@@ -9705,6 +9705,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   })()
               )
             }}
+            id="tour-popover-card"
             className="animate-fade-in"
           >
             {/* Tooltip Header */}
@@ -9770,6 +9771,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
               {/* Action Button (State-Aware Lock!) */}
               <button 
+                id="tour-next-btn"
                 disabled={(() => {
                   if (activeTourWorkflow === 1) {
                     if (tourStep === 3 && selectedRoadmapMilestone !== 'melanoma_readout') return true;
