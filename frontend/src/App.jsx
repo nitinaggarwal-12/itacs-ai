@@ -5359,8 +5359,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               
               return (
                 <div className="glass-card" style={{ 
-                  background: 'rgba(15, 23, 42, 0.45)', 
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  background: 'var(--glass-bg)', 
+                  border: '1px solid var(--glass-border)',
                   padding: '16px 20px', 
                   borderRadius: '12px',
                   display: 'flex',
@@ -5379,30 +5379,30 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <span style={{ 
                         fontSize: '11px', 
                         fontWeight: 800, 
-                        color: currentLoad > 160 ? '#fca5a5' : (currentLoad > 100 ? '#fde047' : '#6ee7b7') 
+                        color: currentLoad > 160 ? 'var(--color-danger)' : (currentLoad > 100 ? 'var(--color-warning)' : 'var(--color-success)') 
                       }}>
                         {currentLoad} / 200 Units ({Math.round((currentLoad / 200) * 100)}% Load)
                       </span>
                     </div>
                     
-                    <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ width: '100%', height: '8px', background: 'rgba(0,0,0,0.06)', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
                       <div style={{ 
                         width: `${Math.min((currentLoad / 200) * 100, 100)}%`, 
                         height: '100%', 
                         background: currentLoad > 160 
-                          ? 'linear-gradient(90deg, #ef4444, #f87171)' 
-                          : (currentLoad > 100 ? 'linear-gradient(90deg, #3b82f6, #f59e0b)' : 'linear-gradient(90deg, #10b981, #34d399)'),
+                          ? 'linear-gradient(90deg, var(--color-danger), #f87171)' 
+                          : (currentLoad > 100 ? 'linear-gradient(90deg, var(--brand-blue), var(--color-warning))' : 'linear-gradient(90deg, var(--color-success), #34d399)'),
                         boxShadow: currentLoad > 160 
-                          ? '0 0 10px rgba(239, 68, 68, 0.5)' 
-                          : (currentLoad > 100 ? '0 0 10px rgba(245, 158, 11, 0.4)' : '0 0 10px rgba(16, 185, 129, 0.4)'),
+                          ? '0 0 8px rgba(239, 68, 68, 0.3)' 
+                          : (currentLoad > 100 ? '0 0 8px rgba(245, 158, 11, 0.3)' : '0 0 8px rgba(16, 185, 129, 0.3)'),
                         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                       }} />
                     </div>
                   </div>
                   
                   <div style={{ 
-                    background: currentLoad > 160 ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.05)',
-                    border: currentLoad > 160 ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(16, 185, 129, 0.15)',
+                    background: currentLoad > 160 ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.06)',
+                    border: currentLoad > 160 ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(16, 185, 129, 0.2)',
                     padding: '10px 16px',
                     borderRadius: '8px',
                     display: 'flex',
@@ -5415,7 +5415,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <span style={{ 
                       fontSize: '11px', 
                       fontWeight: 800, 
-                      color: currentLoad > 160 ? '#fca5a5' : '#6ee7b7',
+                      color: currentLoad > 160 ? 'var(--color-danger)' : 'var(--color-success)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px',
                       marginTop: '2px'
@@ -5519,8 +5519,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
             {/* AI Synergy & Gap Analyzer HUD */}
             <div className="glass-card" style={{ 
-              background: 'rgba(15, 23, 42, 0.35)', 
-              border: '1px solid rgba(255, 255, 255, 0.05)', 
+              background: 'var(--glass-bg)', 
+              border: '1px solid var(--glass-border)', 
               padding: '20px', 
               borderRadius: '12px',
               width: '100%',
@@ -5549,8 +5549,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     alignItems: 'center', 
                     gap: '6px',
                     cursor: 'pointer',
-                    background: isAnalyzingSynergy ? 'rgba(255,255,255,0.02)' : 'rgba(99, 102, 241, 0.1)',
-                    border: isAnalyzingSynergy ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(99, 102, 241, 0.25)',
+                    background: isAnalyzingSynergy ? 'rgba(0,0,0,0.02)' : 'rgba(99, 102, 241, 0.1)',
+                    border: isAnalyzingSynergy ? '1px solid var(--glass-border)' : '1px solid rgba(99, 102, 241, 0.25)',
                     color: isAnalyzingSynergy ? 'var(--text-muted)' : 'var(--brand-purple)'
                   }}
                 >
@@ -5577,7 +5577,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   gap: '12px'
                 }}>
                   <div className="telemetry-loader" style={{ 
-                    border: '2px solid rgba(255,255,255,0.05)', 
+                    border: '2px solid var(--glass-border)', 
                     borderTop: '2px solid var(--brand-purple)', 
                     borderRadius: '50%', 
                     width: '24px', 
@@ -5593,10 +5593,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   display: 'grid', 
                   gridTemplateColumns: '120px 1fr 1fr', 
                   gap: '24px',
-                  background: 'rgba(0,0,0,0.1)',
+                  background: 'var(--bg-primary)',
                   padding: '16px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.02)'
+                  border: '1px solid var(--glass-border)'
                 }}>
                   {/* Gauge Display */}
                   <div style={{ 
@@ -5604,14 +5604,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     flexDirection: 'column', 
                     alignItems: 'center', 
                     justifyContent: 'center',
-                    borderRight: '1px solid rgba(255,255,255,0.05)',
+                    borderRight: '1px solid var(--glass-border)',
                     paddingRight: '12px'
                   }}>
                     <span style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Alignment</span>
                     <span style={{ 
                       fontSize: '28px', 
                       fontWeight: 900, 
-                      color: synergyReport.score > 75 ? '#6ee7b7' : '#fde047',
+                      color: synergyReport.score > 75 ? 'var(--color-success)' : 'var(--color-warning)',
                       marginTop: '4px'
                     }}>
                       {synergyReport.score}%
@@ -5620,7 +5620,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       fontSize: '8px', 
                       fontWeight: 800, 
                       textTransform: 'uppercase', 
-                      color: synergyReport.score > 75 ? '#6ee7b7' : '#fde047',
+                      color: synergyReport.score > 75 ? 'var(--color-success)' : 'var(--color-warning)',
                       marginTop: '2px'
                     }}>
                       {synergyReport.score > 75 ? 'Strong Synergy' : 'Moderate Gaps'}
@@ -5629,7 +5629,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   
                   {/* Synergies Column */}
                   <div>
-                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       🟢 Active Strategic Synergies
                     </h5>
                     <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
@@ -5639,7 +5639,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   
                   {/* Gaps Column */}
                   <div>
-                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <h5 style={{ margin: '0 0 6px 0', fontSize: '10.5px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--color-danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       ⚠️ Gaps & Conflict Risks
                     </h5>
                     <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
@@ -5653,9 +5653,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   padding: '16px', 
                   fontSize: '11px', 
                   color: 'var(--text-muted)',
-                  border: '1px dashed rgba(255,255,255,0.04)',
+                  border: '1px dashed var(--glass-border)',
                   borderRadius: '8px',
-                  background: 'rgba(0,0,0,0.05)'
+                  background: 'var(--bg-primary)',
+                  opacity: 0.8
                 }}>
                   💡 Click <strong>"Run Synergy Scan"</strong> to analyze your active strategic board for gaps, resource conflicts, and clinical alignment.
                 </div>
@@ -5726,8 +5727,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                     {/* Section: Interactive Consensus Loop Simulator */}
                     <div className="glass-card" style={{ 
-                      background: 'rgba(255,255,255,0.01)', 
-                      border: '1px solid rgba(255,255,255,0.04)', 
+                      background: 'var(--glass-bg)', 
+                      border: '1px solid var(--glass-border)', 
                       padding: '14px', 
                       borderRadius: '12px', 
                       display: 'flex', 
@@ -5743,7 +5744,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         <div style={{ 
                           fontSize: '10px', 
                           fontWeight: 800, 
-                          color: '#6ee7b7', 
+                          color: 'var(--color-success)', 
                           background: 'rgba(16, 185, 129, 0.1)', 
                           padding: '2px 8px', 
                           borderRadius: '4px' 
@@ -5767,7 +5768,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           gap: '4px'
                         }}>
                           {consensusLogs.map((log, i) => (
-                            <div key={i} style={{ color: log.includes('✓') || log.includes('achieved') ? '#6ee7b7' : '#94a3b8', textAlign: 'left' }}>
+                            <div key={i} style={{ color: log.includes('✓') || log.includes('achieved') ? '#10b981' : '#94a3b8', textAlign: 'left' }}>
                               {log}
                             </div>
                           ))}
