@@ -489,13 +489,13 @@ def run_quality_and_deduplicate_agent(
             SELECT id, opportunity_space, csf, insight, rationale, implication, quotes, slide_reference, strength_of_evidence_score
             FROM enterprise_memory
             WHERE asset = :asset AND tumor = :tumor AND is_validated = true AND is_quarantined = false
-            ORDER BY embedding <=> :vec::vector
+            ORDER BY embedding <=> CAST(:vec AS vector)
             LIMIT 1
         """)
         row = db.execute(query, {"asset": asset, "tumor": tumor, "vec": vector_str}).fetchone()
         
         if row:
-            dist_query = text("SELECT :vec::vector <=> embedding FROM enterprise_memory WHERE id = :id")
+            dist_query = text("SELECT CAST(:vec AS vector) <=> embedding FROM enterprise_memory WHERE id = :id")
             dist = db.execute(dist_query, {"vec": vector_str, "id": row.id}).scalar()
             if dist is not None and dist < 0.25:
                 duplicate_record = row
@@ -936,7 +936,7 @@ async def upload_document(
         try:
             vector_str = "[" + ",".join([str(x) for x in vector]) + "]"
             db.execute(
-                text("UPDATE enterprise_memory SET embedding = :vec::vector WHERE id = :id"),
+                text("UPDATE enterprise_memory SET embedding = CAST(:vec AS vector) WHERE id = :id"),
                 {"vec": vector_str, "id": insight_record.id}
             )
             db.commit()
@@ -1321,7 +1321,7 @@ def chat_thought_partner(request: ChatRequest, db: Session = Depends(get_db)):
             SELECT id, opportunity_space, csf, insight, rationale, implication, function_lane, asset, tumor, sub_tumor 
             FROM enterprise_memory 
             WHERE is_validated = true AND is_quarantined = false
-            ORDER BY embedding <=> :vec::vector 
+            ORDER BY embedding <=> CAST(:vec AS vector) 
             LIMIT 3
         """)
         results = db.execute(query, {"vec": vector_str}).fetchall()
