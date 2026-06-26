@@ -6755,7 +6755,24 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           <p style={{ margin: 0, fontSize: '9.5px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
                             "Implication: Deploy HEOR surrogate validation models to Access leads by Q3."
                           </p>
-                                          {/* Left: Live Typing Draft Editor */}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* SCENE 2 STAGE: COMPLIANCE INTERCEPTION */}
+                {simActiveScene === 'compliance' && (
+                  <div className="animate-fade-in" style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '24px',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 1,
+                    boxSizing: 'border-box'
+                  }}>
+                    {/* Left: Live Typing Draft Editor */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center' }}>
                       <div className="glass-card" style={{
                         position: 'relative',
@@ -6778,9 +6795,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                               Draft Editor (Medical Affairs Lane)
                             </strong>
                           </div>
-                          <span style={{ fontSize: '8px', color: '#94a3b8' }}>Status: Active Draft</span>
-                        </div>ignItems: 'center', gap: '8px' }}>
-                            <span style={{ w                         <div style={{
+                          <span style={{ fontSize: '8px', color: '#cbd5e1' }}>Status: Active Draft</span>
+                        </div>
+
+                        {/* Input Field with highlighted forbidden words */}
+                        <div style={{
                           background: 'rgba(0,0,0,0.3)',
                           border: '1px solid rgba(255,255,255,0.05)',
                           padding: '14px',
@@ -6804,14 +6823,6 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                         <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9px', color: '#94a3b8' }}>
                           <span>Principal ID: spiffe://itacs.merck.com/.../medical-affairs</span>
-                        </div>"}
-                              <span style={{ background: '#ef4444', color: 'white', padding: '0 4px', borderRadius: '4px', fontWeight: 'bold', animation: 'blink 0.8s infinite' }}>high ROI</span> on our investments.
-                            </span>
-                          )}
-                        </div>
-
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9px', color: 'var(--text-muted)' }}>
-                          <span>Principal ID: spiffe://itacs.merck.com/.../medical-affairs</span>
                         </div>
                       </div>
                     </div>
@@ -6831,7 +6842,19 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <div className="glass-card" style={{
                         width: '100%',
                         maxHeight: '260px',
-                        background: simStep === 3 ? 'rgba(239, 68, 68, 0.05)'                         {simStep === 3 ? (
+                        background: simStep === 3 ? 'rgba(239, 68, 68, 0.05)' : 'rgba(15, 23, 42, 0.65)',
+                        border: simStep === 3 ? '2px dashed #ef4444' : '1px dashed rgba(255,255,255,0.08)',
+                        borderRadius: '16px',
+                        padding: '24px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '12px',
+                        transition: 'all 0.4s ease',
+                        boxSizing: 'border-box'
+                      }}>
+                        {simStep === 3 ? (
                           <div className="animate-scale-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', textAlign: 'center' }}>
                             <ShieldAlert size={48} style={{ color: '#ef4444', animation: 'pulse 1.5s infinite' }} />
                             <h4 style={{ margin: 0, color: '#ef4444', fontWeight: 800, fontSize: '13.5px' }}>
@@ -6852,15 +6875,6 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                               Quarantine Chamber
                             </h4>
                             <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
-                              Compliance Supervisor active. Standing by to intercept lane breaches.
-                            </p>
-                          </div>
-                        )}nter' }}>
-                            <ShieldAlert size={40} style={{ color: 'var(--text-muted)' }} />
-                            <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>
-                              Quarantine Chamber
-                            </h4>
-                            <p style={{ margin: 0, fontSize: '9px', color: 'var(--text-muted)' }}>
                               Compliance Supervisor active. Standing by to intercept lane breaches.
                             </p>
                           </div>
@@ -6900,8 +6914,21 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           style={{
                             strokeDasharray: simVoteSelected ? "none" : "6",
                             animation: simVoteSelected ? "none" : "dash 1.2s linear infinite",
-                            filter: simVoteSelected ? 'drop-shadow(0 0 10px #10b981)' : 'drop-shadow(0 0 10px #ef4444)',
-                                                {/* Left: Medical Affairs Card */}
+                            filter: simVoteSelected ? 'drop-shadow(0 0 10px #10b981)' : 'drop-shadow(0 0 10px #ef4444)'
+                          }}
+                        />
+                      )}
+                    </svg>
+
+                    {/* Left & Right Cards grid */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '30px',
+                      alignItems: 'center',
+                      zIndex: 3
+                    }}>
+                      {/* Left: Medical Affairs Card */}
                       <div className="glass-card animate-slide-right" style={{
                         padding: '16px',
                         background: 'rgba(15, 23, 42, 0.65)',
@@ -6951,7 +6978,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             "Payer step-authorization requirements will delay community access until <strong>Q1 2027</strong>."
                           </p>
                         </div>
-                      </div>ESS / REIMBURSEMENT
+                      </div>
+                    </div>
                               {/* Divergence warning and voting box */}
                     {simStep >= 3 && (
                       <div className="animate-scale-in" style={{
@@ -7012,17 +7040,6 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                                 }}
                                 className="btn btn-primary" 
                                 style={{ fontSize: '11px', padding: '6px 12px', cursor: 'pointer', color: 'white' }}
-                              >
-                                Option B: Accelerate Access with HEOR evidence
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    )}..prev, "[Consensus] GOLT Vote registered for Option B. Deploying HEOR to accelerate Access."]);
-                                }}
-                                className="btn btn-primary" 
-                                style={{ fontSize: '10px', padding: '6px 12px', cursor: 'pointer' }}
                               >
                                 Option B: Accelerate Access with HEOR evidence
                               </button>
@@ -7147,14 +7164,6 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             </span>
                             <span style={{ fontSize: '8px', color: '#cbd5e1' }}>ID: CI-102</span>
                           </div>
-                          <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 'bold' }}>
-                            Competitor X Q3 Pricing & Access Strategy
-                          </h4>
-                          <p style={{ margin: 0, fontSize: '12px', color: '#cbd5e1', fontStyle: 'italic' }}>
-                            "Implication: Competitor X plans 5% discount on monotherapy, but our HEOR survival packaging offset allows price integrity."
-                          </p>
-                        </div>
-                      )}              </div>
                           <h4 style={{ margin: 0, fontSize: '11px', color: 'white', fontWeight: 'bold' }}>
                             Competitor X Q3 Pricing & Access Strategy
                           </h4>
