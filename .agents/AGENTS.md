@@ -70,3 +70,20 @@ When embedding complex, nested XML strings (such as Draw.io diagram configuratio
 * **Index-Based Query Selectors**: Always query diagram containers in associated Javascript controllers using index-based selectors (e.g., `document.querySelectorAll('.mxgraph')[index]`) rather than static DOM IDs. This prevents namespace conflicts and ID collisions with nested Draw.io iframe loaders.
 * **Structural Diffing Verification**: Before declaring diagram modifications complete, you must run a structural XML validation script to verify that the parsed XML structure remains 100% identical to the working base template (excluding the translated cell text values).
 
+## ☁️ RULE: Distributed Cloud Architecture & Persistent State Management (Anti-Filesystem Writes)
+
+### 1. The Constraint
+When designing features that involve saving, modifying, or persisting user-generated state (such as inline diagram edits, custom configurations, or uploaded metadata), you **must never** write to or modify files on the local container disk in production API endpoints. Doing so violates cloud-native principles because:
+1. **Container Ephemerality**: Container filesystems are stateless and ephemeral; any local file writes will be permanently wiped on the next deploy, restart, or scale-down event.
+2. **Container Isolation (No Shared Filesystems)**: In a multi-container architecture (e.g. separate frontend and backend services), the containers run on isolated filesystems. The backend cannot read or write to files served by the frontend container.
+
+### 2. The Protocol (What to Do)
+* **Persistent Database Storage**: Always store all user-generated, mutable state in a centralized, persistent database (like PostgreSQL) or shared object storage, rather than modifying static HTML or configuration files on disk.
+* **Asynchronous Fetching & Deferred Rendering**: 
+  1. The static frontend files must load first, deferring third-party widget rendering by using custom class names (e.g. `mxgraph-deferred` instead of `mxgraph`).
+  2. Perform parallel asynchronous fetch requests to the backend API to retrieve the latest state from the database.
+  3. Update the DOM elements dynamically with the fetched state, swap the class names to the active state, and trigger the widget's rendering script manually (e.g. `window.GraphViewer.processElements()`).
+* **Container-Bundled Seeding**: For baseline data (like default diagram layouts or templates), bundle the raw assets inside the backend container's directory (e.g. `/backend`) so they are distributed. On backend startup, read these local baselines to seed the database if it is empty, providing a self-healing fallback if database rows are missing.
+* **Defensive Fallbacks**: Always write defensive try-catch fallbacks in the frontend fetch lifecycle. If the database is empty or the backend is offline, the page must gracefully fall back to the hardcoded baseline template, ensuring the UI never breaks or stays blank.
+
+
