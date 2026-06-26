@@ -3874,7 +3874,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
 
               <div id="insight-card-list" className="matrix-grid">
-                {filteredInsights.map(ins => {
+                {filteredInsights.map((ins, idx) => {
                   const isSelected = selectedInsight && selectedInsight.id === ins.id;
                   const laneClass = getFunctionBadgeClass(ins.function_lane || ins.metadata?.function_lane || 'Global Lead');
                   
@@ -3886,6 +3886,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                   return (
                     <div 
+                      id={idx === 0 ? "first-insight-card" : undefined}
                       key={ins.id}
                       onClick={() => setSelectedInsight(ins)}
                       className={`matrix-card ${isSelected ? 'selected' : ''}`}
@@ -5529,6 +5530,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <div className="select-box-group" style={{ width: '100%' }}>
                     <label style={{ fontSize: '9px', display: 'block', marginBottom: '2px' }}>Anticipated Strategic Opportunity</label>
                     <input 
+                      id="sme-opportunity-input"
                       type="text" 
                       placeholder="e.g. Rapid 1st-line sequencing standard..." 
                       value={smeOpportunity} 
@@ -5540,6 +5542,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <div className="select-box-group" style={{ width: '100%', marginTop: '6px' }}>
                     <label style={{ fontSize: '9px', display: 'block', marginBottom: '2px' }}>Anticipated Risk / Operational Barrier</label>
                     <input 
+                      id="sme-barrier-input"
                       type="text" 
                       placeholder="e.g. Clinic cold-chain logistics friction..." 
                       value={smeBarrier} 
@@ -5570,6 +5573,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     {/* Row 1: Grounded */}
                     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                       <button
+                        id="trigger-ingestion-demo-btn"
                         type="button"
                         disabled={isUploading}
                         onClick={async () => {
