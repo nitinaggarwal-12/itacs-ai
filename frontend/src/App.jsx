@@ -571,6 +571,23 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
 
+  // Sidebar Group Mapping Helper
+  const getGroupForTab = (tab) => {
+    if (['home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker'].includes(tab)) return 'command';
+    if (['matrix', 'builder', 'workshop', 'kol'].includes(tab)) return 'collaborate';
+    if (['deck', 'budget', 'roleplay'].includes(tab)) return 'deliverables';
+    if (['ingest', 'logistics', 'skills'].includes(tab)) return 'govern';
+    if (['theater'].includes(tab)) return 'showcase';
+    return 'command';
+  };
+
+  const [expandedGroup, setExpandedGroup] = useState(() => getGroupForTab(activeTab));
+
+  // Auto-expand group when activeTab changes
+  useEffect(() => {
+    setExpandedGroup(getGroupForTab(activeTab));
+  }, [activeTab]);
+
   // Effect 1: Handle browser back/forward and hash changes reactively updating the state
   useEffect(() => {
     const handleHashChange = () => {
@@ -2639,149 +2656,408 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
         {/* SCROLLABLE MIDDLE NAVIGATION LINKS DOCK */}
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', marginBottom: '16px' }} className="sidebar-scroll-container">
-          <div className="nav-group">
-          <span className="nav-group-title">Command & Interrogate</span>
-          <button 
-            id="nav-home"
-            onClick={() => setActiveTab('home')}
-            className={`sidebar-nav-btn ${activeTab === 'home' ? 'active' : ''}`}
-          >
-            <Home size={16} style={{ color: 'var(--brand-cyan)' }} /> Welcome Home
-          </button>
-          <button 
-            id="nav-cockpit"
-            onClick={() => setActiveTab('cockpit')}
-            className={`sidebar-nav-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
-          >
-            <Activity size={16} style={{ color: 'var(--brand-cyan)' }} /> Launch Cockpit
-          </button>
-          <button 
-            id="nav-cascade"
-            onClick={() => setActiveTab('cascade')}
-            className={`sidebar-nav-btn ${activeTab === 'cascade' ? 'active' : ''}`}
-          >
-            <Calendar size={16} style={{ color: 'var(--brand-cyan)' }} /> Indication Roadmap
-          </button>
-          <button 
-            id="nav-wargaming"
-            onClick={() => setActiveTab('wargaming')}
-            className={`sidebar-nav-btn ${activeTab === 'wargaming' ? 'active' : ''}`}
-          >
-            <Play size={16} style={{ color: 'var(--brand-purple)' }} /> Competitive Wargaming
-          </button>
-          <button 
-            id="nav-radar"
-            onClick={() => setActiveTab('radar')}
-            className={`sidebar-nav-btn ${activeTab === 'radar' ? 'active' : ''}`}
-          >
-            <Eye size={16} style={{ color: 'var(--brand-cyan)' }} /> Global Market Radar
-          </button>
-          <button 
-            onClick={() => setActiveTab('tracker')}
-            className={`sidebar-nav-btn ${activeTab === 'tracker' ? 'active' : ''}`}
-          >
-            <ClipboardList size={16} /> Workstream Tracker
-          </button>
-        </div>
+          
+          {/* 1. Command & Interrogate Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'command' ? null : 'command')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Command & Interrogate
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'command' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'command' ? '280px' : '0',
+              opacity: expandedGroup === 'command' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <button 
+                id="nav-home"
+                onClick={() => setActiveTab('home')}
+                className={`sidebar-nav-btn ${activeTab === 'home' ? 'active' : ''}`}
+              >
+                <Home size={16} style={{ color: 'var(--brand-cyan)' }} /> Welcome Home
+              </button>
+              <button 
+                id="nav-cockpit"
+                onClick={() => setActiveTab('cockpit')}
+                className={`sidebar-nav-btn ${activeTab === 'cockpit' ? 'active' : ''}`}
+              >
+                <Activity size={16} style={{ color: 'var(--brand-cyan)' }} /> Launch Cockpit
+              </button>
+              <button 
+                id="nav-cascade"
+                onClick={() => setActiveTab('cascade')}
+                className={`sidebar-nav-btn ${activeTab === 'cascade' ? 'active' : ''}`}
+              >
+                <Calendar size={16} style={{ color: 'var(--brand-cyan)' }} /> Indication Roadmap
+              </button>
+              <button 
+                id="nav-wargaming"
+                onClick={() => setActiveTab('wargaming')}
+                className={`sidebar-nav-btn ${activeTab === 'wargaming' ? 'active' : ''}`}
+              >
+                <Play size={16} style={{ color: 'var(--brand-purple)' }} /> Competitive Wargaming
+              </button>
+              <button 
+                id="nav-radar"
+                onClick={() => setActiveTab('radar')}
+                className={`sidebar-nav-btn ${activeTab === 'radar' ? 'active' : ''}`}
+              >
+                <Eye size={16} style={{ color: 'var(--brand-cyan)' }} /> Global Market Radar
+              </button>
+              <button 
+                onClick={() => setActiveTab('tracker')}
+                className={`sidebar-nav-btn ${activeTab === 'tracker' ? 'active' : ''}`}
+              >
+                <ClipboardList size={16} /> Workstream Tracker
+              </button>
+            </div>
+          </div>
 
-        <div className="nav-group">
-          <span className="nav-group-title">Collaborate & Validate</span>
-          <button 
-            onClick={() => setActiveTab('matrix')}
-            className={`sidebar-nav-btn ${activeTab === 'matrix' ? 'active' : ''}`}
-          >
-            <Layers size={16} /> Commercial Matrix
-          </button>
-          <button 
-            onClick={() => setActiveTab('builder')}
-            className={`sidebar-nav-btn ${activeTab === 'builder' ? 'active' : ''}`}
-          >
-            <Plus size={16} /> Imperative Builder
-          </button>
-          <button 
-            onClick={() => setActiveTab('workshop')}
-            className={`sidebar-nav-btn ${activeTab === 'workshop' ? 'active' : ''}`}
-          >
-            <Users size={16} /> Live Workshop
-          </button>
-          <button 
-            onClick={() => setActiveTab('kol')}
-            className={`sidebar-nav-btn ${activeTab === 'kol' ? 'active' : ''}`}
-          >
-            <Users size={16} style={{ color: 'var(--brand-cyan)' }} /> Stakeholder Engagement
-          </button>
-        </div>
+          {/* 2. Collaborate & Validate Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'collaborate' ? null : 'collaborate')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Collaborate & Validate
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'collaborate' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'collaborate' ? '200px' : '0',
+              opacity: expandedGroup === 'collaborate' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <button 
+                onClick={() => setActiveTab('matrix')}
+                className={`sidebar-nav-btn ${activeTab === 'matrix' ? 'active' : ''}`}
+              >
+                <Layers size={16} /> Commercial Matrix
+              </button>
+              <button 
+                onClick={() => setActiveTab('builder')}
+                className={`sidebar-nav-btn ${activeTab === 'builder' ? 'active' : ''}`}
+              >
+                <Plus size={16} /> Imperative Builder
+              </button>
+              <button 
+                onClick={() => setActiveTab('workshop')}
+                className={`sidebar-nav-btn ${activeTab === 'workshop' ? 'active' : ''}`}
+              >
+                <Users size={16} /> Live Workshop
+              </button>
+              <button 
+                onClick={() => setActiveTab('kol')}
+                className={`sidebar-nav-btn ${activeTab === 'kol' ? 'active' : ''}`}
+              >
+                <Users size={16} style={{ color: 'var(--brand-cyan)' }} /> Stakeholder Engagement
+              </button>
+            </div>
+          </div>
 
-        <div className="nav-group">
-          <span className="nav-group-title">Deliverables</span>
-          <button 
-            onClick={() => setActiveTab('deck')}
-            className={`sidebar-nav-btn ${activeTab === 'deck' ? 'active' : ''}`}
-          >
-            <FileText size={16} style={{ color: 'var(--brand-blue)' }} /> Executive Deck Studio
-          </button>
-          <button 
-            onClick={() => setActiveTab('budget')}
-            className={`sidebar-nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
-          >
-            <PieChart size={16} style={{ color: 'var(--brand-purple)' }} /> Budget Strategy
-          </button>
-          <button 
-            onClick={() => setActiveTab('roleplay')}
-            className={`sidebar-nav-btn ${activeTab === 'roleplay' ? 'active' : ''}`}
-          >
-            <BookOpen size={16} style={{ color: 'var(--brand-blue)' }} /> Execution Readiness
-          </button>
-        </div>
+          {/* 3. Deliverables Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'deliverables' ? null : 'deliverables')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Deliverables
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'deliverables' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'deliverables' ? '150px' : '0',
+              opacity: expandedGroup === 'deliverables' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <button 
+                onClick={() => setActiveTab('deck')}
+                className={`sidebar-nav-btn ${activeTab === 'deck' ? 'active' : ''}`}
+              >
+                <FileText size={16} style={{ color: 'var(--brand-blue)' }} /> Executive Deck Studio
+              </button>
+              <button 
+                onClick={() => setActiveTab('budget')}
+                className={`sidebar-nav-btn ${activeTab === 'budget' ? 'active' : ''}`}
+              >
+                <PieChart size={16} style={{ color: 'var(--brand-purple)' }} /> Budget Strategy
+              </button>
+              <button 
+                onClick={() => setActiveTab('roleplay')}
+                className={`sidebar-nav-btn ${activeTab === 'roleplay' ? 'active' : ''}`}
+              >
+                <BookOpen size={16} style={{ color: 'var(--brand-blue)' }} /> Execution Readiness
+              </button>
+            </div>
+          </div>
 
-        <div className="nav-group">
-          <span className="nav-group-title">Govern & Control</span>
-          <button 
-            onClick={() => setActiveTab('ingest')}
-            className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
-          >
-            <Database size={16} /> Ingestion Factory
-          </button>
-          <button 
-            onClick={() => setActiveTab('logistics')}
-            className={`sidebar-nav-btn ${activeTab === 'logistics' ? 'active' : ''}`}
-          >
-            <Activity size={16} style={{ color: 'var(--brand-purple)' }} /> Manufacturing Readiness
-          </button>
-          <button 
-            onClick={() => setActiveTab('skills')}
-            className={`sidebar-nav-btn ${activeTab === 'skills' ? 'active' : ''}`}
-          >
-            <Settings size={16} style={{ color: 'var(--brand-cyan)' }} /> Agent Skill Studio
-          </button>
-        </div>
+          {/* 4. Govern & Control Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'govern' ? null : 'govern')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Govern & Control
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'govern' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'govern' ? '150px' : '0',
+              opacity: expandedGroup === 'govern' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <button 
+                onClick={() => setActiveTab('ingest')}
+                className={`sidebar-nav-btn ${activeTab === 'ingest' ? 'active' : ''}`}
+              >
+                <Database size={16} /> Ingestion Factory
+              </button>
+              <button 
+                onClick={() => setActiveTab('logistics')}
+                className={`sidebar-nav-btn ${activeTab === 'logistics' ? 'active' : ''}`}
+              >
+                <Activity size={16} style={{ color: 'var(--brand-purple)' }} /> Manufacturing Readiness
+              </button>
+              <button 
+                onClick={() => setActiveTab('skills')}
+                className={`sidebar-nav-btn ${activeTab === 'skills' ? 'active' : ''}`}
+              >
+                <Settings size={16} style={{ color: 'var(--brand-cyan)' }} /> Agent Skill Studio
+              </button>
+            </div>
+          </div>
 
-        <div className="nav-group">
-          <span className="nav-group-title">Demo & Showcase</span>
-          <button 
-            onClick={() => setActiveTab('theater')}
-            className={`sidebar-nav-btn ${activeTab === 'theater' ? 'active' : ''}`}
-            style={{ 
-              background: activeTab === 'theater' ? 'rgba(99, 102, 241, 0.12)' : 'transparent', 
-              border: activeTab === 'theater' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent'
-            }}
-          >
-            <Play size={16} style={{ color: 'var(--brand-purple)' }} fill={activeTab === 'theater' ? 'var(--brand-purple)' : 'none'} /> Simulation Theater
-          </button>
-        </div>
+          {/* 5. Demo & Showcase Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'showcase' ? null : 'showcase')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Demo & Showcase
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'showcase' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'showcase' ? '60px' : '0',
+              opacity: expandedGroup === 'showcase' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <button 
+                onClick={() => setActiveTab('theater')}
+                className={`sidebar-nav-btn ${activeTab === 'theater' ? 'active' : ''}`}
+                style={{ 
+                  background: activeTab === 'theater' ? 'rgba(99, 102, 241, 0.12)' : 'transparent', 
+                  border: activeTab === 'theater' ? '1px solid rgba(99, 102, 241, 0.2)' : '1px solid transparent'
+                }}
+              >
+                <Play size={16} style={{ color: 'var(--brand-purple)' }} fill={activeTab === 'theater' ? 'var(--brand-purple)' : 'none'} /> Simulation Theater
+              </button>
+            </div>
+          </div>
 
-        <div className="nav-group">
-          <span className="nav-group-title">Documentation</span>
-          <a 
-            href="/user_guide.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sidebar-nav-btn"
-            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
-          >
-            <BookOpen size={16} style={{ color: 'var(--brand-cyan)' }} /> Platform User Guide
-          </a>
-        </div>
+          {/* 6. Documentation Group */}
+          <div className="nav-group" style={{ marginBottom: '16px' }}>
+            <div 
+              onClick={() => setExpandedGroup(prev => prev === 'documentation' ? null : 'documentation')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                borderRadius: '6px',
+                userSelect: 'none',
+                transition: 'all 0.2s ease',
+                marginBottom: '6px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <span className="nav-group-title" style={{ margin: 0, fontSize: '10.5px', flex: 1 }}>
+                Documentation
+              </span>
+              <ChevronRight 
+                size={13} 
+                style={{ 
+                  transition: 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  transform: expandedGroup === 'documentation' ? 'rotate(90deg)' : 'rotate(0deg)',
+                  color: 'var(--text-muted)'
+                }} 
+              />
+            </div>
+            
+            <div style={{
+              maxHeight: expandedGroup === 'documentation' ? '60px' : '0',
+              opacity: expandedGroup === 'documentation' ? 1 : 0,
+              overflow: 'hidden',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
+            }}>
+              <a 
+                href="/user_guide.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sidebar-nav-btn"
+                style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <BookOpen size={16} style={{ color: 'var(--brand-cyan)' }} /> Platform User Guide
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* THEME TOGGLE DOCK */}
