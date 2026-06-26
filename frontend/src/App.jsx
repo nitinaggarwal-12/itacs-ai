@@ -1659,11 +1659,14 @@ export default function App() {
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    await uploadFileObject(file);
+  };
 
+  const uploadFileObject = async (file, scenarioOverride, oppOverride, barrOverride) => {
     setIsUploading(true);
     setActiveStep(1);
     setUploadProgress(10);
-    
+
     const sessionId = "sess_" + Math.random().toString(36).substring(2, 10);
     setIngestionSession(sessionId);
 
@@ -1674,9 +1677,9 @@ export default function App() {
     formData.append("asset", uploadAsset);
     formData.append("tumor", uploadTumor);
     formData.append("sub_tumor", uploadSubTumor);
-    formData.append("sme_opportunity", smeOpportunity);
-    formData.append("sme_barrier", smeBarrier);
-    formData.append("scenario_type", simulationScenario);
+    formData.append("sme_opportunity", oppOverride !== undefined ? oppOverride : smeOpportunity);
+    formData.append("sme_barrier", barrOverride !== undefined ? barrOverride : smeBarrier);
+    formData.append("scenario_type", scenarioOverride !== undefined ? scenarioOverride : simulationScenario);
 
     const interval = setInterval(() => {
       setUploadProgress(prev => {
@@ -1725,7 +1728,7 @@ export default function App() {
         setActiveStep(6);
         const fallbackNew = {
           id: "ins_" + Math.random().toString(36).substring(2, 9),
-          opportunity_space: `Strategic Sequencing in ${uploadTumor}`,
+          opportunity_space: oppOverride !== undefined ? oppOverride : `Strategic Sequencing in ${uploadTumor}`,
           csf: `Overcoming local access barriers for ${uploadAsset} combination therapy`,
           insight: `Oncology clinics in rural regions report a high willingness to adopt ${uploadAsset} but lack specialized pharmacy storage or freezing protocols.`,
           rationale: `Storage restrictions will delay drug administration by 14 days, leading to patient drop-out or shift to competitive pre-mixed therapies.`,
@@ -1744,12 +1747,17 @@ export default function App() {
           requires_human_review: false,
           is_quarantined: false,
           is_validated: false,
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          sme_opportunity: oppOverride !== undefined ? oppOverride : smeOpportunity,
+          sme_barrier: barrOverride !== undefined ? barrOverride : smeBarrier,
+          evidence_score: 0.92,
+          fact_check_status: "Passed"
         };
         setInsights(prev => [fallbackNew, ...prev]);
         setSelectedInsight(fallbackNew);
         setActiveTab("matrix");
         setDetailTab("framework");
+        setTourIngestionCompleted(true);
       }, 4000);
     }
   };
@@ -5069,6 +5077,99 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <Upload size={24} style={{ color: '#818cf8', margin: '0 auto' }} />
                   <p>Drag & drop strategic presentations</p>
                   <span>Supports PPTX, PDF, PNG (Vision PixelRAG)</span>
+                </div>
+
+                {/* Sample Files Selection (Phase 1 Premium UX!) */}
+                <div style={{ marginTop: '14px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--glass-border)', borderRadius: '10px', padding: '14px' }}>
+                  <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--brand-cyan)', display: 'block', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Or click a sample slide deck to ingest:
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <button
+                      type="button"
+                      disabled={isUploading}
+                      onClick={async () => {
+                        setSimulationScenario("grounded");
+                        setSmeOpportunity("Automated regional cold-chain hub logistics.");
+                        setSmeBarrier("Community clinic ultra-cold storage gaps.");
+                        const mockFile = new File(["Grounded Logistics mock content"], "KEYNOTE-940_Logistics_Brief.pptx", { type: "text/plain" });
+                        await uploadFileObject(mockFile, "grounded", "Automated regional cold-chain hub logistics.", "Community clinic ultra-cold storage gaps.");
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--glass-border)',
+                        borderRadius: '6px',
+                        padding: '8px 12px',
+                        fontSize: '11px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        color: 'var(--text-primary)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span style={{ color: 'var(--brand-cyan)' }}>📊 KEYNOTE-940_Logistics_Brief.pptx</span>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>grounded</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isUploading}
+                      onClick={async () => {
+                        setSimulationScenario("ambitious");
+                        setSmeOpportunity("Instantaneous market adoption & 100% first-year share.");
+                        setSmeBarrier("None. Zero clinic friction expected.");
+                        const mockFile = new File(["Ambitious Forecast mock content"], "V940_Ambitious_Forecast.pptx", { type: "text/plain" });
+                        await uploadFileObject(mockFile, "ambitious", "Instantaneous market adoption & 100% first-year share.", "None. Zero clinic friction expected.");
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--glass-border)',
+                        borderRadius: '6px',
+                        padding: '8px 12px',
+                        fontSize: '11px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        color: 'var(--text-primary)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span style={{ color: '#f59e0b' }}>📈 V940_Ambitious_Forecast.pptx</span>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>ambitious</span>
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isUploading}
+                      onClick={async () => {
+                        setSimulationScenario("promotion");
+                        setSmeOpportunity("Direct-to-consumer digital promotion to bypass clinics.");
+                        setSmeBarrier("High competitor pricing pressure.");
+                        const mockFile = new File(["DTC Promotion mock content"], "DTC_Consumer_Ad_Campaign.pdf", { type: "text/plain" });
+                        await uploadFileObject(mockFile, "promotion", "Direct-to-consumer digital promotion to bypass clinics.", "High competitor pricing pressure.");
+                      }}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px solid var(--glass-border)',
+                        borderRadius: '6px',
+                        padding: '8px 12px',
+                        fontSize: '11px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        color: 'var(--text-primary)',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span style={{ color: '#ef4444' }}>📄 DTC_Consumer_Ad_Campaign.pdf</span>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>dtc-promo</span>
+                    </button>
+                  </div>
                 </div>
 
                 {isUploading && (
@@ -8932,6 +9033,16 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         position: 'absolute',
                         top: highlightStyle.top + 100,
                         left: highlightStyle.left - 320 - 16,
+                        zIndex: 10000,
+                        width: '320px',
+                        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                      };
+                    }
+                    if (step.targetId === 'ingestion-dropzone') {
+                      return {
+                        position: 'absolute',
+                        top: highlightStyle.top - 240 - 16, // Float beautifully ABOVE the dropzone box
+                        left: highlightStyle.left + (highlightStyle.width / 2) - 160,
                         zIndex: 10000,
                         width: '320px',
                         transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
