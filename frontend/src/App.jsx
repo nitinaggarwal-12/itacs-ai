@@ -9660,7 +9660,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (isInDrawer) {
                       return {
                         position: 'absolute',
-                        top: highlightStyle.top + 100,
+                        top: Math.max(80, Math.min(highlightStyle.top - 20, window.innerHeight - 260)),
                         left: highlightStyle.left - 320 - 16,
                         zIndex: 10000,
                         width: '320px',
