@@ -2317,6 +2317,15 @@ def list_imperatives(db: Session = Depends(get_db)):
 @app.get("/api/diagnose-seed")
 def diagnose_seed(db: Session = Depends(get_db)):
     try:
+        # 1. Get count and details before inserts
+        count_before = db.execute(text("SELECT COUNT(*) FROM strategic_imperatives")).scalar()
+        rows_before = [dict(row._mapping) for row in db.execute(text("SELECT id, title, is_archived, resource_tier FROM strategic_imperatives")).all()]
+        
+        # Convert UUIDs to string for JSON serialization
+        for r in rows_before:
+            r['id'] = str(r['id'])
+            
+        # 2. Run inserts
         db.execute(text("""
             INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks) VALUES
             ('a0e8d8d3-575d-4f30-8c22-79919f2f8111', 
@@ -2350,7 +2359,20 @@ def diagnose_seed(db: Session = Depends(get_db)):
             ON CONFLICT (id) DO NOTHING;
         """))
         db.commit()
-        return {"status": "success", "message": "Database seeded successfully!"}
+        
+        # 3. Get count and details after inserts
+        count_after = db.execute(text("SELECT COUNT(*) FROM strategic_imperatives")).scalar()
+        rows_after = [dict(row._mapping) for row in db.execute(text("SELECT id, title, is_archived, resource_tier FROM strategic_imperatives")).all()]
+        for r in rows_after:
+            r['id'] = str(r['id'])
+            
+        return {
+            "status": "success",
+            "count_before": count_before,
+            "rows_before": rows_before,
+            "count_after": count_after,
+            "rows_after": rows_after
+        }
     except Exception as e:
         return {"status": "error", "error_message": str(e)}
 
