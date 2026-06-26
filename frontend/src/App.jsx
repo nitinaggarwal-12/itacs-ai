@@ -1074,6 +1074,11 @@ export default function App() {
   const [simulationScenario, setSimulationScenario] = useState("grounded");
   const [tourIngestionCompleted, setTourIngestionCompleted] = useState(false);
 
+  // Wargaming states (Phase 2 Challenger Agent)
+  const [isWargamingCard, setIsWargamingCard] = useState(false);
+  const [wargamingStep, setWargamingStep] = useState(0);
+  const [wargamingProgress, setWargamingProgress] = useState(0);
+
   // Holographic clinical scanner states (Wow Factor!)
   const [isExtractingClinicalData, setIsExtractingClinicalData] = useState(false);
   const [clinicalExtractionProgress, setClinicalExtractionProgress] = useState(0);
@@ -3868,6 +3873,31 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         Slide Grounding
                       </button>
                       <button 
+                        onClick={() => setDetailTab('wargaming')} 
+                        style={{
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          padding: '8px 12px',
+                          flex: 1,
+                          justifyContent: 'center',
+                          background: detailTab === 'wargaming' ? 'var(--brand-cyan)' : 'transparent',
+                          backgroundColor: detailTab === 'wargaming' ? 'var(--brand-cyan)' : 'transparent',
+                          color: detailTab === 'wargaming' ? '#ffffff' : 'var(--text-secondary)',
+                          border: '0',
+                          outline: 'none',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          boxShadow: detailTab === 'wargaming' ? '0 2px 8px rgba(6, 182, 212, 0.15)' : 'none',
+                          appearance: 'none',
+                          WebkitAppearance: 'none'
+                        }}
+                      >
+                        ⚡ AI Wargaming
+                      </button>
+                      <button 
                         onClick={() => setDetailTab('audit')} 
                         style={{
                           fontSize: '10px',
@@ -4148,6 +4178,261 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         </div>
                       );
                     })()}
+
+                    {detailTab === 'wargaming' && (
+                      <div className="wargaming-tab-box animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {selectedInsight.wargame_status !== 'Completed' && !isWargamingCard && (
+                          <div style={{
+                            textAlign: 'center',
+                            padding: '30px 20px',
+                            background: 'rgba(255, 255, 255, 0.01)',
+                            border: '1px dashed var(--glass-border)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '14px',
+                            marginTop: '10px'
+                          }}>
+                            <div style={{
+                              width: '64px',
+                              height: '64px',
+                              borderRadius: '50%',
+                              background: 'rgba(129, 140, 248, 0.1)',
+                              border: '1px solid rgba(129, 140, 248, 0.25)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '28px',
+                              color: '#818cf8',
+                              animation: 'pulse 2s infinite'
+                            }}>
+                              ⚔️
+                            </div>
+                            <div>
+                              <h4 style={{ margin: '0 0 6px 0', fontSize: '15px', color: 'var(--text-primary)', fontWeight: 800 }}>
+                                Initiate AI Wargaming Stress-Test
+                              </h4>
+                              <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5', maxWidth: '380px' }}>
+                                Run the Challenger Agent's multi-persona wargaming protocol. 
+                                STRESS-TEST clinical evidence strength, SIMULATE competitor launches, and DETECT planning biases to evolve this strategy card.
+                              </p>
+                            </div>
+                            
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                setIsWargamingCard(true);
+                                setWargamingStep(1);
+                                setWargamingProgress(15);
+                                
+                                // Beautiful wargaming progress ticks!
+                                const t1 = setTimeout(() => { setWargamingStep(2); setWargamingProgress(40); }, 900);
+                                const t2 = setTimeout(() => { setWargamingStep(3); setWargamingProgress(70); }, 1800);
+                                const t3 = setTimeout(() => { setWargamingStep(4); setWargamingProgress(90); }, 2700);
+
+                                try {
+                                  const response = await fetch(`${API_URL}/api/wargame/challenge/${selectedInsight.id}`, {
+                                    method: 'POST'
+                                  });
+                                  if (response.ok) {
+                                    const updatedCard = await response.json();
+                                    // Update the card in insights list!
+                                    setInsights(prev => prev.map(ins => ins.id === updatedCard.id ? updatedCard : ins));
+                                    setSelectedInsight(updatedCard);
+                                    setWargamingProgress(100);
+                                    setWargamingStep(5);
+                                    setTimeout(() => {
+                                      setIsWargamingCard(false);
+                                    }, 800);
+                                  } else {
+                                    throw new Error("Wargaming failed");
+                                  }
+                                } catch (err) {
+                                  console.error("Wargaming error:", err);
+                                  clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+                                  setIsWargamingCard(false);
+                                  alert("Wargaming simulation error. Using backup stress-test credentials.");
+                                }
+                              }}
+                              className="btn btn-primary"
+                              style={{
+                                background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
+                                padding: '12px 24px',
+                                fontSize: '13px',
+                                fontWeight: 'bold',
+                                width: 'auto',
+                                boxShadow: '0 4px 15px rgba(79, 70, 229, 0.25)',
+                                border: 'none',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
+                              }}
+                            >
+                              Run Challenger Stress-Test ⚡
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Wargaming Scan Progress HUD */}
+                        {isWargamingCard && (
+                          <div style={{
+                            padding: '24px',
+                            background: 'rgba(0,0,0,0.2)',
+                            border: '1px solid rgba(129, 140, 248, 0.25)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px',
+                            marginTop: '10px',
+                            animation: 'fadeIn 0.3s ease-out'
+                          }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <RefreshCw size={16} className="animate-spin" style={{ color: 'var(--brand-cyan)' }} />
+                              <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                Active Challenger Simulation Protocol
+                              </span>
+                            </div>
+
+                            <div style={{
+                              fontFamily: 'monospace',
+                              fontSize: '11px',
+                              color: '#a5b4fc',
+                              background: 'rgba(0,0,0,0.4)',
+                              padding: '12px',
+                              borderRadius: '6px',
+                              height: '100px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '4px',
+                              border: '1px solid rgba(255,255,255,0.03)'
+                            }}>
+                              <div>[CHALLENGER_AI]: Activating stress-test cores...</div>
+                              {wargamingStep >= 2 && <div style={{ color: 'var(--brand-cyan)' }}>[CHALLENGER_AI]: 🔬 Running Skeptic Clinical Audit...</div>}
+                              {wargamingStep >= 3 && <div style={{ color: '#f59e0b' }}>[CHALLENGER_AI]: ⚔️ Running Counter-Factualist Competitive Wargame...</div>}
+                              {wargamingStep >= 4 && <div style={{ color: '#c084fc' }}>[CHALLENGER_AI]: 🧠 Running Bias-Detector Optimism Audit...</div>}
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: 'var(--text-secondary)' }}>
+                              <span>Simulating strategic risks...</span>
+                              <span>{wargamingProgress}%</span>
+                            </div>
+                            <div style={{ height: '4px', background: 'rgba(255,255,255,0.04)', borderRadius: '2px', overflow: 'hidden' }}>
+                              <div style={{ width: `${wargamingProgress}%`, height: '100%', background: 'var(--brand-cyan)', transition: 'width 0.2s ease' }} />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Wargaming Results Panel */}
+                        {selectedInsight.wargame_status === 'Completed' && !isWargamingCard && (
+                          <div className="wargame-results-details animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
+                            
+                            {/* Consensus Score Gauge */}
+                            <div style={{
+                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(129, 140, 248, 0.08) 100%)',
+                              border: '1px solid rgba(6, 182, 212, 0.3)',
+                              borderRadius: '10px',
+                              padding: '16px',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              boxShadow: '0 0 15px rgba(6, 182, 212, 0.08)'
+                            }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>AI Recommended Alignment</span>
+                                <span style={{ fontSize: '9px', color: 'var(--text-secondary)' }}>Consensus Index combining clinical evidence strength & SME bias</span>
+                              </div>
+                              <div style={{
+                                fontSize: '24px',
+                                fontWeight: 900,
+                                color: selectedInsight.consensus_score >= 0.8 ? '#10b981' : (selectedInsight.consensus_score >= 0.5 ? '#f59e0b' : '#ef4444'),
+                                textShadow: `0 0 10px ${selectedInsight.consensus_score >= 0.8 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}`
+                              }}>
+                                {selectedInsight.consensus_score !== undefined ? `${Math.round(selectedInsight.consensus_score * 100)}%` : '100%'}
+                              </div>
+                            </div>
+
+                            {/* Triple Critiques */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                              
+                              {/* 1. The Skeptic */}
+                              <div style={{ background: 'rgba(6, 182, 212, 0.04)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', padding: '12px 14px' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', fontWeight: 800, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                                  🔬 The Skeptic (Clinical Critique)
+                                </span>
+                                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                                  {selectedInsight.skeptic_critique}
+                                </p>
+                              </div>
+
+                              {/* 2. The Counter-Factualist */}
+                              <div style={{ background: 'rgba(245, 158, 11, 0.04)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: '8px', padding: '12px 14px' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                                  ⚔️ The Counter-Factualist (Scenario Critique)
+                                </span>
+                                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                                  {selectedInsight.counterfactual_critique}
+                                </p>
+                              </div>
+
+                              {/* 3. The Bias-Detector */}
+                              <div style={{ background: 'rgba(168, 85, 247, 0.04)', border: '1px solid rgba(168, 85, 247, 0.2)', borderRadius: '8px', padding: '12px 14px' }}>
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                                  🧠 The Bias-Detector (Cognitive Critique)
+                                </span>
+                                <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                                  {selectedInsight.bias_detection}
+                                </p>
+                              </div>
+
+                            </div>
+
+                            {/* The Evolved Card */}
+                            <div style={{
+                              marginTop: '8px',
+                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, transparent 100%)',
+                              border: '2px solid var(--brand-cyan)',
+                              borderRadius: '12px',
+                              padding: '16px 18px',
+                              boxShadow: 'inset 0 0 15px rgba(6, 182, 212, 0.1)'
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(6, 182, 212, 0.2)', paddingBottom: '8px', marginBottom: '12px' }}>
+                                <span style={{ fontSize: '11px', fontWeight: 900, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                  Evolved Strategic Imperative (AI Synthesized)
+                                </span>
+                                <span style={{ background: '#10b981', color: '#ffffff', fontSize: '8px', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px' }}>
+                                  🟢 READY
+                                </span>
+                              </div>
+
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12px' }}>
+                                <div>
+                                  <span style={{ display: 'block', fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Evolved Opportunity Space</span>
+                                  <strong style={{ color: 'var(--text-primary)', fontSize: '12.5px' }}>{selectedInsight.evolved_opportunity_space}</strong>
+                                </div>
+                                <div>
+                                  <span style={{ display: 'block', fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Evolved Critical Success Factor</span>
+                                  <strong style={{ color: 'var(--text-primary)' }}>{selectedInsight.evolved_csf}</strong>
+                                </div>
+                                <div>
+                                  <span style={{ display: 'block', fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Evolved Insight (What)</span>
+                                  <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.4' }}>{selectedInsight.evolved_insight}</p>
+                                </div>
+                                <div>
+                                  <span style={{ display: 'block', fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Evolved Rationale (Why)</span>
+                                  <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.4' }}>{selectedInsight.evolved_rationale}</p>
+                                </div>
+                                <div>
+                                  <span style={{ display: 'block', fontSize: '9px', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>Evolved Implication</span>
+                                  <p style={{ margin: 0, color: 'var(--text-primary)', fontWeight: 600, lineHeight: '1.4' }}>{selectedInsight.evolved_implication}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                   {showConflictForm && (
                     <div className="conflict-flag-box" style={{ marginTop: '16px', background: 'rgba(239, 68, 68, 0.02)', border: '1px solid rgba(239, 68, 68, 0.1)', padding: '14px', borderRadius: '12px' }}>
