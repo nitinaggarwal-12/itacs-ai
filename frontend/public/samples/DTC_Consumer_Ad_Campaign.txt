@@ -3,8 +3,11 @@ MERCK & CO. - ITACS LAUNCH READINESS BRIEF
 ========================================================================
 ASSET: V940 (mRNA Personalized Cancer Vaccine)
 TRIAL: KEYNOTE-940 (Stage III/IV Melanoma Adjuvant)
+SCENARIO: Direct-to-Consumer (DTC) digital promotion strategy
 ========================================================================
-Slide 12: Medical Affairs Dissemination Strategy
+Slide 12: DTC Patient Engagement & Demand Generation
 ------------------------------------------------------------------------
-"We must communicate trial results to physicians."
+"We will launch an aggressive digital ad campaign directly targeting melanoma patients on social platforms."
+
+"Ads will encourage patients to ask their doctors for V940 by name, bypassing institutional clinic channels to accelerate commercial velocity."
 ========================================================================
