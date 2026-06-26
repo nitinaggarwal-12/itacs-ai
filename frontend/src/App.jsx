@@ -7969,6 +7969,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   return (
                     <div
                       key={slide.index}
+                      className={`slide-outline-item ${isActive ? 'active' : ''}`}
+                      data-slide-index={slide.index}
                       onClick={() => setActivePreviewSlide(slide.index)}
                       style={{
                         padding: '12px',
@@ -8778,7 +8780,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Agent Skill Studio
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                   Visual dictionary management for the Compliance Supervisor agent. Add or remove custom forbidden vocabulary.
                 </p>
               </div>
@@ -8795,14 +8797,19 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     style={{
                       padding: '8px 12px',
                       borderRadius: '8px',
-                      background: 'rgba(239,68,68,0.02)',
-                      border: '1px solid rgba(239,68,68,0.08)',
+                      background: theme === 'light' ? 'rgba(239, 68, 68, 0.05)' : 'rgba(239,68,68,0.02)',
+                      border: theme === 'light' ? '1px solid rgba(239, 68, 68, 0.15)' : '1px solid rgba(239,68,68,0.08)',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center'
                     }}
                   >
-                    <span style={{ fontSize: '11px', color: 'white', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                    <span style={{ 
+                      fontSize: '11px', 
+                      color: theme === 'light' ? '#b91c1c' : '#fca5a5', 
+                      fontWeight: 'bold', 
+                      fontFamily: 'monospace' 
+                    }}>
                       {word}
                     </span>
                     
@@ -8815,9 +8822,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       style={{
                         background: 'transparent',
                         border: 'none',
-                        color: 'rgba(255,255,255,0.4)',
+                        color: theme === 'light' ? '#991b1b' : 'rgba(255,255,255,0.6)',
                         cursor: 'pointer',
-                        fontSize: '11px'
+                        fontSize: '10.5px',
+                        fontWeight: 'bold'
                       }}
                     >
                       ✕ Remove
@@ -8835,12 +8843,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   onChange={(e) => setNewWordInput(e.target.value)}
                   style={{
                     flex: 1,
-                    background: 'rgba(0,0,0,0.3)',
-                    border: '1px solid rgba(255,255,255,0.06)',
+                    background: theme === 'light' ? '#f8fafc' : 'rgba(0,0,0,0.3)',
+                    border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.06)',
                     borderRadius: '8px',
                     padding: '8px 12px',
                     fontSize: '11px',
-                    color: 'white'
+                    color: theme === 'light' ? '#0f172a' : 'white',
+                    outline: 'none'
                   }}
                 />
                 <button
@@ -8901,11 +8910,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     fontSize: '11.5px',
                     color: 'white',
                     resize: 'none',
-                    lineHeight: '1.6'
+                    lineHeight: '1.6',
+                    outline: 'none'
                   }}
                 />
 
-                {/* Validation Response Panel */}
+                {/* Validation Response Panel (Healed Contrast!) */}
                 {testBenchResult && (
                   <div className="animate-scale-in" style={{
                     padding: '16px 20px',
@@ -8916,10 +8926,23 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     flexDirection: 'column',
                     gap: '6px'
                   }}>
-                    <span style={{ fontSize: '9px', fontWeight: 'bold', color: testBenchResult.status === 'pass' ? '#10b981' : '#ef4444', textTransform: 'uppercase' }}>
+                    <span style={{ 
+                      fontSize: '9.5px', 
+                      fontWeight: 'bold', 
+                      color: testBenchResult.status === 'pass' ? 'var(--color-success)' : 'var(--color-error)', 
+                      textTransform: 'uppercase' 
+                    }}>
                       {testBenchResult.status === 'pass' ? '✓ Compliance Verification Passed' : '⚠️ Guardrail Breach Intercepted'}
                     </span>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'white', lineHeight: '1.4' }}>
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '11px', 
+                      color: testBenchResult.status === 'pass'
+                        ? (theme === 'light' ? '#065f46' : '#a7f3d0')
+                        : (theme === 'light' ? '#991b1b' : '#fca5a5'), 
+                      lineHeight: '1.4',
+                      fontWeight: 'bold'
+                    }}>
                       {testBenchResult.message}
                     </p>
                   </div>
@@ -8957,7 +8980,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
                     fontWeight: 'bold',
                     fontSize: '11.5px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    border: 'none'
                   }}
                 >
                   Test Compliance Guardrail Rule
