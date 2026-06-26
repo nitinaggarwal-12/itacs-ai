@@ -801,6 +801,7 @@ export default function App() {
   const [tourStep, setTourStep] = useState(0);
   const [highlightStyle, setHighlightStyle] = useState({ top: 0, left: 0, width: 0, height: 0, opacity: 0 });
   const [hasDraggedTimeline, setHasDraggedTimeline] = useState(false);
+  const [activeTourWorkflow, setActiveTourWorkflow] = useState(1);
 
   // Premium Cockpit Educational States
   const [playbookTab, setPlaybookTab] = useState('input');
@@ -852,7 +853,7 @@ export default function App() {
     }
   }, [warTimeline, tourActive, tourStep]);
 
-  const tourSteps = [
+  const tourStepsW1 = [
     {
       targetId: null,
       title: "Launch Intelligence Tour 🚀",
@@ -908,6 +909,53 @@ export default function App() {
       action: () => {}
     }
   ];
+
+  const tourStepsW2 = [
+    {
+      targetId: null,
+      title: "Governance & Ingestion Tour 🛡️",
+      description: "Welcome to the ITACS Governance and Trust Portal! In this mission, you will learn how to feed SME expectations into our ingestion pipeline, trigger visual layout analysis, and audit the results against the Fact-Check Agent. Let's begin!",
+      buttonText: "Start Ingestion Mission ➔",
+      action: (setActiveTab) => setActiveTab('home')
+    },
+    {
+      targetId: "sme-expectations-panel",
+      title: "SME Strategic Expectations 🧠",
+      description: "This is the SME Expectations portal. Here, you enter your anticipated opportunities and operational risks. Our Merge & Evolve Agent will automatically blend these with the clinical facts from the slides!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => setActiveTab('home')
+    },
+    {
+      targetId: "ingestion-dropzone",
+      title: "Trigger Ingestion ⚡",
+      description: "Use this dropzone to upload slide presentations, or click 'Trigger Ingestion Demo' below to ingest a mock clinical trial slide. This will run the multi-agent trust loop in the background!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => setActiveTab('home')
+    },
+    {
+      targetId: "insight-card-list",
+      title: "Evidence Score Badging 📊",
+      description: "Ingestion complete! Look at the cards in your strategy list. They now display a cyan 'Evidence Score' representing the strength of the clinical evidence extracted by our agents!",
+      buttonText: "Select Card ➔",
+      action: (setActiveTab) => setActiveTab('matrix')
+    },
+    {
+      targetId: "card-details-panel",
+      title: "Trust & Auditing Panel 🛡️",
+      description: "Select a card to view its ITACS Validation details. Here, you will see the 'Strength of Evidence' meter, the 'Fact-Check Agent' alert (which flags hallucinations), and the 'Merged SME Expectations' showing the co-evolution of your thoughts and clinical facts!",
+      buttonText: "Complete Mission 🏅",
+      action: (setActiveTab) => setActiveTab('matrix')
+    },
+    {
+      targetId: null,
+      title: "Governance Certified! 🎉🏆",
+      description: "Incredible work! You have successfully completed Mission 2: Governance & Ingestion. You are now officially certified as a Trust & Compliance Officer on the ITACS platform! Your Governance Badge has been awarded.",
+      buttonText: "Complete Mission 🎓",
+      action: () => {}
+    }
+  ];
+
+  const tourSteps = activeTourWorkflow === 1 ? tourStepsW1 : tourStepsW2;
 
   useEffect(() => {
     if (!tourActive) return;
@@ -2680,7 +2728,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>ITACS End-to-End Onboarding Missions</h3>
                 </div>
                 <span style={{ fontSize: '11px', color: 'var(--brand-cyan)', background: 'rgba(6, 182, 212, 0.08)', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
-                  Global Progress: {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)'}
+                  Global Progress: {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? '50% Complete (2/4 Badges)' : (localStorage.getItem('itacs_tour_completed_w1') === 'true' ? '25% Complete (1/4 Badges)' : '0% Complete (0/4 Badges)')}
                 </span>
               </div>
 
@@ -2733,13 +2781,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </button>
                 </div>
 
-                {/* Mission 2 Station (Locked) */}
+                {/* Mission 2 Station (Dynamic) */}
                 <div style={{
                   background: 'var(--bg-primary)',
-                  border: '1px solid var(--glass-border)',
+                  border: `1px solid ${localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'rgba(16, 185, 129, 0.3)' : (localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--brand-cyan)' : 'var(--glass-border)')}`,
                   borderRadius: '12px',
                   padding: '20px',
-                  opacity: 0.5,
+                  opacity: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 1 : 0.5,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -2747,17 +2795,44 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 }}>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 2</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)', background: 'rgba(6, 182, 212, 0.08)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 2</span>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? '#10b981' : (localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)') }}>
+                        {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'Completed 🏅' : (localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'Active 🚀' : 'Locked 🔒')}
+                      </span>
                     </div>
-                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Insight Grounding & Gating</h4>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-                      Audit statements, verify slide OCR bounding boxes, verify Postgres ledgers, and approve memory bank promotions.
+                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--text-primary)' : 'var(--text-muted)' }}>Governance & Ingestion</h4>
+                    <p style={{ margin: 0, fontSize: '11px', color: localStorage.getItem('itacs_tour_completed_w1') === 'true' ? 'var(--text-secondary)' : 'var(--text-muted)', lineHeight: '1.4' }}>
+                      Audit statements, verify slide OCR bounding boxes, check Postgres trust ledgers, and merge SME expectations.
                     </p>
                   </div>
-                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
-                    Complete Mission 1 to Unlock
-                  </button>
+                  {localStorage.getItem('itacs_tour_completed_w1') === 'true' ? (
+                    <button 
+                      onClick={() => {
+                        setActiveTourWorkflow(2);
+                        setTourStep(0);
+                        setTourActive(true);
+                      }}
+                      style={{
+                        width: '100%',
+                        background: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'transparent' : 'var(--brand-cyan)',
+                        border: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? '1px solid var(--glass-border)' : 'none',
+                        color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--text-primary)' : '#ffffff',
+                        borderRadius: '6px',
+                        padding: '8px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        marginTop: '12px'
+                      }}
+                    >
+                      {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'Replay Mission 🔄' : 'Start Mission 🚀'}
+                    </button>
+                  ) : (
+                    <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                      Complete Mission 1 to Unlock
+                    </button>
+                  )}
                 </div>
 
                 {/* Mission 3 Station (Locked) */}
@@ -3573,7 +3648,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </div>
               </div>
 
-              <div className="matrix-grid">
+              <div id="insight-card-list" className="matrix-grid">
                 {filteredInsights.map(ins => {
                   const isSelected = selectedInsight && selectedInsight.id === ins.id;
                   const laneClass = getFunctionBadgeClass(ins.metadata.function_lane);
@@ -3640,7 +3715,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
             {/* Right Column: Source Verification & Details Drawer */}
             {selectedInsight && (
-              <div className="matrix-right-drawer">
+              <div id="card-details-panel" className="matrix-right-drawer">
                 <div className="glass-card" style={{ height: '100%' }}>
                   <div className="drawer-header" style={{ marginBottom: '10px' }}>
                     <div className="drawer-header-title">
@@ -4867,7 +4942,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </div>
 
                 {/* SME Initial Expectations Inputs (Phase 1) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
+                <div id="sme-expectations-panel" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px', background: 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '6px', border: '1px solid var(--glass-border)' }}>
                   <h4 style={{ margin: '0 0 4px 0', fontSize: '10px', fontWeight: 'bold', color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SME Initial Expectations</h4>
                   <div className="select-box-group" style={{ width: '100%' }}>
                     <label style={{ fontSize: '9px', display: 'block', marginBottom: '2px' }}>Anticipated Strategic Opportunity</label>
@@ -4893,7 +4968,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </div>
                 </div>
 
-                <div className="dropzone-box">
+                <div id="ingestion-dropzone" className="dropzone-box">
                   <input 
                     type="file" 
                     onChange={handleFileUpload} 
@@ -8846,7 +8921,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   if (tourStep < tourSteps.length - 1) {
                     setTourStep(prev => prev + 1);
                   } else {
-                    localStorage.setItem('itacs_tour_completed_w1', 'true');
+                    localStorage.setItem(`itacs_tour_completed_w${activeTourWorkflow}`, 'true');
                     setTourActive(false);
                     // Redirect back to cockpit so the reload lands them home!
                     window.location.hash = 'home';
