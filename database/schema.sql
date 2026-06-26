@@ -3,6 +3,8 @@ CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Drop tables if they exist (for clean initialization)
+DROP TABLE IF EXISTS tactical_actions CASCADE;
+DROP TABLE IF EXISTS strategic_imperatives CASCADE;
 DROP TABLE IF EXISTS cross_functional_conflicts CASCADE;
 DROP TABLE IF EXISTS agent_audit_trail CASCADE;
 DROP TABLE IF EXISTS enterprise_memory CASCADE;
@@ -95,3 +97,35 @@ CREATE INDEX idx_audit_step ON agent_audit_trail(step_index);
 
 -- HNSW Vector Index for fast semantic similarity search (using cosine distance)
 CREATE INDEX idx_em_embedding_cosine ON enterprise_memory USING hnsw (embedding vector_cosine_ops);
+
+-- 4. Table: strategic_imperatives (Slide 23 - Strategic Kanban Board initiatives)
+CREATE TABLE strategic_imperatives (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(50) NOT NULL, -- 'clinical' | 'payer' | 'diagnostics'
+    priority VARCHAR(20) NOT NULL DEFAULT 'medium', -- 'high' | 'medium' | 'low'
+    resource_tier VARCHAR(20) NOT NULL DEFAULT 'medium', -- 'low' | 'medium' | 'high'
+    trade_offs TEXT,
+    risks TEXT,
+    is_archived BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. Table: tactical_actions (Slide 23 - Concrete tactical actions linked to imperatives and validated cards)
+CREATE TABLE tactical_actions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    imperative_id UUID REFERENCES strategic_imperatives(id) ON DELETE CASCADE,
+    action_text TEXT NOT NULL,
+    owner_role VARCHAR(100) NOT NULL, -- e.g. 'Medical Affairs Lead', 'CI Director'
+    strength_of_evidence DECIMAL(3,2) DEFAULT 1.00, -- 0.00 to 1.00
+    evidence_card_id UUID REFERENCES enterprise_memory(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for strategic imperatives & tactical actions
+CREATE INDEX idx_si_category ON strategic_imperatives(category);
+CREATE INDEX idx_si_resource ON strategic_imperatives(resource_tier);
+CREATE INDEX idx_ta_imperative ON tactical_actions(imperative_id);
+CREATE INDEX idx_ta_evidence ON tactical_actions(evidence_card_id);

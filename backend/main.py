@@ -255,6 +255,33 @@ class AgentEvaluationResult(Base):
     safety_gating_score = Column(Numeric(5, 2), default=1.00)
     simulation_notes = Column(Text, nullable=True)
 
+class StrategicImperative(Base):
+    __tablename__ = "strategic_imperatives"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=False)
+    category = Column(String(50), nullable=False) # 'clinical' | 'payer' | 'diagnostics'
+    priority = Column(String(20), nullable=False, default='medium') # 'high' | 'medium' | 'low'
+    resource_tier = Column(String(20), nullable=False, default='medium') # 'low' | 'medium' | 'high'
+    trade_offs = Column(Text, nullable=True)
+    risks = Column(Text, nullable=True)
+    is_archived = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
+
+class TacticalAction(Base):
+    __tablename__ = "tactical_actions"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
+    imperative_id = Column(UUID(as_uuid=True), ForeignKey("strategic_imperatives.id", ondelete="CASCADE"), nullable=False)
+    action_text = Column(Text, nullable=False)
+    owner_role = Column(String(100), nullable=False) # e.g. 'Medical Affairs Lead', 'CI Director'
+    strength_of_evidence = Column(Numeric(3, 2), default=1.00) # 0.00 to 1.00
+    evidence_card_id = Column(UUID(as_uuid=True), ForeignKey("enterprise_memory.id", ondelete="SET NULL"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
+
+
 # Dependency to get db session
 def get_db():
     db = SessionLocal()
@@ -296,6 +323,30 @@ class InsightUpdatePayload(BaseModel):
     quotes: Optional[List[QuoteSchema]] = None
     slide_reference: Optional[str] = None
     is_validated: Optional[bool] = None
+
+class ImperativeCreatePayload(BaseModel):
+    title: str
+    description: str
+    category: str
+    priority: Optional[str] = 'medium'
+    resource_tier: Optional[str] = 'medium'
+    trade_offs: Optional[str] = None
+    risks: Optional[str] = None
+
+class ImperativeUpdatePayload(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = None
+    priority: Optional[str] = None
+    resource_tier: Optional[str] = None
+    trade_offs: Optional[str] = None
+    risks: Optional[str] = None
+
+class ActionCreatePayload(BaseModel):
+    action_text: str
+    owner_role: str
+    strength_of_evidence: Optional[float] = 1.00
+    evidence_card_id: Optional[str] = None
 
 class ChatMessage(BaseModel):
     role: str # 'user' or 'assistant'
@@ -2221,6 +2272,183 @@ def update_insight(insight_id: str, payload: InsightUpdatePayload, request: Requ
     )
     
     return {"status": "success", "insight_id": str(insight.id)}
+
+@app.get("/api/imperatives")
+def list_imperatives(db: Session = Depends(get_db)):
+    """Lists all strategic imperatives with their tactical actions."""
+    imperatives = db.query(StrategicImperative).filter(StrategicImperative.is_archived == False).order_by(StrategicImperative.created_at.desc()).all()
+    res = []
+    for imp in imperatives:
+        actions = db.query(TacticalAction).filter(TacticalAction.imperative_id == imp.id).all()
+        actions_list = [
+            {
+                "id": str(act.id),
+                "imperative_id": str(act.imperative_id),
+                "action_text": act.action_text,
+                "owner_role": act.owner_role,
+                "strength_of_evidence": float(act.strength_of_evidence),
+                "evidence_card_id": str(act.evidence_card_id) if act.evidence_card_id else None,
+                "created_at": act.created_at.isoformat()
+            } for act in actions
+        ]
+        res.append({
+            "id": str(imp.id),
+            "title": imp.title,
+            "description": imp.description,
+            "category": imp.category,
+            "priority": imp.priority,
+            "resource_tier": imp.resource_tier,
+            "trade_offs": imp.trade_offs,
+            "risks": imp.risks,
+            "is_archived": imp.is_archived,
+            "created_at": imp.created_at.isoformat(),
+            "actions": actions_list
+        })
+    return res
+
+@app.post("/api/imperatives")
+def create_imperative(payload: ImperativeCreatePayload, db: Session = Depends(get_db)):
+    """Creates a new strategic imperative."""
+    imp = StrategicImperative(
+        title=payload.title,
+        description=payload.description,
+        category=payload.category,
+        priority=payload.priority,
+        resource_tier=payload.resource_tier,
+        trade_offs=payload.trade_offs,
+        risks=payload.risks
+    )
+    db.add(imp)
+    db.commit()
+    db.refresh(imp)
+    return {
+        "status": "success",
+        "imperative": {
+            "id": str(imp.id),
+            "title": imp.title,
+            "description": imp.description,
+            "category": imp.category,
+            "priority": imp.priority,
+            "resource_tier": imp.resource_tier,
+            "trade_offs": imp.trade_offs,
+            "risks": imp.risks,
+            "is_archived": imp.is_archived,
+            "created_at": imp.created_at.isoformat(),
+            "actions": []
+        }
+    }
+
+@app.patch("/api/imperatives/{id}")
+def update_imperative(id: str, payload: ImperativeUpdatePayload, db: Session = Depends(get_db)):
+    """Updates an existing strategic imperative (e.g., column dragging or options editing)."""
+    from uuid import UUID as pyUUID
+    try:
+        imp_uuid = pyUUID(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid imperative ID format.")
+
+    imp = db.query(StrategicImperative).filter(StrategicImperative.id == imp_uuid).first()
+    if not imp:
+        raise HTTPException(status_code=404, detail="Strategic imperative not found")
+
+    update_data = payload.model_dump(exclude_unset=True)
+    for k, v in update_data.items():
+        setattr(imp, k, v)
+
+    imp.updated_at = datetime.datetime.now(datetime.timezone.utc)
+    db.commit()
+    db.refresh(imp)
+
+    actions = db.query(TacticalAction).filter(TacticalAction.imperative_id == imp.id).all()
+    actions_list = [
+        {
+            "id": str(act.id),
+            "imperative_id": str(act.imperative_id),
+            "action_text": act.action_text,
+            "owner_role": act.owner_role,
+            "strength_of_evidence": float(act.strength_of_evidence),
+            "evidence_card_id": str(act.evidence_card_id) if act.evidence_card_id else None,
+            "created_at": act.created_at.isoformat()
+        } for act in actions
+    ]
+
+    return {
+        "status": "success",
+        "imperative": {
+            "id": str(imp.id),
+            "title": imp.title,
+            "description": imp.description,
+            "category": imp.category,
+            "priority": imp.priority,
+            "resource_tier": imp.resource_tier,
+            "trade_offs": imp.trade_offs,
+            "risks": imp.risks,
+            "is_archived": imp.is_archived,
+            "created_at": imp.created_at.isoformat(),
+            "actions": actions_list
+        }
+    }
+
+@app.post("/api/imperatives/{id}/actions")
+def create_tactical_action(id: str, payload: ActionCreatePayload, db: Session = Depends(get_db)):
+    """Adds a tactical action to a strategic imperative."""
+    from uuid import UUID as pyUUID
+    try:
+        imp_uuid = pyUUID(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid imperative ID format.")
+
+    imp = db.query(StrategicImperative).filter(StrategicImperative.id == imp_uuid).first()
+    if not imp:
+        raise HTTPException(status_code=404, detail="Strategic imperative not found")
+
+    card_uuid = None
+    if payload.evidence_card_id:
+        try:
+            card_uuid = pyUUID(payload.evidence_card_id)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid evidence card ID format.")
+
+    act = TacticalAction(
+        imperative_id=imp_uuid,
+        action_text=payload.action_text,
+        owner_role=payload.owner_role,
+        strength_of_evidence=payload.strength_of_evidence,
+        evidence_card_id=card_uuid
+    )
+    db.add(act)
+    db.commit()
+    db.refresh(act)
+
+    return {
+        "status": "success",
+        "action": {
+            "id": str(act.id),
+            "imperative_id": str(act.imperative_id),
+            "action_text": act.action_text,
+            "owner_role": act.owner_role,
+            "strength_of_evidence": float(act.strength_of_evidence),
+            "evidence_card_id": str(act.evidence_card_id) if act.evidence_card_id else None,
+            "created_at": act.created_at.isoformat()
+        }
+    }
+
+@app.delete("/api/imperatives/{id}")
+def delete_imperative(id: str, db: Session = Depends(get_db)):
+    """Archives/deletes a strategic imperative."""
+    from uuid import UUID as pyUUID
+    try:
+        imp_uuid = pyUUID(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid imperative ID format.")
+
+    imp = db.query(StrategicImperative).filter(StrategicImperative.id == imp_uuid).first()
+    if not imp:
+        raise HTTPException(status_code=404, detail="Strategic imperative not found")
+
+    db.delete(imp)
+    db.commit()
+    return {"status": "success", "message": f"Strategic imperative {id} deleted successfully."}
 
 @app.get("/api/conflicts")
 def list_conflicts(db: Session = Depends(get_db)):
