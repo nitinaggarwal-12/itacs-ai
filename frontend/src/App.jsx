@@ -9969,6 +9969,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </div>
 
                 <button
+                  id="close-scanner-modal-btn"
                   type="button"
                   onClick={() => setIsExtractingClinicalData(false)}
                   className="btn btn-primary"
