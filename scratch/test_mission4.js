@@ -124,7 +124,6 @@ const path = require('path');
     // Physically click the spotlighted formulate button using DOM-level click to bypass overlays!
     await page.$eval('#add-imperative-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for modal slide-in
-    await page.screenshot({ path: path.join(screenshotDir, 'debug_modal_open.png') });
 
     // Fill inputs
     console.log("✏️ Typing Title and Description...");
