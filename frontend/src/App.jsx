@@ -1,7 +1,7 @@
 // ITACS Enterprise Insights Platform - Automated Webhook Trigger V1.6.5
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, 
+  Upload, FileText, CheckCircle2, AlertTriangle, MessageSquare, Download,
   Settings, Layers, RefreshCw, Send, ShieldAlert, Check, 
   HelpCircle, Eye, ChevronRight, Edit3, UserCheck, Sparkles, Database, History, Play, X,
   Plus, Server, Activity, BarChart2, Calendar, ClipboardList, MoveRight, Users, Sun, Moon,
@@ -5085,90 +5085,167 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     Or click a sample slide deck to ingest:
                   </span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <button
-                      type="button"
-                      disabled={isUploading}
-                      onClick={async () => {
-                        setSimulationScenario("grounded");
-                        setSmeOpportunity("Automated regional cold-chain hub logistics.");
-                        setSmeBarrier("Community clinic ultra-cold storage gaps.");
-                        const mockFile = new File(["Grounded Logistics mock content"], "KEYNOTE-940_Logistics_Brief.pptx", { type: "text/plain" });
-                        await uploadFileObject(mockFile, "grounded", "Automated regional cold-chain hub logistics.", "Community clinic ultra-cold storage gaps.");
-                      }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid var(--glass-border)',
-                        borderRadius: '6px',
-                        padding: '8px 12px',
-                        fontSize: '11px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        cursor: isUploading ? 'not-allowed' : 'pointer',
-                        color: 'var(--text-primary)',
-                        transition: 'all 0.2s ease',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <span style={{ color: 'var(--brand-cyan)' }}>📊 KEYNOTE-940_Logistics_Brief.pptx</span>
-                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>grounded</span>
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isUploading}
-                      onClick={async () => {
-                        setSimulationScenario("ambitious");
-                        setSmeOpportunity("Instantaneous market adoption & 100% first-year share.");
-                        setSmeBarrier("None. Zero clinic friction expected.");
-                        const mockFile = new File(["Ambitious Forecast mock content"], "V940_Ambitious_Forecast.pptx", { type: "text/plain" });
-                        await uploadFileObject(mockFile, "ambitious", "Instantaneous market adoption & 100% first-year share.", "None. Zero clinic friction expected.");
-                      }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid var(--glass-border)',
-                        borderRadius: '6px',
-                        padding: '8px 12px',
-                        fontSize: '11px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        cursor: isUploading ? 'not-allowed' : 'pointer',
-                        color: 'var(--text-primary)',
-                        transition: 'all 0.2s ease',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <span style={{ color: '#f59e0b' }}>📈 V940_Ambitious_Forecast.pptx</span>
-                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>ambitious</span>
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isUploading}
-                      onClick={async () => {
-                        setSimulationScenario("promotion");
-                        setSmeOpportunity("Direct-to-consumer digital promotion to bypass clinics.");
-                        setSmeBarrier("High competitor pricing pressure.");
-                        const mockFile = new File(["DTC Promotion mock content"], "DTC_Consumer_Ad_Campaign.pdf", { type: "text/plain" });
-                        await uploadFileObject(mockFile, "promotion", "Direct-to-consumer digital promotion to bypass clinics.", "High competitor pricing pressure.");
-                      }}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        border: '1px solid var(--glass-border)',
-                        borderRadius: '6px',
-                        padding: '8px 12px',
-                        fontSize: '11px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        cursor: isUploading ? 'not-allowed' : 'pointer',
-                        color: 'var(--text-primary)',
-                        transition: 'all 0.2s ease',
-                        textAlign: 'left'
-                      }}
-                    >
-                      <span style={{ color: '#ef4444' }}>📄 DTC_Consumer_Ad_Campaign.pdf</span>
-                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>dtc-promo</span>
-                    </button>
+                    {/* Row 1: Grounded */}
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <button
+                        type="button"
+                        disabled={isUploading}
+                        onClick={async () => {
+                          setSimulationScenario("grounded");
+                          setSmeOpportunity("Automated regional cold-chain hub logistics.");
+                          setSmeBarrier("Community clinic ultra-cold storage gaps.");
+                          const mockFile = new File(["Grounded Logistics mock content"], "KEYNOTE-940_Logistics_Brief.txt", { type: "text/plain" });
+                          await uploadFileObject(mockFile, "grounded", "Automated regional cold-chain hub logistics.", "Community clinic ultra-cold storage gaps.");
+                        }}
+                        style={{
+                          flex: 1,
+                          fontSize: '10.5px',
+                          fontWeight: 'bold',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          border: '1px solid var(--glass-border)',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          color: 'var(--text-primary)',
+                          cursor: isUploading ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <span style={{ color: 'var(--brand-cyan)' }}>📊 KEYNOTE-940_Logistics_Brief.txt</span>
+                        <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 4px', borderRadius: '4px' }}>grounded</span>
+                      </button>
+                      <a
+                        href="/samples/KEYNOTE-940_Logistics_Brief.txt"
+                        download="KEYNOTE-940_Logistics_Brief.txt"
+                        title="Download raw slide file"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          border: '1px solid var(--glass-border)',
+                          borderRadius: '6px',
+                          padding: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'var(--brand-cyan)',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Download size={14} />
+                      </a>
+                    </div>
+
+                    {/* Row 2: Ambitious */}
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <button
+                        type="button"
+                        disabled={isUploading}
+                        onClick={async () => {
+                          setSimulationScenario("ambitious");
+                          setSmeOpportunity("Instantaneous market adoption & 100% first-year share.");
+                          setSmeBarrier("None. Zero clinic friction expected.");
+                          const mockFile = new File(["Ambitious Forecast mock content"], "V940_Ambitious_Forecast.txt", { type: "text/plain" });
+                          await uploadFileObject(mockFile, "ambitious", "Instantaneous market adoption & 100% first-year share.", "None. Zero clinic friction expected.");
+                        }}
+                        style={{
+                          flex: 1,
+                          fontSize: '10.5px',
+                          fontWeight: 'bold',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          border: '1px solid var(--glass-border)',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          color: 'var(--text-primary)',
+                          cursor: isUploading ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <span style={{ color: '#f59e0b' }}>📈 V940_Ambitious_Forecast.txt</span>
+                        <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 4px', borderRadius: '4px' }}>ambitious</span>
+                      </button>
+                      <a
+                        href="/samples/V940_Ambitious_Forecast.txt"
+                        download="V940_Ambitious_Forecast.txt"
+                        title="Download raw slide file"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          border: '1px solid var(--glass-border)',
+                          borderRadius: '6px',
+                          padding: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#f59e0b',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Download size={14} />
+                      </a>
+                    </div>
+
+                    {/* Row 3: DTC Promo */}
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      <button
+                        type="button"
+                        disabled={isUploading}
+                        onClick={async () => {
+                          setSimulationScenario("promotion");
+                          setSmeOpportunity("Direct-to-consumer digital promotion to bypass clinics.");
+                          setSmeBarrier("High competitor pricing pressure.");
+                          const mockFile = new File(["DTC Promotion mock content"], "DTC_Consumer_Ad_Campaign.txt", { type: "text/plain" });
+                          await uploadFileObject(mockFile, "promotion", "Direct-to-consumer digital promotion to bypass clinics.", "High competitor pricing pressure.");
+                        }}
+                        style={{
+                          flex: 1,
+                          fontSize: '10.5px',
+                          fontWeight: 'bold',
+                          padding: '8px 12px',
+                          borderRadius: '6px',
+                          border: '1px solid var(--glass-border)',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          color: 'var(--text-primary)',
+                          cursor: isUploading ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'left'
+                        }}
+                      >
+                        <span style={{ color: '#ef4444' }}>📄 DTC_Consumer_Ad_Campaign.txt</span>
+                        <span style={{ fontSize: '8px', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 4px', borderRadius: '4px' }}>dtc-promo</span>
+                      </button>
+                      <a
+                        href="/samples/DTC_Consumer_Ad_Campaign.txt"
+                        download="DTC_Consumer_Ad_Campaign.txt"
+                        title="Download raw slide file"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          border: '1px solid var(--glass-border)',
+                          borderRadius: '6px',
+                          padding: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#ef4444',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Download size={14} />
+                      </a>
+                    </div>
                   </div>
                 </div>
 
