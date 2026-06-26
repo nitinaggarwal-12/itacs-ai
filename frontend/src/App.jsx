@@ -10295,6 +10295,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return true;
                     if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return true;
                   }
+                  if (activeTourWorkflow === 4) {
+                    if (tourStep === 1 && imperatives.length === 0) return true;
+                    if (tourStep === 3 && (!isImperativeDrawerOpen || !selectedImperative)) return true;
+                    if (tourStep === 4 && (!selectedImperative || !selectedImperative.trade_offs || !selectedImperative.trade_offs.trim() || !selectedImperative.risks || !selectedImperative.risks.trim())) return true;
+                    if (tourStep === 5 && (!selectedImperative || !selectedImperative.actions || selectedImperative.actions.length === 0)) return true;
+                  }
                   return false;
                 })()}
                 onClick={() => {
@@ -10333,6 +10339,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 'not-allowed';
                       if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return 'not-allowed';
                     }
+                    if (activeTourWorkflow === 4) {
+                      if (tourStep === 1 && imperatives.length === 0) return 'not-allowed';
+                      if (tourStep === 3 && (!isImperativeDrawerOpen || !selectedImperative)) return 'not-allowed';
+                      if (tourStep === 4 && (!selectedImperative || !selectedImperative.trade_offs || !selectedImperative.trade_offs.trim() || !selectedImperative.risks || !selectedImperative.risks.trim())) return 'not-allowed';
+                      if (tourStep === 5 && (!selectedImperative || !selectedImperative.actions || selectedImperative.actions.length === 0)) return 'not-allowed';
+                    }
                     return 'pointer';
                   })(),
                   opacity: (() => {
@@ -10351,6 +10363,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       if (tourStep === 2 && detailTab !== 'wargaming') return 0.4;
                       if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return 0.4;
                       if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return 0.4;
+                    }
+                    if (activeTourWorkflow === 4) {
+                      if (tourStep === 1 && imperatives.length === 0) return 0.4;
+                      if (tourStep === 3 && (!isImperativeDrawerOpen || !selectedImperative)) return 0.4;
+                      if (tourStep === 4 && (!selectedImperative || !selectedImperative.trade_offs || !selectedImperative.trade_offs.trim() || !selectedImperative.risks || !selectedImperative.risks.trim())) return 0.4;
+                      if (tourStep === 5 && (!selectedImperative || !selectedImperative.actions || selectedImperative.actions.length === 0)) return 0.4;
                     }
                     return 1;
                   })(),
@@ -10377,6 +10395,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     if (tourStep === 2 && detailTab !== 'wargaming') return "Open Wargaming tab... 🔒";
                     if (tourStep === 3 && (!selectedInsight || selectedInsight.wargame_status !== 'Completed')) return "Run Stress-Test... 🔒";
                     if (tourStep === 6 && (!selectedInsight || !selectedInsight.is_validated)) return "Approve Strategy... 🔒";
+                  }
+                  if (activeTourWorkflow === 4) {
+                    if (tourStep === 1 && imperatives.length === 0) return "Formulate Strategy... 🔒";
+                    if (tourStep === 3 && (!isImperativeDrawerOpen || !selectedImperative)) return "Open Workshop... 🔒";
+                    if (tourStep === 4 && (!selectedImperative || !selectedImperative.trade_offs || !selectedImperative.trade_offs.trim() || !selectedImperative.risks || !selectedImperative.risks.trim())) return "Catalog Implications... 🔒";
+                    if (tourStep === 5 && (!selectedImperative || !selectedImperative.actions || selectedImperative.actions.length === 0)) return "Add Tactical Action... 🔒";
                   }
                   return tourSteps[tourStep].buttonText;
                 })()}
