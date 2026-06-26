@@ -9654,7 +9654,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       || step.targetId === 'wargame-results-hud'
                       || step.targetId === 'wargame-consensus-gauge'
                       || step.targetId === 'wargame-critiques-row'
-                      || step.targetId === 'wargame-evolved-card';
+                      || step.targetId === 'wargame-evolved-card'
+                      || step.targetId === 'approve-to-memory-btn';
 
                     if (isInDrawer) {
                       return {
