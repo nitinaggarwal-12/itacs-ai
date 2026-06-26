@@ -1074,6 +1074,11 @@ export default function App() {
   const [simulationScenario, setSimulationScenario] = useState("grounded");
   const [tourIngestionCompleted, setTourIngestionCompleted] = useState(false);
 
+  // Holographic clinical scanner states (Wow Factor!)
+  const [isExtractingClinicalData, setIsExtractingClinicalData] = useState(false);
+  const [clinicalExtractionProgress, setClinicalExtractionProgress] = useState(0);
+  const [clinicalExtractionComplete, setClinicalExtractionComplete] = useState(false);
+
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [filterLane, setFilterLane] = useState("All Functions");
@@ -3623,6 +3628,67 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           ))}
                         </ul>
                       </div>
+
+                      {/* HTA Negotiation Simulator (Wow Factor!) */}
+                      {selectedRegionFilter === 'EU' && (
+                        <div style={{
+                          marginTop: '20px',
+                          background: 'rgba(0,0,0,0.3)',
+                          border: '1px solid rgba(245, 158, 11, 0.3)',
+                          borderRadius: '10px',
+                          padding: '18px',
+                          boxShadow: '0 0 15px rgba(245, 158, 11, 0.05)',
+                          animation: 'fadeIn 0.4s ease-out'
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', animation: 'pulse 1s infinite' }} />
+                            <span style={{ fontSize: '10px', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              Live HTA Reimbursement Negotiation Simulator
+                            </span>
+                          </div>
+                          
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontFamily: 'sans-serif', fontSize: '12px' }}>
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                              <span style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px', height: '18px', fontSize: '9px' }}>G-BA (GERMANY)</span>
+                              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                                "The clinical benefit of V940 is recognized, but the €125,000 annual cost is unacceptable given clinic cold-chain refrigerator gaps."
+                              </p>
+                            </div>
+                            
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                              <span style={{ background: 'rgba(6,182,212,0.15)', color: 'var(--brand-cyan)', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px', height: '18px', fontSize: '9px' }}>ITACS AGENT (AI)</span>
+                              <p style={{ margin: 0, color: 'var(--text-primary)', lineHeight: '1.4', fontWeight: 600 }}>
+                                "Merck proposes a risk-sharing agreement: Merck will subsidize -70C freezer installations in 120 regional clinics in exchange for a guaranteed €12,500/cycle price point."
+                              </p>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                              <span style={{ background: 'rgba(245,158,11,0.15)', color: '#f59e0b', fontWeight: 'bold', padding: '2px 6px', borderRadius: '4px', height: '18px', fontSize: '9px' }}>G-BA (GERMANY)</span>
+                              <p style={{ margin: 0, color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                                "Proposal accepted. Reimbursement approved under Amber status. Strategic Access unlocked."
+                              </p>
+                            </div>
+
+                            <div style={{
+                              marginTop: '8px',
+                              background: 'rgba(16,185,129,0.1)',
+                              border: '1px solid rgba(16,185,129,0.3)',
+                              borderRadius: '6px',
+                              padding: '8px 12px',
+                              fontSize: '11px',
+                              color: '#6ee7b7',
+                              fontWeight: 'bold',
+                              textAlign: 'center',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '6px'
+                            }}>
+                              🏆 NEGOTIATION CONSENSUS REACHED: Germany Market Entry Secured
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                   </div>
@@ -6588,6 +6654,53 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   </div>
                 </div>
               </div>
+
+              {/* Dynamic Wargaming Threat HUD (Wow Factor!) */}
+              <div style={{ 
+                marginTop: '24px', 
+                background: warTimeline <= 3 
+                  ? 'linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.02) 100%)' 
+                  : warTimeline >= 8 
+                    ? 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.02) 100%)'
+                    : 'linear-gradient(135deg, rgba(79,70,229,0.1) 0%, rgba(79,70,229,0.02) 100%)',
+                border: warTimeline <= 3 
+                  ? '1px solid rgba(239,68,68,0.4)' 
+                  : warTimeline >= 8 
+                    ? '1px solid rgba(16,185,129,0.4)'
+                    : '1px solid rgba(79,70,229,0.4)',
+                borderRadius: '10px', 
+                padding: '16px 20px',
+                boxShadow: warTimeline <= 3 
+                  ? '0 0 20px rgba(239,68,68,0.1)' 
+                  : warTimeline >= 8 
+                    ? '0 0 20px rgba(16,185,129,0.1)'
+                    : '0 0 20px rgba(79,70,229,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                animation: 'pulse 2s infinite',
+                transition: 'all 0.4s ease'
+              }}>
+                <div style={{
+                  background: warTimeline <= 3 ? 'rgba(239,68,68,0.2)' : warTimeline >= 8 ? 'rgba(16,185,129,0.2)' : 'rgba(79,70,229,0.2)',
+                  width: '44px', height: '44px', borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '20px',
+                  boxShadow: 'inset 0 0 10px rgba(255,255,255,0.1)'
+                }}>
+                  {warTimeline <= 3 ? '🚨' : warTimeline >= 8 ? '🏆' : '📡'}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ margin: '0 0 4px 0', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', color: warTimeline <= 3 ? '#fca5a5' : warTimeline >= 8 ? '#6ee7b7' : '#a5b4fc' }}>
+                    ITACS COMPETITIVE HUD: {warTimeline <= 3 ? 'CRITICAL RISK ALERT' : warTimeline >= 8 ? 'STRATEGIC ADVANTAGE SECURED' : 'MARKET CONTEST ACTIVE'}
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.4', fontWeight: 600 }}>
+                    {warTimeline <= 3 && `Competitor X FDA approval is imminent in ${warTimeline} Months! Merck V940 first-line market share projection crashes by -${(4 - warTimeline) * 15}%. Operational window severely compromised!`}
+                    {warTimeline >= 8 && `Competitor FDA approval delayed to ${warTimeline} Months! Merck secures a ${(warTimeline - 7) * 12}% monopoly on first-line adjuvant patient sequencing. Projected Revenue: +$${(warTimeline - 7) * 45}M USD!`}
+                    {warTimeline > 3 && warTimeline < 8 && `Competitor FDA approval set for ${warTimeline} Months. Head-to-head market launch. Expected market share split: 52% Merck, 48% Competitor X. Monitor HTA pricing.`}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Bottom row: Impact Heatmap Matrix */}
@@ -7736,7 +7849,23 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       {/* Clinical Readout Phase */}
                       <div 
                         id="gantt-readout-melanoma"
-                        onClick={() => setSelectedRoadmapMilestone('melanoma_readout')}
+                        onClick={() => {
+                          setSelectedRoadmapMilestone('melanoma_readout');
+                          if (tourActive && tourStep === 3) {
+                            setIsExtractingClinicalData(true);
+                            setClinicalExtractionProgress(0);
+                            setClinicalExtractionComplete(false);
+                            let progress = 0;
+                            const interval = setInterval(() => {
+                              progress += 4;
+                              setClinicalExtractionProgress(progress);
+                              if (progress >= 100) {
+                                clearInterval(interval);
+                                setClinicalExtractionComplete(true);
+                              }
+                            }, 80);
+                          }
+                        }}
                         style={{
                           position: 'absolute',
                           left: '10%', width: '25%',
@@ -9295,6 +9424,108 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             </div>
           </div>
         </>
+      )}
+
+      {/* Holographic Clinical Extraction Scanner Modal (Wow Factor!) */}
+      {isExtractingClinicalData && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(5, 5, 10, 0.85)', backdropFilter: 'blur(8px)',
+          zIndex: 11000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          animation: 'fadeIn 0.3s ease-out'
+        }}>
+          <div className="glass-card" style={{
+            width: '500px', padding: '30px', border: '1px solid var(--brand-cyan)',
+            boxShadow: '0 0 40px rgba(6, 182, 212, 0.25)', borderRadius: '16px',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            {/* Scanline effect */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '4px',
+              background: 'linear-gradient(to right, transparent, var(--brand-cyan), transparent)',
+              animation: 'scan 2s linear infinite',
+              boxShadow: '0 0 10px var(--brand-cyan)'
+            }} />
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <Sparkles size={24} style={{ color: 'var(--brand-cyan)', animation: 'pulse 1.5s infinite' }} />
+              <h3 style={{ margin: 0, color: 'var(--brand-cyan)', fontSize: '18px', fontWeight: 800, letterSpacing: '1px' }}>
+                CLINICAL DATA EXTRACTION
+              </h3>
+            </div>
+
+            {!clinicalExtractionComplete ? (
+              <div>
+                <div style={{
+                  fontFamily: 'monospace', fontSize: '11px', color: '#67e8f9',
+                  background: 'rgba(0,0,0,0.4)', padding: '15px', borderRadius: '8px',
+                  height: '140px', overflowY: 'hidden', border: '1px solid rgba(6, 182, 212, 0.15)',
+                  marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '4px'
+                }}>
+                  <div>[SYS_AGENT_INGEST]: Initiating clinical coordinate reader...</div>
+                  {clinicalExtractionProgress > 20 && <div>[SYS_AGENT_INGEST]: Scanning KEYNOTE-940 Adjuvant Melanoma cohort...</div>}
+                  {clinicalExtractionProgress > 45 && <div style={{ color: 'var(--brand-cyan)' }}>[SYS_AGENT_INGEST]: Extracting Hazard Ratio (HR)... Mapped: 0.58</div>}
+                  {clinicalExtractionProgress > 70 && <div style={{ color: 'var(--brand-cyan)' }}>[SYS_AGENT_INGEST]: Extracting Recurrence-Free Survival (RFS)... Mapped: 78.4%</div>}
+                  {clinicalExtractionProgress > 90 && <div style={{ color: '#10b981' }}>[SYS_AGENT_INGEST]: Running Cross-Trial HEOR comparison... COMPLETED.</div>}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  <span>PixelRAG Coordinate Scan in progress...</span>
+                  <span>{clinicalExtractionProgress}%</span>
+                </div>
+                <div style={{ height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${clinicalExtractionProgress}%`, height: '100%', background: 'linear-gradient(90deg, #06b6d4 0%, #06b6d4 100%)', transition: 'width 0.1s ease' }} />
+                </div>
+              </div>
+            ) : (
+              <div style={{ animation: 'scaleUp 0.3s ease-out' }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(6,182,212,0.02) 100%)',
+                  border: '2px solid var(--brand-cyan)', borderRadius: '10px', padding: '20px',
+                  boxShadow: 'inset 0 0 20px rgba(6,182,212,0.15)', marginBottom: '20px',
+                  textAlign: 'center', position: 'relative'
+                }}>
+                  <div style={{
+                    position: 'absolute', top: '10px', right: '10px',
+                    background: 'rgba(16, 185, 129, 0.15)', color: '#10b981',
+                    fontSize: '9px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '4px',
+                    border: '1px solid #10b981'
+                  }}>
+                    🟢 EXTRACTED & PASSED
+                  </div>
+                  <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    Clinical Trial Dossier
+                  </span>
+                  <h4 style={{ margin: '6px 0 12px 0', fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    KEYNOTE-940 (Adjuvant Melanoma)
+                  </h4>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginTop: '10px' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                      <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>HAZARD RATIO</span>
+                      <strong style={{ fontSize: '18px', color: 'var(--brand-cyan)' }}>0.58</strong>
+                      <span style={{ fontSize: '8px', color: '#10b981', display: 'block' }}>(Highly Significant)</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateRows: 'auto auto', gap: '4px', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                      <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>24-MO RFS RATE</span>
+                      <strong style={{ fontSize: '18px', color: 'var(--brand-cyan)' }}>78.4%</strong>
+                      <span style={{ fontSize: '8px', color: 'var(--text-muted)', display: 'block' }}>(vs 62.4% control)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsExtractingClinicalData(false)}
+                  className="btn btn-primary"
+                  style={{ width: '100%', padding: '12px', background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)', fontWeight: 'bold' }}
+                >
+                  Load Strategic Briefings ➔
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
     </div>
