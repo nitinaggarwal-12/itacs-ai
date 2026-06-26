@@ -2769,6 +2769,19 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             <Play size={16} style={{ color: 'var(--brand-purple)' }} fill={activeTab === 'theater' ? 'var(--brand-purple)' : 'none'} /> Simulation Theater
           </button>
         </div>
+
+        <div className="nav-group">
+          <span className="nav-group-title">Documentation</span>
+          <a 
+            href="/user_guide.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="sidebar-nav-btn"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <BookOpen size={16} style={{ color: 'var(--brand-cyan)' }} /> Platform User Guide
+          </a>
+        </div>
         </div>
 
         {/* THEME TOGGLE DOCK */}

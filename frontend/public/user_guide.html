@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITACS Enterprise - User Guide & Workflow Verification</title>
+    <!-- Google Fonts: Outfit & Inter for premium, modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0B0F19;         /* Dark navy background */
+            --bg-card: #151D30;         /* Glassmorphic dark card background */
+            --bg-sub: #0F1626;          /* Deep navy accents */
+            --color-primary: #06B6D4;   /* Brand Cyan */
+            --color-primary-hover: #0891B2;
+            --color-primary-glow: rgba(6, 182, 212, 0.08);
+            --color-text-main: #F8FAFC; /* Crisp white-slate text */
+            --color-text-muted: #94A3B8; /* Slate grey muted text */
+            --border-color: rgba(255, 255, 255, 0.05); /* Soft translucent borders */
+            --accent-purple: #8B5CF6;   /* Brand Indigo */
+            --accent-green: #10B981;    /* Success green */
+            --accent-amber: #F59E0B;    /* Warning amber */
+            --accent-red: #EF4444;      /* Alert red */
+            --font-outfit: 'Outfit', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--color-text-main);
+            font-family: var(--font-inter);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* HEADER STYLING */
+        .guide-header {
+            background: linear-gradient(180deg, #0F1626 0%, #0B0F19 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guide-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .logo-badge {
+            background: var(--color-primary-glow);
+            color: var(--color-primary);
+            font-family: var(--font-outfit);
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            font-size: 0.68rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--color-primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .guide-header h1 {
+            font-family: var(--font-outfit);
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 0 0.4rem 0;
+            background: linear-gradient(to right, #FFFFFF, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .guide-header p {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* CONTAINER & LAYOUT */
+        .guide-container {
+            max-width: 1600px;
+            width: 94%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2.5rem;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .guide-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-family: var(--font-outfit);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-primary);
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.65rem 1rem;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-menu a:hover {
+            color: var(--color-text-main);
+            background: rgba(6, 182, 212, 0.04);
+            border-color: rgba(6, 182, 212, 0.1);
+        }
+
+        .sidebar-menu a.active {
+            color: white;
+            background: var(--color-primary);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+        }
+
+        /* CONTENT AREAS */
+        .guide-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .guide-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            scroll-margin-top: 2rem;
+        }
+
+        .guide-section h2 {
+            font-family: var(--font-outfit);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--color-text-main);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        /* WORKFLOW STEPS */
+        .workflow-timeline {
+            margin: 2rem 0;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .workflow-timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-step {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-badge-num {
+            position: absolute;
+            left: -40px;
+            top: 2px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--bg-card);
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 800;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .timeline-step.completed .step-badge-num {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .step-title {
+            font-family: var(--font-outfit);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+            color: var(--color-text-main);
+        }
+
+        .step-desc {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .step-code {
+            background-color: #0B0F19;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #38BDF8;
+            margin-top: 0.75rem;
+            display: block;
+            overflow-x: auto;
+        }
+
+        /* VALIDATION CARDS */
+        .validation-card {
+            background: rgba(16, 185, 129, 0.02);
+            border: 1px dashed var(--accent-green);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .validation-card h4 {
+            color: var(--accent-green);
+            margin: 0 0 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-outfit);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .validation-card ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .validation-card li {
+            margin-bottom: 0.4rem;
+        }
+
+        .validation-card li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* LABELS & BADGES */
+        .workflow-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .badge-core {
+            background-color: var(--color-primary-glow);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+
+        .badge-advanced {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+            border: 1px solid var(--accent-purple);
+        }
+
+        /* ALERT BLOCKS */
+        .alert-box {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            margin: 1.5rem 0;
+        }
+
+        .alert-note {
+            background-color: rgba(6, 182, 212, 0.02);
+            border-left: 4px solid var(--color-primary);
+            color: var(--color-text-muted);
+        }
+
+        .alert-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .guide-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .guide-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <header class="guide-header">
+        <a href="/#home" style="position: absolute; left: 2rem; top: 1.8rem; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; font-family: var(--font-outfit); font-weight: 700; font-size: 0.82rem; color: var(--color-primary); background: var(--color-primary-glow); border: 1px solid var(--color-primary); padding: 0.45rem 0.95rem; border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='var(--color-primary)'; this.style.color='#fff'" onmouseout="this.style.background='var(--color-primary-glow)'; this.style.color='var(--color-primary)'">
+            <span>🏠</span> Return to Cockpit
+        </a>
+        <div class="logo-badge">ITACS Enterprise</div>
+        <h1>User Guide & Workflow Verification</h1>
+        <p>Your step-by-step handbook to execute, test, and validate multi-agent strategic oncology consensus pipelines.</p>
+    </header>
+
+    <div class="guide-container">
+        
+        <!-- Sticky Sidebar Navigation -->
+        <aside class="guide-sidebar">
+            <h3 class="sidebar-title">Core Sections</h3>
+            <ul class="sidebar-menu">
+                <li><a href="#overview" class="active" onclick="activateMenu(this)">📖 Platform Overview</a></li>
+                <li><a href="#architecture" onclick="activateMenu(this)">🏗️ Multi-Agent Architecture</a></li>
+                <li><a href="#compliance" onclick="activateMenu(this)">🛡️ Compliance & QC Gating</a></li>
+                <li><a href="#ui_guide" onclick="activateMenu(this)">🖥️ Interface & UI Guide</a></li>
+                <li><a href="#workflow1" onclick="activateMenu(this)">📥 Ingestion & Validation</a></li>
+                <li><a href="#workflow2" onclick="activateMenu(this)">⚖️ Strategic Workshop</a></li>
+                <li><a href="#workflow3" onclick="activateMenu(this)">🔍 Gap Detection Engine</a></li>
+                <li><a href="#audit" onclick="activateMenu(this)">📜 Cryptographic Audit Ledger</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Guide Content -->
+        <main class="guide-content">
+            
+            <!-- SECTION 0: Overview -->
+            <section id="overview" class="guide-section">
+                <h2><span class="section-icon">📖</span> Platform Overview</h2>
+                <p>Welcome to the <strong>ITACS Enterprise Insights Platform</strong>—the strategic multi-agent workbench built to accelerate functional oncology slide deck synthesis, cross-functional wargaming, and boardroom-certified action formulation.</p>
+                <p>ITACS operates using a **decoupled, multi-agent consensus network** designed to eliminate strategic bias, evaluate evidence levels, and ground corporate decisions (for assets like <strong>V940</strong> and <strong>MK-1084</strong>) in solid, verifiable data. The platform ensures 100% compliance with FDA regulations and brand guidelines by routing extracted slide insights through automated supervisor gates, challenging assumptions via Red Team agents, and compiling a cryptographically secured corporate audit trail.</p>
+                
+                <div class="alert-box alert-note">
+                    <span class="alert-icon">💡</span>
+                    <div>
+                        <strong>Did you know?</strong> ITACS leverages a hybrid routing engine built on **Google GenAI SDK**: using **Gemini 1.5 Pro** for deep strategic wargaming and RAG search, and **Gemini 2.0 Flash** for sub-second slide parsing, compliance checks, and real-time UI rendering.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 1: System Architecture -->
+            <section id="architecture" class="guide-section">
+                <h2><span class="section-icon">🏗️</span> Multi-Agent System Architecture</h2>
+                <p>The ITACS platform decouples clinical slide ingestion from strategic planning. Below is the active dataflow representing all active agents, databases, decision nodes, technology stacks, and target connectors.</p>
+                
+                <!-- Diagram Flowchart representation using styled CSS nodes -->
+                <div style="background: var(--bg-sub); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin: 1.5rem 0;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
+                        <div style="background: rgba(6,182,212,0.08); border: 1px solid var(--color-primary); padding: 15px; border-radius: 6px;">
+                            <strong style="color: var(--color-primary); display: block; font-size: 0.85rem; text-transform: uppercase;">1. Ingestion Agent</strong>
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Extracts raw slide text & pixel data via PixelRAG</span>
+                        </div>
+                        <div style="background: rgba(139,92,246,0.08); border: 1px solid var(--accent-purple); padding: 15px; border-radius: 6px;">
+                            <strong style="color: var(--accent-purple); display: block; font-size: 0.85rem; text-transform: uppercase;">2. Compliance Supervisor</strong>
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Calculates compliance scores & flags violations</span>
+                        </div>
+                        <div style="background: rgba(16,185,129,0.08); border: 1px solid var(--accent-green); padding: 15px; border-radius: 6px;">
+                            <strong style="color: var(--accent-green); display: block; font-size: 0.85rem; text-transform: uppercase;">3. Red Team Challenger</strong>
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Challenges assumptions, bias & counter-factuals</span>
+                        </div>
+                        <div style="background: rgba(245,158,11,0.08); border: 1px solid var(--accent-amber); padding: 15px; border-radius: 6px;">
+                            <strong style="color: var(--accent-amber); display: block; font-size: 0.85rem; text-transform: uppercase;">4. GenAI Historian</strong>
+                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">pgvector semantic search to deduplicate memory</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-note">
+                    <span class="alert-icon">💡</span>
+                    <div>
+                        <strong>Data Security:</strong> Every step of the agent orchestration pipeline is backed by **SPIFFE/OIDC identities** and is logged cryptographically in the postgres ledger to satisfy corporate compliance audits.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Compliance & QC Gating -->
+            <section id="compliance" class="guide-section">
+                <h2><span class="section-icon">🛡️</span> Compliance & QC Gating</h2>
+                <p>To operate at enterprise scale, ITACS enforces a dual-layered compliance gate:</p>
+                <ul style="color: var(--color-text-muted); font-size: 0.95rem; padding-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Compliance Supervisor (White Line check)</strong>: Evaluates incoming slide text against corporate compliance lists (e.g., off-label promotions, unvalidated efficacy claims). High-confidence items proceed to validation; items with $< 85\%$ compliance scores are quarantined.</li>
+                    <li><strong>Red Team Challenger</strong>: Prompts specialized personas (Skeptic, Payer, Competitor) to review the slide before validation, flagging blind spots and generating counter-factual scenarios.</li>
+                </ul>
+                <div class="step-code">
+                    [Compliance Gate] Ingesting Slide MR-2 (Slide 14)...<br>
+                    [Supervisor] Evaluating off-label claims: CLM-092 passed (Score: 0.98)<br>
+                    [Historian] pgvector query: No duplicates found. Tagged: New Insight 🆕
+                </div>
+            </section>
+
+            <!-- SECTION 3: Interface & UI Guide -->
+            <section id="ui_guide" class="guide-section">
+                <h2><span class="section-icon">🖥️</span> Interface & UI Guide</h2>
+                <p>The ITACS dashboard features a premium, dark-mode, glassmorphic layout divided into three main operational panels:</p>
+                
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">A. The Indication Roadmap & Cockpit</h3>
+                <p>The home screen lists our active strategic Indication Roadmaps (e.g., Melanoma KEYNOTE-940, NSCLC MK-1084). Clicking any timeline block displays active clinical studies, filings, and regulatory milestones, letting you jump directly to target validation workshops.</p>
+                
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">B. The SME Validation Queue</h3>
+                <p>The inbox panel lists raw extracted insights. Click any card to open the drawer: review compliance scores, run competitor stress-tests in the Wargaming Console, read Red Team critiques, and approve them to the Enterprise Memory.</p>
+
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">C. The Strategic Imperative Builder</h3>
+                <p>A drag-and-drop Kanban board sorting macro-imperatives by resource commitment. Click any card to open the Strategic Workshop Drawer, weigh trade-offs/risks, and add concrete tactical actions backed by evidence.</p>
+            </section>
+
+            <!-- SECTION 4: Ingestion Workflow -->
+            <section id="workflow1" class="guide-section">
+                <h2><span class="section-icon">📥</span> Workflow 1: Ingestion & Validation <span class="workflow-badge badge-core">Core</span></h2>
+                <p>This workflow covers uploading raw slide decks, checking compliance, and approving insights into the active memory bank.</p>
+                
+                <div class="workflow-timeline">
+                    <div class="timeline-step completed">
+                        <div class="step-badge-num">1</div>
+                        <h3 class="step-title">Upload the Slide Deck</h3>
+                        <p class="step-desc">Drag and drop your functional PowerPoint/PDF file (e.g., <code>Melanoma_MR_Brief_Q2.pptx</code>) into the upload zone.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">2</div>
+                        <h3 class="step-title">Audit Compliance & Historian Badging</h3>
+                        <p class="step-desc">The system will parse the slide, run compliance audits, and flag the insight as <code>🆕 New</code> or <code>🔄 Known</code> based on vector similarity.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">3</div>
+                        <h3 class="step-title">Approve to Enterprise Memory</h3>
+                        <p class="step-desc">Open the card details, review the evidence score and RAG quotes, and click **"Approve to Memory Bank"** to write the card to the database.</p>
+                    </div>
+                </div>
+
+                <div class="validation-card">
+                    <h4>🔍 How to Validate the Results</h4>
+                    <ul>
+                        <li>Confirm the newly validated card displays a solid emerald-green checkmark and is listed under the validated ledger.</li>
+                        <li>Verify the total counts in the top header update immediately.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 5: Strategic Workshop Workflow -->
+            <section id="workflow2" class="guide-section">
+                <h2><span class="section-icon">⚖️</span> Workflow 2: Strategic Workshop & Actions <span class="workflow-badge badge-core">Core</span></h2>
+                <p>This workflow covers formulating macro-imperatives, cataloging trade-offs/risks, and adding actionable tactics.</p>
+                
+                <div class="workflow-timeline">
+                    <div class="timeline-step completed">
+                        <div class="step-badge-num">1</div>
+                        <h3 class="step-title">Formulate a Strategic Imperative</h3>
+                        <p class="step-desc">Navigate to the **Imperative Builder** page. Click **"+ Formulate Imperative"**, fill the title/description, and create the card on the board.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">2</div>
+                        <h3 class="step-title">Catalog Resource Trade-offs & Risks</h3>
+                        <p class="step-desc">Click the card to slide open the Strategic Workshop Drawer. In the Implications Editor, type the trade-offs and risks. Click out of the fields to trigger automatic on-blur saving.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">3</div>
+                        <h3 class="step-title">Add Actionable Tactics</h3>
+                        <p class="step-desc">In the Actions Ledger at the bottom of the drawer, type your tactical action, select the owner, link a validated source card as evidence, and click **"Add"**.</p>
+                    </div>
+                </div>
+
+                <div class="validation-card">
+                    <h4>🔍 How to Validate the Results</h4>
+                    <ul>
+                        <li>Verify the Strategic Workshop Drawer remains open during typing (no focus loss or text wipes).</li>
+                        <li>Confirm the strategic card in the background dynamically updates its count to <code>📋 1 Tactical Actions</code>.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 6: Gap Detection Engine -->
+            <section id="workflow3" class="guide-section">
+                <h2><span class="section-icon">🔍</span> Workflow 3: Gap Detection & Temporal Decay <span class="workflow-badge badge-advanced">Advanced</span></h2>
+                <p>To prevent strategic drift, ITACS features an active **Temporal Decay Engine** that flags cards older than 90 days as stale, automatically querying external medical databases to fill gaps.</p>
+                
+                <div class="workflow-timeline">
+                    <div class="timeline-step completed">
+                        <div class="step-badge-num">1</div>
+                        <h3 class="step-title">Trigger Gap Detection</h3>
+                        <p class="step-desc">Click the **"Automated Gap Engine"** button in the sidebar or run the API endpoint to scan for stale validated cards.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">2</div>
+                        <h3 class="step-title">External Repository Search (MCP)</h3>
+                        <p class="step-desc">The model utilizes the Model Context Protocol (MCP) to query registered external endpoints (such as Veeva Promomats or SharePoint) for fresh clinical findings.</p>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="step-badge-num">3</div>
+                        <h3 class="step-title">Merge Gap-Fill Hypothesis</h3>
+                        <p class="step-desc">Review the automatically generated gap-fill hypothesis card, and click **"Approve & Merge"** to overwrite the stale card in memory.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: Cryptographic Audit Ledger -->
+            <section id="audit" class="guide-section">
+                <h2><span class="section-icon">📜</span> Cryptographic Audit Ledger & Data Provenance</h2>
+                <p>To satisfy rigorous pharmaceutical regulatory requirements, ITACS binds every approved strategic card to a secure, unique **SHA-256 verification hash**.</p>
+                
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">A. How the SHA-256 Seal Works</h3>
+                <p>When the SME validates an insight, the system binds the text to its original reference code and generates a secure verification hash:</p>
+                <span class="step-code">
+                    {<br>
+                    &nbsp;&nbsp;"card_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3d4bad",<br>
+                    &nbsp;&nbsp;"evidence_source": "Melanoma Slide 14",<br>
+                    &nbsp;&nbsp;"cryptographic_seal": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"<br>
+                    }
+                </span>
+                <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
+                    This hash acts as a **tamper-evident digital wax seal**. If a single character is modified in the database directly, the computed hash will break instantly, flagging the card as ungrounded and alerting reviewers in the cockpit.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Smooth scrolling navigation activation
+        function activateMenu(elem) {
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            menuItems.forEach(item => item.classList.remove('active'));
+            elem.classList.add('active');
+        }
+
+        // Highlight menu item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.guide-section');
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            
+            let currentSectionId = 'overview';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + currentSectionId) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
