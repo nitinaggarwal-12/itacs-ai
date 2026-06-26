@@ -42,6 +42,7 @@ You must **always** pause and present a comprehensive validation/review step (in
 ### 2. The Protocol
 * **No Auto-Advancing**: Never automatically start writing code or executing tasks for the next phase without explicit, manual user approval of the current phase.
 * **Seed Verification**: When writing E2E tests, always verify state pre-seeding (like localStorage or database values) to ensure tests can run independently and reliably in clean browser sessions.
+* **Seed & Asset Integrity Auditing**: When implementing mock datasets, sample slide briefs, or onboarding templates, you **must** write a programmatic validation script (e.g. `scratch/validate_seeds.py`) to verify that the file contents match their strategic purposes and do not contain crossed or desynchronized text.
 * **Visual Gallery Review**: Offer a walkthrough of captured screenshots and code changes during the validation step so the user can visually confirm design integrity before moving forward.
 
 ## 🧪 RULE: E2E Testing Synchronization & Animation Settling
