@@ -1205,6 +1205,95 @@ export default function App() {
   const [deckApprovedSlides, setDeckApprovedSlides] = useState([]);
   const [isCompilingDeck, setIsCompilingDeck] = useState(false);
   const [compilationStep, setCompilationStep] = useState(0);
+  const [deckEditMode, setDeckEditMode] = useState(false);
+  const [deckSlides, setDeckSlides] = useState(() => {
+    const saved = localStorage.getItem('itacs_deck_slides');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return {
+      1: {
+        title: "ITACS Adjuvant Oncology Launch Strategy",
+        subtitle: "Cross-Functional Alignment & Strategic Execution Roadmap for V940/MK-940",
+        author: "Presented by: Global Oncology Leadership Team (GOLT)",
+        date: "Date: March 2026 Presentation Ready"
+      },
+      2: {
+        title: "MK-940 Adjuvant Recurrence Risk Reduction Plan",
+        leftHeader: "CLINICAL DIFFERENTIATION STRATEGY",
+        leftBody: "Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch.",
+        rightHeader: "MARKET ACCESS REIMBURSEMENT ROADMAP",
+        rightBody: "Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance."
+      },
+      3: {
+        title: "Payer Access Strategy & HEOR Value Realization",
+        leftHeader: "RISK-SHARING AGREEMENTS",
+        leftBody: "Formulate performance milestone-based rebate contracts with commercial insurers to bypass national step-therapy thresholds.",
+        rightHeader: "SUBCUTANEOUS VALUE ARGUMENT",
+        rightBody: "Highlight the 20% clinical throughput gain and nursing chair-time savings of the subcutaneous adjuvant formulation."
+      },
+      4: {
+        title: "Companion Diagnostic Scaling & Molecular Screening",
+        leftHeader: "RAPID IHC TESTING ROLLOUT",
+        leftBody: "Deploy rapid IHC companion assay kits to 250+ community hospital pathology labs by Q4 to avoid chemotherapy misrouting.",
+        rightHeader: "NGS REFLEX PROTOCOLS",
+        rightBody: "Standardize reflex testing protocols at surgical resection to ensure patient biomarker results are returned within 7 days."
+      },
+      5: {
+        title: "Vein-to-Vein Logistics & Practice Support Operations",
+        leftHeader: "ULTRA-COLD CHAIN HUBS",
+        leftBody: "Establish leased -70°C deep-freezer placement programs targeting tier-1 community oncology practices to secure storage capacity.",
+        rightHeader: "ONCOLOGY PATIENT NAVIGATORS",
+        rightBody: "Deploy dedicated clinical navigators to manage patient scheduling, biopsy routing, and prior-authorization approvals."
+      }
+    };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('itacs_deck_slides', JSON.stringify(deckSlides));
+  }, [deckSlides]);
+
+  const handleUpdateSlideField = (slideIdx, field, val) => {
+    setDeckSlides(prev => ({
+      ...prev,
+      [slideIdx]: {
+        ...prev[slideIdx],
+        [field]: val
+      }
+    }));
+  };
+
+  const handleDownloadSlide = (slideIdx) => {
+    const slide = deckSlides[slideIdx];
+    let content = `ITACS EXECUTIVE PRESENTATION STUDIO - SLIDE ${slideIdx}\n`;
+    content += `==================================================\n\n`;
+    if (slideIdx === 1) {
+      content += `TITLE: ${slide.title}\n`;
+      content += `SUBTITLE: ${slide.subtitle}\n\n`;
+      content += `${slide.author}\n`;
+      content += `${slide.date}\n`;
+    } else {
+      content += `SLIDE TITLE: ${slide.title}\n\n`;
+      content += `[COLUMN 1: ${slide.leftHeader}]\n`;
+      content += `${slide.leftBody}\n\n`;
+      content += `[COLUMN 2: ${slide.rightHeader}]\n`;
+      content += `${slide.rightBody}\n`;
+    }
+    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `itacs_slide_${slideIdx}_draft.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   // 5. KOL Network Graph States
   const [selectedKol, setSelectedKol] = useState("Dr. Sarah Patel");
@@ -8095,19 +8184,60 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   ? '0 15px 35px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.6)' 
                   : '0 15px 35px rgba(0,0,0,0.4)'
               }}>
-                {/* PPTX Border Badge */}
+                {/* Interactive slide controls dock at top right */}
                 <div style={{
                   position: 'absolute',
                   top: '20px', right: '24px',
-                  fontSize: '8px',
-                  color: 'var(--text-muted)',
-                  border: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.08)',
-                  padding: '2px 8px',
-                  borderRadius: '10px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  zIndex: 10
                 }}>
-                  Microsoft PowerPoint • 16:9 widescreen template
+                  <button
+                    onClick={() => setDeckEditMode(!deckEditMode)}
+                    className="btn"
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '9.5px',
+                      fontWeight: 'bold',
+                      borderRadius: '6px',
+                      background: deckEditMode 
+                        ? 'rgba(6, 182, 212, 0.15)' 
+                        : (theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.04)'),
+                      border: deckEditMode 
+                        ? '1px solid var(--brand-cyan)' 
+                        : `1px solid ${theme === 'light' ? '#cbd5e1' : 'rgba(255,255,255,0.08)'}`,
+                      color: deckEditMode ? 'var(--brand-cyan)' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {deckEditMode ? '👁️ Preview Mode' : '✏️ Edit Slide'}
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDownloadSlide(activePreviewSlide)}
+                    className="btn"
+                    style={{
+                      padding: '4px 10px',
+                      fontSize: '9.5px',
+                      fontWeight: 'bold',
+                      borderRadius: '6px',
+                      background: theme === 'light' ? '#f1f5f9' : 'rgba(255,255,255,0.04)',
+                      border: `1px solid ${theme === 'light' ? '#cbd5e1' : 'rgba(255,255,255,0.08)'}`,
+                      color: 'var(--text-primary)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <Download size={10} />
+                    Download Copy
+                  </button>
                 </div>
 
                 {/* Merck Corporate Header */}
@@ -8128,24 +8258,67 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   {activePreviewSlide === 1 ? (
                     /* Slide 1: Premium Title Page Layout */
                     <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '14px', justifyContent: 'center', height: '100%' }}>
-                      <h1 style={{ 
-                        margin: 0, 
-                        fontSize: '30px', 
-                        fontWeight: 800, 
-                        color: theme === 'light' ? '#0f172a' : '#f8fafc', 
-                        letterSpacing: '-1px', 
-                        lineHeight: '1.2' 
-                      }}>
-                        ITACS Adjuvant Oncology Launch Strategy
-                      </h1>
-                      <p style={{ 
-                        margin: 0, 
-                        fontSize: '15px', 
-                        color: 'var(--brand-indigo)', 
-                        fontWeight: 700 
-                      }}>
-                        Cross-Functional Alignment & Strategic Execution Roadmap for V940/MK-940
-                      </p>
+                      {deckEditMode ? (
+                        <>
+                          <input
+                            type="text"
+                            value={deckSlides[1].title}
+                            onChange={(e) => handleUpdateSlideField(1, 'title', e.target.value)}
+                            style={{
+                              width: '100%',
+                              background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                              border: '1.5px solid var(--brand-indigo)',
+                              borderRadius: '8px',
+                              padding: '8px 12px',
+                              fontSize: '22px',
+                              fontWeight: 800,
+                              color: theme === 'light' ? '#0f172a' : '#f8fafc',
+                              textAlign: 'center',
+                              outline: 'none',
+                              boxShadow: '0 0 10px rgba(99, 102, 241, 0.1)'
+                            }}
+                          />
+                          <textarea
+                            value={deckSlides[1].subtitle}
+                            onChange={(e) => handleUpdateSlideField(1, 'subtitle', e.target.value)}
+                            style={{
+                              width: '100%',
+                              height: '60px',
+                              background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                              border: '1.5px solid var(--brand-cyan)',
+                              borderRadius: '8px',
+                              padding: '8px 12px',
+                              fontSize: '13px',
+                              color: 'var(--brand-indigo)',
+                              fontWeight: 700,
+                              textAlign: 'center',
+                              resize: 'none',
+                              outline: 'none'
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <h1 style={{ 
+                            margin: 0, 
+                            fontSize: '30px', 
+                            fontWeight: 800, 
+                            color: theme === 'light' ? '#0f172a' : '#f8fafc', 
+                            letterSpacing: '-1px', 
+                            lineHeight: '1.2' 
+                          }}>
+                            {deckSlides[1].title}
+                          </h1>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '15px', 
+                            color: 'var(--brand-indigo)', 
+                            fontWeight: 700 
+                          }}>
+                            {deckSlides[1].subtitle}
+                          </p>
+                        </>
+                      )}
                       <div style={{ marginTop: '20px', fontSize: '11px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <span>Presented by: Global Oncology Leadership Team (GOLT)</span>
                         <span>Date: March 2026 Presentation Ready</span>
@@ -8154,18 +8327,34 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   ) : (
                     /* Slides 2, 3, 4, 5: Dynamic Split-Card Slide Layout (Stunning & High Contrast!) */
                     <>
-                      <h1 style={{ 
-                        margin: 0, 
-                        fontSize: '22px', 
-                        fontWeight: 800, 
-                        color: theme === 'light' ? '#0f172a' : '#f8fafc', 
-                        letterSpacing: '-0.5px' 
-                      }}>
-                        {activePreviewSlide === 2 && "MK-940 Adjuvant Recurrence Risk Reduction Plan"}
-                        {activePreviewSlide === 3 && "Payer Access Strategy & HEOR Value Realization"}
-                        {activePreviewSlide === 4 && "Companion Diagnostic Scaling & Molecular Screening"}
-                        {activePreviewSlide === 5 && "Vein-to-Vein Logistics & Practice Support Operations"}
-                      </h1>
+                      {deckEditMode ? (
+                        <input
+                          type="text"
+                          value={deckSlides[activePreviewSlide].title}
+                          onChange={(e) => handleUpdateSlideField(activePreviewSlide, 'title', e.target.value)}
+                          style={{
+                            width: '100%',
+                            background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                            border: '1.5px solid var(--brand-indigo)',
+                            borderRadius: '8px',
+                            padding: '6px 12px',
+                            fontSize: '18px',
+                            fontWeight: 800,
+                            color: theme === 'light' ? '#0f172a' : '#f8fafc',
+                            outline: 'none'
+                          }}
+                        />
+                      ) : (
+                        <h1 style={{ 
+                          margin: 0, 
+                          fontSize: '22px', 
+                          fontWeight: 800, 
+                          color: theme === 'light' ? '#0f172a' : '#f8fafc', 
+                          letterSpacing: '-0.5px' 
+                        }}>
+                          {deckSlides[activePreviewSlide].title}
+                        </h1>
+                      )}
                       
                       {/* Grid showing gorgeous split cards */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '5px' }}>
@@ -8177,32 +8366,68 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.01)',
                           border: `1.5px solid ${theme === 'light' ? '#e2e8f0' : 'rgba(99, 102, 241, 0.15)'}`,
                           borderLeft: `4px solid var(--brand-indigo)`,
-                          boxShadow: 'none'
+                          boxShadow: 'none',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px'
                         }}>
-                          <h4 style={{ 
-                            margin: '0 0 8px 0', 
-                            fontSize: '11px', 
-                            color: theme === 'light' ? '#312e81' : '#a5b4fc', 
-                            fontWeight: 800,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                          }}>
-                            {activePreviewSlide === 2 && "CLINICAL DIFFERENTIATION STRATEGY"}
-                            {activePreviewSlide === 3 && "RISK-SHARING AGREEMENTS"}
-                            {activePreviewSlide === 4 && "RAPID IHC TESTING ROLLOUT"}
-                            {activePreviewSlide === 5 && "ULTRA-COLD CHAIN HUBS"}
-                          </h4>
-                          <p style={{ 
-                            margin: 0, 
-                            fontSize: '11.5px', 
-                            color: theme === 'light' ? '#334155' : '#cbd5e1', 
-                            lineHeight: '1.5' 
-                          }}>
-                            {activePreviewSlide === 2 && "Provide robust HEOR overall survival models supporting personalized vaccine efficacy to global payers immediately at launch."}
-                            {activePreviewSlide === 3 && "Formulate performance milestone-based rebate contracts with commercial insurers to bypass national step-therapy thresholds."}
-                            {activePreviewSlide === 4 && "Deploy rapid IHC companion assay kits to 250+ community hospital pathology labs by Q4 to avoid chemotherapy misrouting."}
-                            {activePreviewSlide === 5 && "Establish leased -70°C deep-freezer placement programs targeting tier-1 community oncology practices to secure storage capacity."}
-                          </p>
+                          {deckEditMode ? (
+                            <>
+                              <input
+                                type="text"
+                                value={deckSlides[activePreviewSlide].leftHeader}
+                                onChange={(e) => handleUpdateSlideField(activePreviewSlide, 'leftHeader', e.target.value)}
+                                style={{
+                                  background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                                  border: '1px solid var(--brand-indigo)',
+                                  borderRadius: '6px',
+                                  padding: '4px 8px',
+                                  fontSize: '11px',
+                                  color: theme === 'light' ? '#312e81' : '#a5b4fc',
+                                  fontWeight: 800,
+                                  textTransform: 'uppercase',
+                                  outline: 'none'
+                                }}
+                              />
+                              <textarea
+                                value={deckSlides[activePreviewSlide].leftBody}
+                                onChange={(e) => handleUpdateSlideField(activePreviewSlide, 'leftBody', e.target.value)}
+                                style={{
+                                  height: '90px',
+                                  background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                                  border: '1px solid #cbd5e1',
+                                  borderRadius: '6px',
+                                  padding: '6px 8px',
+                                  fontSize: '11px',
+                                  color: theme === 'light' ? '#334155' : '#cbd5e1',
+                                  lineHeight: '1.4',
+                                  resize: 'none',
+                                  outline: 'none'
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <h4 style={{ 
+                                margin: '0 0 8px 0', 
+                                fontSize: '11px', 
+                                color: theme === 'light' ? '#312e81' : '#a5b4fc', 
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                              }}>
+                                {deckSlides[activePreviewSlide].leftHeader}
+                              </h4>
+                              <p style={{ 
+                                margin: 0, 
+                                fontSize: '11.5px', 
+                                color: theme === 'light' ? '#334155' : '#cbd5e1', 
+                                lineHeight: '1.5' 
+                              }}>
+                                {deckSlides[activePreviewSlide].leftBody}
+                              </p>
+                            </>
+                          )}
                         </div>
 
                         {/* Right Card: Market Access/Operations */}
@@ -8212,32 +8437,68 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.01)',
                           border: `1.5px solid ${theme === 'light' ? '#e2e8f0' : 'rgba(139, 92, 246, 0.15)'}`,
                           borderLeft: `4px solid var(--brand-purple)`,
-                          boxShadow: 'none'
+                          boxShadow: 'none',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px'
                         }}>
-                          <h4 style={{ 
-                            margin: '0 0 8px 0', 
-                            fontSize: '11px', 
-                            color: theme === 'light' ? '#4c1d95' : '#c084fc', 
-                            fontWeight: 800,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                          }}>
-                            {activePreviewSlide === 2 && "MARKET ACCESS REIMBURSEMENT ROADMAP"}
-                            {activePreviewSlide === 3 && "SUBCUTANEOUS VALUE ARGUMENT"}
-                            {activePreviewSlide === 4 && "NGS REFLEX PROTOCOLS"}
-                            {activePreviewSlide === 5 && "ONCOLOGY PATIENT NAVIGATORS"}
-                          </h4>
-                          <p style={{ 
-                            margin: 0, 
-                            fontSize: '11.5px', 
-                            color: theme === 'light' ? '#334155' : '#cbd5e1', 
-                            lineHeight: '1.5' 
-                          }}>
-                            {activePreviewSlide === 2 && "Engage payers via customized digital value folders in Q3 to offset prior-authorization friction and secure early Q1 clearance."}
-                            {activePreviewSlide === 3 && "Highlight the 20% clinical throughput gain and nursing chair-time savings of the subcutaneous adjuvant formulation."}
-                            {activePreviewSlide === 4 && "Standardize reflex testing protocols at surgical resection to ensure patient biomarker results are returned within 7 days."}
-                            {activePreviewSlide === 5 && "Deploy dedicated clinical navigators to manage patient scheduling, biopsy routing, and prior-authorization approvals."}
-                          </p>
+                          {deckEditMode ? (
+                            <>
+                              <input
+                                type="text"
+                                value={deckSlides[activePreviewSlide].rightHeader}
+                                onChange={(e) => handleUpdateSlideField(activePreviewSlide, 'rightHeader', e.target.value)}
+                                style={{
+                                  background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                                  border: '1px solid var(--brand-purple)',
+                                  borderRadius: '6px',
+                                  padding: '4px 8px',
+                                  fontSize: '11px',
+                                  color: theme === 'light' ? '#4c1d95' : '#c084fc',
+                                  fontWeight: 800,
+                                  textTransform: 'uppercase',
+                                  outline: 'none'
+                                }}
+                              />
+                              <textarea
+                                value={deckSlides[activePreviewSlide].rightBody}
+                                onChange={(e) => handleUpdateSlideField(activePreviewSlide, 'rightBody', e.target.value)}
+                                style={{
+                                  height: '90px',
+                                  background: theme === 'light' ? '#ffffff' : 'rgba(0,0,0,0.2)',
+                                  border: '1px solid #cbd5e1',
+                                  borderRadius: '6px',
+                                  padding: '6px 8px',
+                                  fontSize: '11px',
+                                  color: theme === 'light' ? '#334155' : '#cbd5e1',
+                                  lineHeight: '1.4',
+                                  resize: 'none',
+                                  outline: 'none'
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <h4 style={{ 
+                                margin: '0 0 8px 0', 
+                                fontSize: '11px', 
+                                color: theme === 'light' ? '#4c1d95' : '#c084fc', 
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                              }}>
+                                {deckSlides[activePreviewSlide].rightHeader}
+                              </h4>
+                              <p style={{ 
+                                margin: 0, 
+                                fontSize: '11.5px', 
+                                color: theme === 'light' ? '#334155' : '#cbd5e1', 
+                                lineHeight: '1.5' 
+                              }}>
+                                {deckSlides[activePreviewSlide].rightBody}
+                              </p>
+                            </>
+                          )}
                         </div>
 
                       </div>
