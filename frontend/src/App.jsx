@@ -1063,7 +1063,71 @@ export default function App() {
     }
   ];
 
-  const tourSteps = activeTourWorkflow === 1 ? tourStepsW1 : (activeTourWorkflow === 2 ? tourStepsW2 : tourStepsW3);
+  const tourStepsW4 = [
+    {
+      targetId: null,
+      title: "Cross-Functional Strategic Workshop ⚔️",
+      description: "Welcome to the Strategic Imperative Builder! In this mission, you will learn how to formulate macro-strategic initiatives, sort them by Resource Commitment on an interactive Kanban board, and draft tactical actions linked to clinical evidence. Let's begin!",
+      buttonText: "Start Strategic Workshop ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "add-imperative-btn",
+      title: "Formulate Strategic Imperative ➕",
+      description: "Click the 'Formulate Strategic Imperative' button to open the strategy formulation console. This is where you draft your strategic mandates and set their categories!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "builder-kanban-board",
+      title: "Resource-Weighting Kanban Board 📊",
+      description: "This is your Strategic Kanban Board. Initiatives are automatically sorted into Low, Medium, and High Resource Commitment columns. You can drag or click to re-weight resources and options instantly!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "first-imperative-card",
+      title: "Strategic Workshop Drawer 💼",
+      description: "Click on any Strategic Imperative card on the board to open the detailed Workshop Console. This is where cross-functional teams weigh options and trade-offs!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "workshop-implications-editor",
+      title: "Structured Implications Editor ⚖️",
+      description: "In accordance with Slide 23 of the strategic vision, you must catalog Alternative Options, Resource Trade-offs, and Execution Risks here. This provides full decision transparency for leadership!",
+      buttonText: "Next Step ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: "workshop-actions-builder",
+      title: "Tactical Actions Ledger 📋",
+      description: "Draft concrete tactical actions, assign owners, and link them directly to validated source cards in the Memory Bank to preserve the cryptographic audit trail! Let's complete the workshop!",
+      buttonText: "Complete Mission ➔",
+      action: (setActiveTab) => {
+        setActiveTab('builder');
+      }
+    },
+    {
+      targetId: null,
+      title: "Strategy Boardroom Certified! 🎉🏆",
+      description: "Sensational work! You have successfully formulated strategic imperatives, weighed resource trade-offs, and drafted grounded tactical actions. You are now officially Boardroom Certified! Your final Strategic Badge has been awarded.",
+      buttonText: "Complete Mission 🏅",
+      action: () => {}
+    }
+  ];
+
+  const tourSteps = activeTourWorkflow === 1 ? tourStepsW1 : (activeTourWorkflow === 2 ? tourStepsW2 : (activeTourWorkflow === 3 ? tourStepsW3 : tourStepsW4));
 
   useEffect(() => {
     if (!tourActive) return;
@@ -3144,7 +3208,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
                     <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--text-primary)' : 'var(--text-muted)' }}>Operational Field Telemetry</h4>
                     <p style={{ margin: 0, fontSize: '11px', color: localStorage.getItem('itacs_tour_completed_w2') === 'true' ? 'var(--text-secondary)' : 'var(--text-muted)', lineHeight: '1.4' }}>
-                      Map strategic Kanban tasks, drag nodes on consensus canvas, map KOL target lists, and synchronize sales CRM.
+                      Wargame strategies against competitor speedups, analyze clinical safety, and promotion to Memory ledgers.
                     </p>
                   </div>
                   {localStorage.getItem('itacs_tour_completed_w2') === 'true' ? (
@@ -3152,8 +3216,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       id="start-mission-3-btn"
                       onClick={() => {
                         setActiveTourWorkflow(3);
-                        setTourStep(0);
                         setTourActive(true);
+                        setTourStepIndex(0);
                         setSelectedInsight(null);
                       }}
                       style={{
@@ -3179,13 +3243,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   )}
                 </div>
 
-                {/* Mission 4 Station (Locked) */}
+                {/* Mission 4 Station (Active/Unlocked) */}
                 <div style={{
                   background: 'var(--bg-primary)',
-                  border: '1px solid var(--glass-border)',
+                  border: `1px solid ${localStorage.getItem('itacs_tour_completed_w4') === 'true' ? 'rgba(16, 185, 129, 0.3)' : (localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--brand-cyan)' : 'var(--glass-border)')}`,
                   borderRadius: '12px',
                   padding: '20px',
-                  opacity: 0.5,
+                  opacity: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 1 : 0.5,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -3193,17 +3257,59 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 }}>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.04)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 4</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Locked 🔒</span>
+                      <span style={{ fontSize: '9px', fontWeight: 'bold', color: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)', background: 'rgba(6, 182, 212, 0.08)', padding: '2px 6px', borderRadius: '4px' }}>MISSION 4</span>
+                      <span style={{ 
+                        fontSize: '11px', 
+                        fontWeight: 'bold', 
+                        color: localStorage.getItem('itacs_tour_completed_w4') === 'true' ? '#10b981' : (localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--brand-cyan)' : 'var(--text-muted)') 
+                      }}>
+                        {localStorage.getItem('itacs_tour_completed_w4') === 'true' ? 'Completed 🏅' : (localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'Active 🚀' : 'Locked 🔒')}
+                      </span>
                     </div>
-                    <h4 style={{ margin: '0 0 6px 0', fontSize: '13.5px', fontWeight: 800, color: 'var(--text-muted)' }}>Boardroom Strategy & Governance</h4>
-                    <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-                      Compile boardroom slides, allocate budgets, wargame price-cuts in wargaming, and run AI simulations.
+                    <h4 style={{ 
+                      margin: '0 0 6px 0', 
+                      fontSize: '13.5px', 
+                      fontWeight: 800, 
+                      color: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--text-primary)' : 'var(--text-muted)' 
+                    }}>Strategic Imperative Builder</h4>
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '11px', 
+                      color: localStorage.getItem('itacs_tour_completed_w3') === 'true' ? 'var(--text-secondary)' : 'var(--text-muted)', 
+                      lineHeight: '1.4' 
+                    }}>
+                      Formulate strategic imperatives, weight resource tiers on a Kanban board, and draft tactical actions linked to clinical evidence.
                     </p>
                   </div>
-                  <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
-                    Complete Mission 3 to Unlock
-                  </button>
+                  {localStorage.getItem('itacs_tour_completed_w3') === 'true' ? (
+                    <button 
+                      id="start-mission-4-btn"
+                      onClick={() => {
+                        setActiveTourWorkflow(4);
+                        setTourActive(true);
+                        setTourStepIndex(0);
+                      }}
+                      style={{
+                        width: '100%',
+                        background: localStorage.getItem('itacs_tour_completed_w4') === 'true' ? 'transparent' : 'var(--brand-cyan)',
+                        border: localStorage.getItem('itacs_tour_completed_w4') === 'true' ? '1px solid var(--glass-border)' : 'none',
+                        color: localStorage.getItem('itacs_tour_completed_w4') === 'true' ? 'var(--text-primary)' : '#ffffff',
+                        borderRadius: '6px',
+                        padding: '8px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                        marginTop: '12px'
+                      }}
+                    >
+                      {localStorage.getItem('itacs_tour_completed_w4') === 'true' ? 'Replay Mission 🔄' : 'Start Mission 🚀'}
+                    </button>
+                  ) : (
+                    <button disabled style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)', borderRadius: '6px', padding: '8px', fontSize: '11px', fontWeight: 'bold', cursor: 'not-allowed', marginTop: '12px' }}>
+                      Complete Mission 3 to Unlock
+                    </button>
+                  )}
                 </div>
                 
               </div>
@@ -4847,7 +4953,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
             </div>
 
             {/* 3-Column Resource Kanban Board */}
-            <main className="kanban-board" style={{ gridTemplateColumns: 'repeat(3, 1fr)', height: 'calc(100vh - 220px)', padding: 0 }}>
+            <main id="builder-kanban-board" className="kanban-board" style={{ gridTemplateColumns: 'repeat(3, 1fr)', height: 'calc(100vh - 220px)', padding: 0 }}>
               
               {/* Columns: Low, Medium, High Resource Commitment */}
               {['low', 'medium', 'high'].map(tier => {
@@ -4866,7 +4972,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
 
                     <div className="kanban-cards-container">
-                      {tierImperatives.map(imp => {
+                      {tierImperatives.map((imp, idx) => {
                         const catBadgeStyle = imp.category === 'clinical' 
                           ? { background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }
                           : (imp.category === 'payer' 
@@ -4882,6 +4988,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         return (
                           <div 
                             key={imp.id} 
+                            id={tier === 'low' && idx === 0 ? "first-imperative-card" : undefined}
                             className="kanban-card strategic-imperative-card animate-fade-in"
                             onClick={() => { setSelectedImperative(imp); setIsImperativeDrawerOpen(true); }}
                             style={{ cursor: 'pointer', borderLeft: `4px solid ${columnBadgeColor}` }}
@@ -4965,7 +5072,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
 
                     {/* Section: Options, Trade-offs, Risks (Slide 23 Core!) */}
-                    <div className="glass-card" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <div id="workshop-implications-editor" className="glass-card" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                       <h4 style={{ margin: 0, fontSize: '11px', fontWeight: 900, color: 'var(--brand-indigo)', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid rgba(255, 255, 255, 0.03)', paddingBottom: '6px' }}>
                         ⚖️ Strategic Implications Editor (Slide 23)
                       </h4>
@@ -4996,7 +5103,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     </div>
 
                     {/* Section: Tactical Actions Builder */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div id="workshop-actions-builder" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <h4 style={{ margin: 0, fontSize: '11px', fontWeight: 900, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         📋 Tactical Actions Ledger
                       </h4>
