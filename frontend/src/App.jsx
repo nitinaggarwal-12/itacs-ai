@@ -5254,6 +5254,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <div className="form-group" style={{ flex: 1 }}>
                         <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Category</label>
                         <select 
+                          id="create-imp-category"
                           value={newImpCategory} 
                           onChange={(e) => setNewImpCategory(e.target.value)}
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}
@@ -5267,6 +5268,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <div className="form-group" style={{ flex: 1 }}>
                         <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Priority</label>
                         <select 
+                          id="create-imp-priority"
                           value={newImpPriority} 
                           onChange={(e) => setNewImpPriority(e.target.value)}
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}
@@ -5280,6 +5282,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       <div className="form-group" style={{ flex: 1 }}>
                         <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Resource Tier</label>
                         <select 
+                          id="create-imp-resource-tier"
                           value={newImpResourceTier} 
                           onChange={(e) => setNewImpResourceTier(e.target.value)}
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}

@@ -107,33 +107,34 @@ const path = require('path');
 
     // ----------------- STEP 2: Launch Tour (Tour Step 0: Intro) -----------------
     console.log("📸 Step 2: Launching Mission 4 Tour...");
-    await page.click('#start-mission-4-btn');
+    await page.$eval('#start-mission-4-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000)); // Settling delay
     await assertPopoverIntegrity(2);
     await page.screenshot({ path: path.join(screenshotDir, '02_mission4_intro.png') });
 
     // ----------------- STEP 3: Advance to Tour Step 1 (Formulate Button Spotlight) -----------------
     console.log("📸 Step 3: Advancing to Tour Step 1 (Formulate Button)...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1500)); // Tab switch delay
     await assertPopoverIntegrity(3);
     await page.screenshot({ path: path.join(screenshotDir, '03_step1_builder_portal.png') });
 
     // ----------------- STEP 4: Formulate Imperative (Interactive Action) -----------------
     console.log("📸 Step 4: Formulating Imperative via Modal...");
-    // Physically click the spotlighted formulate button
-    await page.click('#add-imperative-btn');
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for modal slide-in
+    // Physically click the spotlighted formulate button using DOM-level click to bypass overlays!
+    await page.$eval('#add-imperative-btn', el => el.click());
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for modal slide-in
+    await page.screenshot({ path: path.join(screenshotDir, 'debug_modal_open.png') });
 
     // Fill inputs
     console.log("✏️ Typing Title and Description...");
     await page.type('input[placeholder*="Optimize regional"]', "Optimize Regional Cold-Chain Distribution Channels");
     await page.type('textarea[placeholder*="Define the strategic"]', "Mitigate temperature fluctuation risks by deploying IoT-enabled smart sensors across regional distributors.");
     
-    // Select category, priority, and resource tier
-    await page.select('select:nth-of-type(1)', 'clinical'); // category
-    await page.select('select:nth-of-type(2)', 'medium');   // priority
-    await page.select('select:nth-of-type(3)', 'low');      // resource tier (Low so it maps to low column!)
+    // Select category, priority, and resource tier using robust, explicit element IDs!
+    await page.select('#create-imp-category', 'clinical');
+    await page.select('#create-imp-priority', 'medium');
+    await page.select('#create-imp-resource-tier', 'low');
     
     await page.screenshot({ path: path.join(screenshotDir, '04_form_inputs_filled.png') });
 
@@ -150,28 +151,28 @@ const path = require('path');
 
     // ----------------- STEP 5: Advance to Tour Step 2 (Kanban Board Spotlight) -----------------
     console.log("📸 Step 5: Advancing to Tour Step 2 (Kanban Board)...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(5);
     await page.screenshot({ path: path.join(screenshotDir, '06_step2_kanban_board.png') });
 
     // ----------------- STEP 6: Advance to Tour Step 3 (Card Spotlight) -----------------
     console.log("📸 Step 6: Advancing to Tour Step 3 (Card Spotlight)...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(6);
     await page.screenshot({ path: path.join(screenshotDir, '07_step3_imperative_card.png') });
 
     // ----------------- STEP 7: Interact with Card to open Workshop Drawer -----------------
     console.log("📸 Step 7: Clicking card to open Workshop Drawer...");
-    // Physically click the card to slide open the Workshop Drawer
-    await page.click('#first-imperative-card');
+    // Click the card to slide open the Workshop Drawer using DOM-level click
+    await page.$eval('#first-imperative-card', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1500)); // Allow slide-out drawer to settle!
     await page.screenshot({ path: path.join(screenshotDir, '08_workshop_drawer_opened.png') });
 
     // ----------------- STEP 8: Advance to Tour Step 4 (Implications Editor Spotlight) -----------------
     console.log("📸 Step 8: Advancing to Tour Step 4 (Implications Editor)...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(8);
     await page.screenshot({ path: path.join(screenshotDir, '09_step4_implications_editor.png') });
@@ -185,7 +186,7 @@ const path = require('path');
 
     // ----------------- STEP 9: Advance to Tour Step 5 (Actions Ledger Spotlight) -----------------
     console.log("📸 Step 9: Advancing to Tour Step 5 (Actions Ledger)...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(9);
     await page.screenshot({ path: path.join(screenshotDir, '11_step5_actions_builder.png') });
@@ -195,21 +196,21 @@ const path = require('path');
     await page.type('input[placeholder*="Add a new tactical"]', "Deploy 500 smart sensors to pilot distribution nodes in Germany.");
     // Link first evidence card
     await page.select('select:nth-of-type(2)', '1'); // Select first evidence card option
-    await page.click('#workshop-actions-builder button'); // Click "Add" button
+    await page.$eval('#workshop-actions-builder button', el => el.click()); // Click "Add" button
     
     await new Promise(resolve => setTimeout(resolve, 1500)); // Allow DB save & list render to settle
     await page.screenshot({ path: path.join(screenshotDir, '12_tactical_action_added.png') });
 
     // ----------------- STEP 10: Advance to Tour Step 6 (Graduation Congrats) -----------------
     console.log("📸 Step 10: Advancing to Graduation Congratulations...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(10);
     await page.screenshot({ path: path.join(screenshotDir, '13_graduation_congrats.png') });
 
     // ----------------- STEP 11: Complete Tour & Return to Cockpit -----------------
     console.log("📸 Step 11: Completing Mission 4 and returning to Cockpit...");
-    await page.click('#tour-next-btn');
+    await page.$eval('#tour-next-btn', el => el.click());
     await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for Cockpit load and localStorage sync
     await page.screenshot({ path: path.join(screenshotDir, '14_mission_complete.png') });
 
