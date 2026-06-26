@@ -1226,6 +1226,44 @@ export default function App() {
     "Optimize Launch Readiness": 5 // % ($2.5M)
   });
 
+  // 8. Strategic Resource Allocation & Budget Rebalancing Handler
+  const handleUpdateBudget = (pillarName, newVal) => {
+    const value = Math.max(0, Math.min(100, Number(newVal)));
+    
+    // The amount of budget we need to distribute among the other pillars
+    const remaining = 100 - value;
+    
+    const otherPillars = Object.keys(budgetAllocations).filter(p => p !== pillarName);
+    
+    // Calculate the current sum of the other pillars
+    const otherSum = otherPillars.reduce((sum, p) => sum + budgetAllocations[p], 0);
+    
+    let newAllocations = { ...budgetAllocations, [pillarName]: value };
+    
+    if (otherSum > 0) {
+      // Proportionally allocate the remaining percentage
+      otherPillars.forEach(p => {
+        const share = (budgetAllocations[p] / otherSum) * remaining;
+        newAllocations[p] = Math.round(share);
+      });
+    } else {
+      // Equal distribution if other sum was 0
+      otherPillars.forEach(p => {
+        newAllocations[p] = Math.round(remaining / otherPillars.length);
+      });
+    }
+    
+    // Adjust rounding errors to ensure exact sum is 100
+    const finalSum = Object.values(newAllocations).reduce((sum, v) => sum + v, 0);
+    if (finalSum !== 100) {
+      const diff = 100 - finalSum;
+      // Apply the rounding difference to the first other pillar
+      newAllocations[otherPillars[0]] += diff;
+    }
+    
+    setBudgetAllocations(newAllocations);
+  };
+
   // 9. AI Field Force Roleplay States
   const [roleplayPersona, setRoleplayPersona] = useState('skeptical_oncologist');
   const [roleplayChatHistory, setRoleplayChatHistory] = useState([
@@ -10045,8 +10083,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
         {/* 4. STRATEGIC RESOURCE ALLOCATION (BUDGET TREE-MAP) */}
         {activeTab === 'budget' && (
           <div className="budget-container animate-fade-in" style={{
-            display: 'grid',
-            gridTemplateRows: 'auto 1fr',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '24px',
             padding: '24px 32px',
             height: 'calc(100vh - 80px)',
@@ -10055,43 +10093,46 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           }}>
             {/* Top Row: Budget Strategy Overview */}
             <div className="glass-card" style={{
-              padding: '24px',
+              padding: '20px 24px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px'
+              gap: '12px',
+              flexShrink: 0
             }}>
-              <div>
-                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  FINANCIAL STRATEGY INTEGRATION
-                </span>
-                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Strategic Resource Allocation (Budget Strategy)
-                </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
-                  Total Brand Launch Budget: <strong style={{ color: 'var(--text-primary)' }}>$50.0M USD</strong>. Maps financial allocations directly to the pillars created in the Imperative Builder.
-                </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    FINANCIAL STRATEGY INTEGRATION
+                  </span>
+                  <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    Strategic Resource Allocation (Budget Strategy)
+                  </h2>
+                  <p style={{ margin: '4px 0 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                    Total Brand Launch Budget: <strong style={{ color: 'var(--text-primary)' }}>$50.0M USD</strong>. Drag sliders inside blocks to dynamically rebalance funds.
+                  </p>
+                </div>
               </div>
 
-              {/* AI Misalignment Flag */}
-              {budgetAllocations["Accelerate Diagnostic Speed"] === 15 ? (
+              {/* AI Misalignment Flag (High Contrast Healed!) */}
+              {budgetAllocations["Accelerate Diagnostic Speed"] < 25 ? (
                 <div className="animate-scale-in" style={{
-                  padding: '12px 16px',
-                  background: 'rgba(245,158,11,0.08)',
-                  border: '1px solid rgba(245,158,11,0.2)',
-                  borderRadius: '10px',
+                  padding: '10px 16px',
+                  background: 'rgba(245,158,11,0.05)',
+                  border: '1px solid rgba(245,158,11,0.25)',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   gap: '12px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '16px' }}>⚠️</span>
+                    <span style={{ fontSize: '14px', color: 'var(--color-warning)' }}>⚠️</span>
                     <div>
-                      <strong style={{ fontSize: '11px', color: '#fde047' }}>
-                        AI STRATEGIC ALIGNMENT WARNING: Diagnostic Screening Speed is flagged as GOLT Priority #1, but is underfunded.
+                      <strong style={{ fontSize: '11px', color: 'var(--text-primary)' }}>
+                        AI STRATEGIC ALIGNMENT WARNING: <span style={{ color: 'var(--color-warning)' }}>Diagnostic Screening Speed is underfunded (GOLT Priority #1).</span>
                       </strong>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#fde047' }}>
-                        Diagnostic Speed has the highest priority weighting (Accrual Barrier) but only has 15% ($7.5M) budget allocated. Consider shifting $5.0M to avoid launch execution bottlenecks.
+                      <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
+                        Diagnostic Speed has the highest priority weighting (Accrual Barrier) but only has {budgetAllocations["Accelerate Diagnostic Speed"]}% allocated. Raise to 25% ($12.5M) to avoid launch execution bottlenecks.
                       </p>
                     </div>
                   </div>
@@ -10107,140 +10148,348 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                       alert("⚡ Brand Launch Budget optimized successfully. Aligned with GOLT priority matrices!");
                     }}
                     className="btn btn-primary"
-                    style={{ fontSize: '10px', padding: '6px 12px', whiteSpace: 'nowrap', cursor: 'pointer' }}
+                    style={{ fontSize: '10px', padding: '6px 12px', whiteSpace: 'nowrap', cursor: 'pointer', background: 'var(--brand-purple)', border: 'none' }}
                   >
                     ⚡ Auto-Reallocate Budget
                   </button>
                 </div>
               ) : (
                 <div className="animate-scale-in" style={{
-                  padding: '12px 16px',
-                  background: 'rgba(16,185,129,0.08)',
-                  border: '1px solid rgba(16,185,129,0.2)',
-                  borderRadius: '10px',
+                  padding: '10px 16px',
+                  background: 'rgba(16,185,129,0.05)',
+                  border: '1px solid rgba(16,185,129,0.25)',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px'
                 }}>
-                  <span style={{ fontSize: '16px' }}>✓</span>
+                  <span style={{ fontSize: '14px', color: 'var(--color-success)' }}>✓</span>
                   <div>
-                    <strong style={{ fontSize: '11px', color: '#a7f3d0' }}>
-                      ✓ AI STRATEGIC ALIGNMENT OPTIMIZED: Budget matches tactical priority weights.
+                    <strong style={{ fontSize: '11px', color: 'var(--text-primary)' }}>
+                      AI STRATEGIC ALIGNMENT OPTIMIZED: <span style={{ color: 'var(--color-success)' }}>Budget matches tactical priority weights.</span>
                     </strong>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '9px', color: '#a7f3d0' }}>
-                      Diagnostic screening has been reallocated to 25% ($12.5M), resolving structural launch execution friction.
+                    <p style={{ margin: '2px 0 0 0', fontSize: '9.5px', color: 'var(--text-secondary)' }}>
+                      Diagnostic screening has been reallocated to {budgetAllocations["Accelerate Diagnostic Speed"]}%, resolving structural launch execution friction.
                     </p>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Bottom Row: Hierarchical budget blocks (Tree-map mockup) */}
+            {/* Middle Row: Hierarchical budget blocks (Tree-map mockup converted to Interactive Sliders!) */}
             <div className="glass-card" style={{
-              padding: '24px',
+              padding: '20px 24px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '16px'
+              gap: '12px',
+              flexShrink: 0
             }}>
-              <h3 style={{ margin: 0, fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
-                $50.0M Budget Distribution Map
+              <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                $50.0M Budget Distribution Map (Interactive Sliders)
               </h3>
 
-              {/* Tree-map horizontal blocks representation */}
-              <div style={{ display: 'flex', height: '160px', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
+              {/* Tree-map horizontal blocks representation with range inputs */}
+              <div style={{ display: 'flex', height: '150px', gap: '8px', width: '100%', boxSizing: 'border-box' }}>
+                
                 {/* Block 1: Clinical Differentiation */}
                 <div style={{
-                  flex: budgetAllocations["Sharpen Clinical Differentiation"],
-                  background: 'rgba(99, 102, 241, 0.15)',
+                  flex: Math.max(budgetAllocations["Sharpen Clinical Differentiation"], 8), // prevent collapsing entirely visually
+                  background: 'rgba(99, 102, 241, 0.08)',
                   border: '2px solid var(--brand-indigo)',
                   borderRadius: '10px',
-                  padding: '16px',
+                  padding: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'all 0.4s ease'
+                  transition: 'all 0.3s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Sharpen Clinical Differentiation
                     </h4>
-                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #2</span>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-indigo)', fontWeight: 'bold' }}>GOLT Priority #2</span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
-                    {budgetAllocations["Sharpen Clinical Differentiation"]}% (${(50 * budgetAllocations["Sharpen Clinical Differentiation"] / 100).toFixed(1)}M)
-                  </strong>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <strong style={{ fontSize: '16px', color: 'var(--text-primary)' }}>
+                      {budgetAllocations["Sharpen Clinical Differentiation"]}% (${(50 * budgetAllocations["Sharpen Clinical Differentiation"] / 100).toFixed(1)}M)
+                    </strong>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={budgetAllocations["Sharpen Clinical Differentiation"]}
+                      onChange={(e) => handleUpdateBudget("Sharpen Clinical Differentiation", e.target.value)}
+                      style={{ width: '100%', accentColor: 'var(--brand-indigo)', cursor: 'pointer', height: '4px' }}
+                    />
+                  </div>
                 </div>
 
                 {/* Block 2: Payer Value */}
                 <div style={{
-                  flex: budgetAllocations["Demonstrate Payer Value"],
-                  background: 'rgba(139, 92, 246, 0.15)',
+                  flex: Math.max(budgetAllocations["Demonstrate Payer Value"], 8),
+                  background: 'rgba(139, 92, 246, 0.08)',
                   border: '2px solid var(--brand-purple)',
                   borderRadius: '10px',
-                  padding: '16px',
+                  padding: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'all 0.4s ease'
+                  transition: 'all 0.3s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Demonstrate Payer Value
                     </h4>
-                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #3</span>
+                    <span style={{ fontSize: '9px', color: 'var(--brand-purple)', fontWeight: 'bold' }}>GOLT Priority #3</span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
-                    {budgetAllocations["Demonstrate Payer Value"]}% (${(50 * budgetAllocations["Demonstrate Payer Value"] / 100).toFixed(1)}M)
-                  </strong>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <strong style={{ fontSize: '16px', color: 'var(--text-primary)' }}>
+                      {budgetAllocations["Demonstrate Payer Value"]}% (${(50 * budgetAllocations["Demonstrate Payer Value"] / 100).toFixed(1)}M)
+                    </strong>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={budgetAllocations["Demonstrate Payer Value"]}
+                      onChange={(e) => handleUpdateBudget("Demonstrate Payer Value", e.target.value)}
+                      style={{ width: '100%', accentColor: 'var(--brand-purple)', cursor: 'pointer', height: '4px' }}
+                    />
+                  </div>
                 </div>
 
                 {/* Block 3: Diagnostic Screening */}
                 <div style={{
-                  flex: budgetAllocations["Accelerate Diagnostic Speed"],
-                  background: budgetAllocations["Accelerate Diagnostic Speed"] === 25 ? 'rgba(6, 182, 212, 0.15)' : 'rgba(245,158,11,0.1)',
-                  border: `2px solid ${budgetAllocations["Accelerate Diagnostic Speed"] === 25 ? 'var(--brand-cyan)' : '#f59e0b'}`,
+                  flex: Math.max(budgetAllocations["Accelerate Diagnostic Speed"], 8),
+                  background: budgetAllocations["Accelerate Diagnostic Speed"] >= 25 ? 'rgba(6, 182, 212, 0.08)' : 'rgba(245,158,11,0.05)',
+                  border: `2px solid ${budgetAllocations["Accelerate Diagnostic Speed"] >= 25 ? 'var(--brand-cyan)' : 'var(--color-warning)'}`,
                   borderRadius: '10px',
-                  padding: '16px',
+                  padding: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'all 0.4s ease'
+                  transition: 'all 0.3s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+                    <h4 style={{ margin: 0, fontSize: '12px', color: 'var(--text-primary)', fontWeight: 'bold' }}>
                       Accelerate Diagnostic Speed
                     </h4>
-                    <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>GOLT Priority #1</span>
+                    <span style={{ fontSize: '9px', color: budgetAllocations["Accelerate Diagnostic Speed"] >= 25 ? 'var(--brand-cyan)' : 'var(--color-warning)', fontWeight: 'bold' }}>
+                      GOLT Priority #1
+                    </span>
                   </div>
-                  <strong style={{ fontSize: '18px', color: 'var(--text-primary)' }}>
-                    {budgetAllocations["Accelerate Diagnostic Speed"]}% (${(50 * budgetAllocations["Accelerate Diagnostic Speed"] / 100).toFixed(1)}M)
-                  </strong>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <strong style={{ fontSize: '16px', color: 'var(--text-primary)' }}>
+                      {budgetAllocations["Accelerate Diagnostic Speed"]}% (${(50 * budgetAllocations["Accelerate Diagnostic Speed"] / 100).toFixed(1)}M)
+                    </strong>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={budgetAllocations["Accelerate Diagnostic Speed"]}
+                      onChange={(e) => handleUpdateBudget("Accelerate Diagnostic Speed", e.target.value)}
+                      style={{ width: '100%', accentColor: budgetAllocations["Accelerate Diagnostic Speed"] >= 25 ? 'var(--brand-cyan)' : 'var(--color-warning)', cursor: 'pointer', height: '4px' }}
+                    />
+                  </div>
                 </div>
 
                 {/* Block 4: Launch Readiness */}
                 <div style={{
-                  flex: budgetAllocations["Optimize Launch Readiness"],
-                  background: 'rgba(255,255,255,0.01)',
-                  border: '1px dashed rgba(255,255,255,0.1)',
+                  flex: Math.max(budgetAllocations["Optimize Launch Readiness"], 6),
+                  background: 'var(--glass-bg)',
+                  border: '1px dashed var(--glass-border)',
                   borderRadius: '10px',
-                  padding: '16px',
+                  padding: '14px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'all 0.4s ease'
+                  transition: 'all 0.3s ease'
                 }}>
                   <div>
-                    <h4 style={{ margin: 0, fontSize: '10px', color: 'var(--text-muted)' }}>
+                    <h4 style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)' }}>
                       Optimize Launch Readiness
                     </h4>
                     <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>GOLT Priority #4</span>
                   </div>
-                  <strong style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
-                    {budgetAllocations["Optimize Launch Readiness"]}% (${(50 * budgetAllocations["Optimize Launch Readiness"] / 100).toFixed(1)}M)
-                  </strong>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <strong style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+                      {budgetAllocations["Optimize Launch Readiness"]}% (${(50 * budgetAllocations["Optimize Launch Readiness"] / 100).toFixed(1)}M)
+                    </strong>
+                    <input 
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={budgetAllocations["Optimize Launch Readiness"]}
+                      onChange={(e) => handleUpdateBudget("Optimize Launch Readiness", e.target.value)}
+                      style={{ width: '100%', accentColor: 'var(--text-muted)', cursor: 'pointer', height: '4px' }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Bottom Row: Dynamic SVG Launch Curve & Detailed Cost Ledger (Fills empty space!) */}
+            {(() => {
+              // Calculate simulated peak adoption dynamically based on Accelerate Diagnostic Speed allocation
+              const diagAllocation = budgetAllocations["Accelerate Diagnostic Speed"];
+              const peakAdoption = 40 + (diagAllocation >= 25 ? 52 : (diagAllocation - 15) * 5.2);
+              
+              // Dynamic Y coordinate for Month 12 peak
+              const yPeak = 220 - (peakAdoption * 1.6);
+              const pathD = `M 40 220 Q 180 200, 360 ${yPeak + 45} T 720 ${yPeak}`;
+              
+              return (
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 1.1fr', 
+                  gap: '24px', 
+                  width: '100%', 
+                  boxSizing: 'border-box',
+                  flex: 1,
+                  minHeight: '280px',
+                  marginBottom: '10px'
+                }}>
+                  
+                  {/* Left: 12-Month Market Adoption Curve */}
+                  <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                        📈 Simulated 12-Month Market Adoption Curve
+                      </h4>
+                      <span style={{ 
+                        fontSize: '11px', 
+                        fontWeight: 'bold', 
+                        color: peakAdoption > 80 ? 'var(--color-success)' : 'var(--color-warning)',
+                        background: peakAdoption > 80 ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)',
+                        padding: '2px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        Peak adoption: {Math.round(peakAdoption)}%
+                      </span>
+                    </div>
+                    
+                    {/* SVG Chart */}
+                    <div style={{ flex: 1, minHeight: '180px', background: 'rgba(0,0,0,0.05)', borderRadius: '8px', border: '1px solid var(--glass-border)', position: 'relative', overflow: 'hidden', padding: '10px' }}>
+                      <svg viewBox="0 0 760 240" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+                        {/* Grid lines */}
+                        <line x1="40" y1="220" x2="720" y2="220" stroke="var(--glass-border)" strokeWidth="1" />
+                        <line x1="40" y1="140" x2="720" y2="140" stroke="var(--glass-border)" strokeDasharray="3" />
+                        <line x1="40" y1="60" x2="720" y2="60" stroke="var(--glass-border)" strokeDasharray="3" />
+                        
+                        <line x1="40" y1="220" x2="40" y2="40" stroke="var(--glass-border)" strokeWidth="1" />
+                        <line x1="266" y1="220" x2="266" y2="40" stroke="var(--glass-border)" strokeDasharray="3" />
+                        <line x1="493" y1="220" x2="493" y2="40" stroke="var(--glass-border)" strokeDasharray="3" />
+                        <line x1="720" y1="220" x2="720" y2="40" stroke="var(--glass-border)" strokeWidth="1" />
+
+                        {/* Curve Shadow area */}
+                        <path 
+                          d={`${pathD} L 720 220 L 40 220 Z`} 
+                          fill={peakAdoption > 80 ? 'rgba(16, 185, 129, 0.04)' : 'rgba(245, 158, 11, 0.04)'} 
+                          transition="all 0.3s ease" 
+                        />
+                        
+                        {/* Dynamic Path */}
+                        <path 
+                          d={pathD} 
+                          fill="none" 
+                          stroke={peakAdoption > 80 ? 'var(--color-success)' : 'var(--color-warning)'} 
+                          strokeWidth="3" 
+                          style={{ transition: 'all 0.3s ease' }}
+                        />
+                        
+                        {/* Final Peak Dot */}
+                        <circle 
+                          cx="720" 
+                          cy={yPeak} 
+                          r="6" 
+                          fill={peakAdoption > 80 ? 'var(--color-success)' : 'var(--color-warning)'} 
+                          style={{ transition: 'all 0.3s ease', filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.5))' }}
+                        />
+
+                        {/* Chart labels */}
+                        <text x="40" y="235" fill="var(--text-muted)" fontSize="9" textAnchor="middle">Launch</text>
+                        <text x="266" y="235" fill="var(--text-muted)" fontSize="9" textAnchor="middle">Month 4</text>
+                        <text x="493" y="235" fill="var(--text-muted)" fontSize="9" textAnchor="middle">Month 8</text>
+                        <text x="720" y="235" fill="var(--text-muted)" fontSize="9" textAnchor="middle">Month 12</text>
+                        
+                        <text x="30" y="223" fill="var(--text-muted)" fontSize="9" textAnchor="end">0%</text>
+                        <text x="30" y="143" fill="var(--text-muted)" fontSize="9" textAnchor="end">50%</text>
+                        <text x="30" y="103" fill="var(--text-muted)" fontSize="9" textAnchor="end">100%</text>
+                      </svg>
+                      
+                      {diagAllocation < 25 && (
+                        <div style={{ position: 'absolute', bottom: '28px', left: '160px', right: '160px', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '6px 10px', borderRadius: '6px', textAlign: 'center', fontSize: '9px', color: '#fca5a5' }}>
+                          ⚠️ Diagnostic capacity bottleneck limits Month-12 adoption peak.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Right: Spend breakdown table */}
+                  <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                      💵 Accrual Spend Breakdown Ledger
+                    </h4>
+                    
+                    <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--glass-border)', borderRadius: '8px', background: 'rgba(0,0,0,0.05)' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', textAlign: 'left' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid var(--glass-border)', background: 'var(--bg-tertiary)', color: 'var(--text-primary)', fontWeight: 'bold' }}>
+                            <th style={{ padding: '8px 12px' }}>Strategic Pillar</th>
+                            <th style={{ padding: '8px 12px' }}>Sub-Allocation</th>
+                            <th style={{ padding: '8px 12px', textAlign: 'right' }}>Weight %</th>
+                            <th style={{ padding: '8px 12px', textAlign: 'right' }}>Spend ($)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
+                            <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>Clinical Diff.</td>
+                            <td style={{ padding: '8px 12px' }}>Biomarker & Registries</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right' }}>{budgetAllocations["Sharpen Clinical Differentiation"]}%</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                              ${(50 * budgetAllocations["Sharpen Clinical Differentiation"] / 100).toFixed(2)}M
+                            </td>
+                          </tr>
+                          <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
+                            <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>Payer Value</td>
+                            <td style={{ padding: '8px 12px' }}>Reimbursement Dossiers</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right' }}>{budgetAllocations["Demonstrate Payer Value"]}%</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                              ${(50 * budgetAllocations["Demonstrate Payer Value"] / 100).toFixed(2)}M
+                            </td>
+                          </tr>
+                          <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
+                            <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>Diagnostic Speed</td>
+                            <td style={{ padding: '8px 12px' }}>Sequencing Placements</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right' }}>{budgetAllocations["Accelerate Diagnostic Speed"]}%</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                              ${(50 * budgetAllocations["Accelerate Diagnostic Speed"] / 100).toFixed(2)}M
+                            </td>
+                          </tr>
+                          <tr style={{ color: 'var(--text-secondary)' }}>
+                            <td style={{ padding: '8px 12px', fontWeight: 'bold' }}>Launch Readiness</td>
+                            <td style={{ padding: '8px 12px' }}>Field Force Symposia</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right' }}>{budgetAllocations["Optimize Launch Readiness"]}%</td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                              ${(50 * budgetAllocations["Optimize Launch Readiness"] / 100).toFixed(2)}M
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-tertiary)', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+                      <span style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Total Outlay</span>
+                      <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>$50.00M USD (100% Bound)</strong>
+                    </div>
+                  </div>
+                  
+                </div>
+              );
+            })()}
           </div>
         )}
 
