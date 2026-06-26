@@ -105,30 +105,23 @@ const path = require('path');
     console.log("📸 Step 1: Cockpit Loaded...");
     await page.screenshot({ path: path.join(screenshotDir, '01_home_loaded.png') });
 
-    // ----------------- STEP 2: Launch Tour -----------------
+    // ----------------- STEP 2: Launch Tour (Tour Step 0: Intro) -----------------
     console.log("📸 Step 2: Launching Mission 4 Tour...");
     await page.click('#start-mission-4-btn');
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Mandatory animation settling delay!
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Settling delay
     await assertPopoverIntegrity(2);
     await page.screenshot({ path: path.join(screenshotDir, '02_mission4_intro.png') });
 
-    // ----------------- STEP 3: Go to Builder Portal -----------------
-    console.log("📸 Step 3: Transitioning to Strategic Builder Portal...");
+    // ----------------- STEP 3: Advance to Tour Step 1 (Formulate Button Spotlight) -----------------
+    console.log("📸 Step 3: Advancing to Tour Step 1 (Formulate Button)...");
     await page.click('#tour-next-btn');
-    await new Promise(resolve => setTimeout(resolve, 1500)); // Allow tab switch & animations to settle!
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Tab switch delay
     await assertPopoverIntegrity(3);
     await page.screenshot({ path: path.join(screenshotDir, '03_step1_builder_portal.png') });
 
-    // ----------------- STEP 4: Highlight Formulate Button -----------------
-    console.log("📸 Step 4: Highlighting Strategy Formulator Button...");
-    await page.click('#tour-next-btn');
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Settling delay
-    await assertPopoverIntegrity(4);
-    await page.screenshot({ path: path.join(screenshotDir, '04_step2_formulate_btn.png') });
-
-    // ----------------- STEP 5: Fill Form & Create Strategic Imperative -----------------
-    console.log("📸 Step 5: Formulating Imperative via Modal...");
-    // Physically click the button to open the creation modal
+    // ----------------- STEP 4: Formulate Imperative (Interactive Action) -----------------
+    console.log("📸 Step 4: Formulating Imperative via Modal...");
+    // Physically click the spotlighted formulate button
     await page.click('#add-imperative-btn');
     await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for modal slide-in
 
@@ -142,7 +135,7 @@ const path = require('path');
     await page.select('select:nth-of-type(2)', 'medium');   // priority
     await page.select('select:nth-of-type(3)', 'low');      // resource tier (Low so it maps to low column!)
     
-    await page.screenshot({ path: path.join(screenshotDir, '05_form_inputs_filled.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '04_form_inputs_filled.png') });
 
     // Click Formulate button inside modal
     console.log("💾 Submitting Formulate Imperative form...");
@@ -153,73 +146,74 @@ const path = require('path');
     });
     
     await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for database insert & board refresh!
-    await page.screenshot({ path: path.join(screenshotDir, '06_imperative_created.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '05_imperative_created.png') });
 
-    // ----------------- STEP 6: Highlight Kanban Board -----------------
-    console.log("📸 Step 6: Highlighting Kanban Board columns...");
+    // ----------------- STEP 5: Advance to Tour Step 2 (Kanban Board Spotlight) -----------------
+    console.log("📸 Step 5: Advancing to Tour Step 2 (Kanban Board)...");
+    await page.click('#tour-next-btn');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await assertPopoverIntegrity(5);
+    await page.screenshot({ path: path.join(screenshotDir, '06_step2_kanban_board.png') });
+
+    // ----------------- STEP 6: Advance to Tour Step 3 (Card Spotlight) -----------------
+    console.log("📸 Step 6: Advancing to Tour Step 3 (Card Spotlight)...");
     await page.click('#tour-next-btn');
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(6);
-    await page.screenshot({ path: path.join(screenshotDir, '07_step3_kanban_board.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '07_step3_imperative_card.png') });
 
-    // ----------------- STEP 7: Highlight Card & Open Drawer -----------------
-    console.log("📸 Step 7: Highlighting First Strategic Card...");
-    await page.click('#tour-next-btn');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await assertPopoverIntegrity(7);
-    await page.screenshot({ path: path.join(screenshotDir, '08_step4_imperative_card.png') });
-
+    // ----------------- STEP 7: Interact with Card to open Workshop Drawer -----------------
+    console.log("📸 Step 7: Clicking card to open Workshop Drawer...");
     // Physically click the card to slide open the Workshop Drawer
-    console.log("💼 Clicking strategic card to open Workshop Drawer...");
     await page.click('#first-imperative-card');
     await new Promise(resolve => setTimeout(resolve, 1500)); // Allow slide-out drawer to settle!
-    await page.screenshot({ path: path.join(screenshotDir, '09_workshop_drawer_opened.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '08_workshop_drawer_opened.png') });
 
-    // ----------------- STEP 8: Highlight Implications Editor -----------------
-    console.log("📸 Step 8: Highlighting Implications Editor (Slide 23)...");
+    // ----------------- STEP 8: Advance to Tour Step 4 (Implications Editor Spotlight) -----------------
+    console.log("📸 Step 8: Advancing to Tour Step 4 (Implications Editor)...");
     await page.click('#tour-next-btn');
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(8);
-    await page.screenshot({ path: path.join(screenshotDir, '10_step5_implications_editor.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '09_step4_implications_editor.png') });
 
     // Fill trade-offs & risks textareas
     console.log("✏️ Inputting Options, Trade-offs, and Risks...");
     await page.type('textarea[placeholder*="Heavy deployment"]', "Requires diverting 15% of regional medical affairs budget from advisory boards.");
     await page.type('textarea[placeholder*="Timeline delays"]', "Potential custom hardware supply chain lead time delays in Q3.");
     await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for autosave/debounce
-    await page.screenshot({ path: path.join(screenshotDir, '11_implications_filled.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '10_implications_filled.png') });
 
-    // ----------------- STEP 9: Highlight Actions Builder & Add Action -----------------
-    console.log("📸 Step 9: Highlighting Tactical Actions Ledger...");
+    // ----------------- STEP 9: Advance to Tour Step 5 (Actions Ledger Spotlight) -----------------
+    console.log("📸 Step 9: Advancing to Tour Step 5 (Actions Ledger)...");
     await page.click('#tour-next-btn');
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(9);
-    await page.screenshot({ path: path.join(screenshotDir, '12_step6_actions_builder.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '11_step5_actions_builder.png') });
 
     // Draft tactical action
     console.log("✏️ Adding Grounded Tactical Action...");
     await page.type('input[placeholder*="Add a new tactical"]', "Deploy 500 smart sensors to pilot distribution nodes in Germany.");
     // Link first evidence card
-    await page.select('select:nth-of-type(2)', '1'); // Select first evidence card option (id=1 since we reset firstCard)
+    await page.select('select:nth-of-type(2)', '1'); // Select first evidence card option
     await page.click('#workshop-actions-builder button'); // Click "Add" button
     
     await new Promise(resolve => setTimeout(resolve, 1500)); // Allow DB save & list render to settle
-    await page.screenshot({ path: path.join(screenshotDir, '13_tactical_action_added.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '12_tactical_action_added.png') });
 
-    // ----------------- STEP 10: Graduation Congrats -----------------
+    // ----------------- STEP 10: Advance to Tour Step 6 (Graduation Congrats) -----------------
     console.log("📸 Step 10: Advancing to Graduation Congratulations...");
     await page.click('#tour-next-btn');
     await new Promise(resolve => setTimeout(resolve, 1000));
     await assertPopoverIntegrity(10);
-    await page.screenshot({ path: path.join(screenshotDir, '14_graduation_congrats.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '13_graduation_congrats.png') });
 
-    // ----------------- STEP 11: Return to Cockpit & Complete Subway Roadmap -----------------
+    // ----------------- STEP 11: Complete Tour & Return to Cockpit -----------------
     console.log("📸 Step 11: Completing Mission 4 and returning to Cockpit...");
     await page.click('#tour-next-btn');
     await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for Cockpit load and localStorage sync
-    await page.screenshot({ path: path.join(screenshotDir, '15_mission_complete.png') });
+    await page.screenshot({ path: path.join(screenshotDir, '14_mission_complete.png') });
 
-    console.log("🎉 SUCCESS! All 15 visual frames for Mission 4 captured perfectly!");
+    console.log("🎉 SUCCESS! All 14 visual frames for Mission 4 captured perfectly!");
 
   } catch (err) {
     console.error("❌ E2E TEST CRASHED:", err);
