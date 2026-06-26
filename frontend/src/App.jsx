@@ -1734,12 +1734,7 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(details)
       });
-      if (res.ok) {
-        const result = await res.json();
-        if (selectedImperative && selectedImperative.id === impId) {
-          setSelectedImperative(result.imperative);
-        }
-      }
+      // Successfully persisted to database. No state overwrite here to prevent race conditions and focus loss during concurrent edits!
     } catch (e) {
       console.error("Failed to persist imperative details:", e);
     }
