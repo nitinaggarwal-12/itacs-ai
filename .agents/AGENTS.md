@@ -110,5 +110,21 @@ When conducting E2E interface validations, visual audits, or user journey stress
 * **Clean Visual Gallery Housekeeping**: Programmatically purge the target screenshot folder (`fs.unlinkSync`) *before* executing the Puppeteer run to prevent stale, misaligned, or orphaned screenshots from cluttering the workspace.
 * **GOLT & Multi-State Verification**: Always simulate human-in-the-loop consensus actions (like clicking voting options or drag-and-dropping cards) and capture the resulting state transitions.
 
+---
+
+## 🚫 RULE: Host-Level Binary & Railway CLI Installation Prohibition (macOS Environment)
+
+### 1. The Constraint
+You must **never** attempt to install, download, compile, or execute the `railway` CLI tool or any other third-party binary that requires host-level installation, package managers (like Homebrew), or admin privileges in this macOS environment.
+
+### 2. The Verification Protocol
+*   **Banned Operations**: Do not run installation scripts, curl-to-bash piping, or binary package managers.
+*   **Alternative Checks**: Always perform all deployment verifications, database audits, and routing checks using native, standard programming language protocols (e.g. Python's `urllib`, Node's `fetch`, or automated Puppeteer E2E scripts) and raw cURL requests rather than expecting CLI status outputs.
+*   **Self-Sufficient Diagnostics**: If you need to diagnose database states, write temporary, secure API endpoints (which you immediately purge after use) to audit internal states via HTTP, rather than attempting to connect via CLI tunnel binaries.
+
+### 3. Rationale
+This prevents execution crashes, command-not-found errors, and permission blocks in the sandbox/host container, ensuring 100% stable execution and respecting security constraints.
+
+
 
 
