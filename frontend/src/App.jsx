@@ -4617,9 +4617,37 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     <button onClick={() => setShowConflictForm(true)} className="btn btn-warn" style={{ padding: '8px 14px', fontSize: '12px' }}>
                       <AlertTriangle size={14} /> Flag Contradiction
                     </button>
-                    <button id="approve-to-memory-btn" onClick={handleApprove} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
-                      <Check size={14} /> Approve to Memory
-                    </button>
+                    {selectedInsight.is_validated ? (
+                      <button 
+                        id="approve-to-memory-btn" 
+                        disabled 
+                        className="btn" 
+                        style={{ 
+                          padding: '8px 14px', 
+                          fontSize: '12px',
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          color: 'white',
+                          border: 'none',
+                          cursor: 'not-allowed',
+                          boxShadow: 'none',
+                          opacity: 0.9,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        <Check size={14} /> Approved to Memory
+                      </button>
+                    ) : (
+                      <button 
+                        id="approve-to-memory-btn" 
+                        onClick={handleApprove} 
+                        className="btn btn-primary" 
+                        style={{ padding: '8px 14px', fontSize: '12px' }}
+                      >
+                        <Check size={14} /> Approve to Memory
+                      </button>
+                    )}
                   </div>
 
                 </div>
