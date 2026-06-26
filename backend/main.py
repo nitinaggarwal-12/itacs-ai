@@ -2236,6 +2236,10 @@ def startup_db_init():
                     simulation_notes TEXT
                 );
             """))
+            # Enable pgvector and add embedding column if missing
+            conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector;"))
+            conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS embedding vector(768);"))
+            
             # Self-healing migrations for dynamic strategic imperatives & pillars
             conn.execute(text("ALTER TABLE enterprise_memory ADD COLUMN IF NOT EXISTS strategic_pillar VARCHAR(255);"))
             
