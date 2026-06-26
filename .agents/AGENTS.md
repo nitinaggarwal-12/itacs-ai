@@ -44,6 +44,7 @@ You must **always** pause and present a comprehensive validation/review step (in
 * **Seed Verification**: When writing E2E tests, always verify state pre-seeding (like localStorage or database values) to ensure tests can run independently and reliably in clean browser sessions.
 * **Seed & Asset Integrity Auditing**: When implementing mock datasets, sample slide briefs, or onboarding templates, you **must** write a programmatic validation script (e.g. `scratch/validate_seeds.py`) to verify that the file contents match their strategic purposes and do not contain crossed or desynchronized text.
 * **Visual Gallery Review**: Offer a walkthrough of captured screenshots and code changes during the validation step so the user can visually confirm design integrity before moving forward.
+* **Visual Gallery Housekeeping & Stale File Prevention**: When writing or refactoring E2E screenshot automation suites, you **must** programmatically purge the target screenshot directory (e.g., `rm -f scratch/screenshots_mX/*.png` or equivalent directory cleaning) *before* executing the new test run. This guarantees that any orphaned, misaligned, or obsolete screenshots from previous failed or aborted runs are completely wiped, preventing stale files from lingering in the workspace or cluttering the visual validation gallery.
 
 ## 🧪 RULE: E2E Testing Synchronization & Animation Settling
 
