@@ -669,7 +669,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div id="diagram-architecture" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML1__"></div>
+                    <div id="diagram-architecture" class="mxgraph-deferred" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML1__"></div>
                 </div>
                 
                 <div class="alert-box alert-note" style="margin-top: 1rem;">
@@ -692,7 +692,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div id="diagram-gateway" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML2__"></div>
+                    <div id="diagram-gateway" class="mxgraph-deferred" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML2__"></div>
                 </div>
             </section>
 
@@ -708,7 +708,7 @@ html_template = """<!DOCTYPE html>
                 
                 <!-- Draw.io Interactive Embed Container (No conflicting ID, identical to template) -->
                 <div style="width: 100%; height: 940px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
-                    <div id="diagram-sequence" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML3__"></div>
+                    <div id="diagram-sequence" class="mxgraph-deferred" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="__XML3__"></div>
                 </div>
             </section>
 
@@ -1175,6 +1175,68 @@ html_template = """<!DOCTYPE html>
             });
         });
     </script>
+    
+    <!-- DYNAMIC DIAGRAMS DATABASE LOADER (PRODUCTION RESOLUTION) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("🚀 Initializing Dynamic Diagram Loading...");
+            const backendUrl = "https://itacs-backend-production.up.railway.app";
+            const diagramTypes = ["architecture", "gateway", "sequence"];
+            let pendingCount = diagramTypes.length;
+            
+            diagramTypes.forEach(function(dtype) {
+                const container = document.getElementById("diagram-" + dtype);
+                if (!container) {
+                    pendingCount--;
+                    return;
+                }
+                
+                // Fetch the latest XML from database
+                fetch(backendUrl + "/api/get-diagram/" + dtype)
+                    .then(function(res) {
+                        if (!res.ok) throw new Error("Status " + res.status);
+                        return res.json();
+                    })
+                    .then(function(data) {
+                        if (data && data.xml) {
+                            console.log("  🟢 Loaded custom diagram for " + dtype + " from database.");
+                            try {
+                                const config = JSON.parse(container.getAttribute("data-mxgraph"));
+                                config.xml = data.xml;
+                                container.setAttribute("data-mxgraph", JSON.stringify(config));
+                            } catch(e) {
+                                console.error("  ❌ Failed to update config XML: ", e);
+                            }
+                        } else {
+                            console.log("  🟡 Using default baseline diagram for " + dtype);
+                        }
+                    })
+                    .catch(function(err) {
+                        console.log("  🟡 Using default baseline diagram for " + dtype + " (Fetch failed: " + err.message + ")");
+                    })
+                    .finally(function() {
+                        // Mark as ready: change class from deferred to active
+                        container.className = "mxgraph";
+                        pendingCount--;
+                        if (pendingCount === 0) {
+                            console.log("  🚀 All diagrams prepared. Triggering Draw.io rendering...");
+                            triggerDrawioRender();
+                        }
+                    });
+            });
+            
+            function triggerDrawioRender() {
+                if (window.GraphViewer && typeof window.GraphViewer.processElements === "function") {
+                    window.GraphViewer.processElements();
+                    console.log("  🎉 Draw.io rendering completed!");
+                } else {
+                    console.log("  ⏳ Draw.io script not loaded yet. Retrying in 50ms...");
+                    setTimeout(triggerDrawioRender, 50);
+                }
+            }
+        });
+    </script>
+
     <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js" async></script>
 </body>
 </html>

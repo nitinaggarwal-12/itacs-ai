@@ -282,6 +282,14 @@ class TacticalAction(Base):
     created_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
 
 
+class Diagram(Base):
+    __tablename__ = "diagrams"
+
+    id = Column(String(50), primary_key=True) # "architecture" | "gateway" | "sequence"
+    xml = Column(Text, nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"), onupdate=text("CURRENT_TIMESTAMP"))
+
+
 # Dependency to get db session
 def get_db():
     db = SessionLocal()
@@ -2795,6 +2803,34 @@ def startup_db_init():
                 """))
                 logger.info("Pre-seeded default tactical tasks into the database.")
                 
+            # Create diagrams table if missing
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS diagrams (
+                    id VARCHAR(50) PRIMARY KEY,
+                    xml TEXT NOT NULL,
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                );
+            """))
+            
+            # Pre-seed default diagrams if empty
+            res_diagrams = conn.execute(text("SELECT COUNT(*) FROM diagrams")).fetchone()
+            if res_diagrams[0] == 0:
+                base_dir = os.path.dirname(os.path.abspath(__file__))
+                for dtype, filename in [("architecture", "raw_diagram_1.xml"), 
+                                         ("gateway", "raw_diagram_2.xml"), 
+                                         ("sequence", "raw_diagram_3.xml")]:
+                    xml_path = os.path.join(base_dir, filename)
+                    if os.path.exists(xml_path):
+                        with open(xml_path, "r", encoding="utf-8") as f:
+                            xml_val = f.read()
+                        conn.execute(text("INSERT INTO diagrams (id, xml) VALUES (:id, :xml)"), {"id": dtype, "xml": xml_val})
+                        logger.info(f"Pre-seeded default diagram '{dtype}' from file '{filename}'.")
+                    else:
+                        # Fallback basic XML if file is somehow missing
+                        fallback_xml = f'<mxfile><diagram id="{dtype}"><mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="test" parent="1" value="Default {dtype} Diagram" vertex="1"><mxGeometry height="60" width="120" x="100" y="100" as="geometry"/></mxCell></root></mxGraphModel></diagram></mxfile>'
+                        conn.execute(text("INSERT INTO diagrams (id, xml) VALUES (:id, :xml)"), {"id": dtype, "xml": fallback_xml})
+                        logger.warning(f"Default diagram file '{filename}' not found. Seeded fallback XML for '{dtype}'.")
+                        
             conn.commit()
             logger.info("Enterprise Productization SQL schemas and tables provisioned successfully.")
             
@@ -2807,63 +2843,52 @@ class SaveDiagramRequest(BaseModel):
     xml: str
     diagram_type: str = "architecture"
 
-@app.post("/api/save-diagram")
-def save_diagram_to_user_guide(req: SaveDiagramRequest):
+@app.get("/api/get-diagram/{diagram_type}")
+def get_diagram_xml(diagram_type: str, db: Session = Depends(get_db)):
     """
-    Saves an updated Draw.io diagram XML back into the static HTML user guide.
-    This enables full visual editing lifecycle of systems architecture in the UI.
+    Fetches the saved Draw.io XML for a diagram from the database.
+    This enables persistent, database-backed diagram loading.
     """
-    logger.info(f"Received request to save diagram: {req.diagram_type}")
+    logger.info(f"Received request to fetch diagram: {diagram_type}")
+    if diagram_type not in ["architecture", "gateway", "sequence"]:
+        raise HTTPException(status_code=400, detail="Invalid diagram type")
+        
     try:
-        import os
-        import re
-        import json
-        import html
-        
-        # Paths
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        html_path = os.path.join(os.path.dirname(base_dir), "frontend", "public", "user_guide.html")
-        
-        if not os.path.exists(html_path):
-            raise HTTPException(status_code=404, detail="user_guide.html not found on server")
+        diagram = db.query(Diagram).filter(Diagram.id == diagram_type).first()
+        if not diagram:
+            raise HTTPException(status_code=404, detail=f"Diagram {diagram_type} not found in database")
             
-        with open(html_path, "r", encoding="utf-8") as f:
-            html_content = f.read()
-            
-        # Configure the Draw.io embed dictionary
-        config = {
-            "highlight": "#06B6D4",
-            "nav": True,
-            "resize": True,
-            "toolbar": "zoom layers tags edit",
-            "edit": "_blank",
-            "xml": req.xml
-        }
-        
-        # Serialize to JSON and run robust HTML escaping
-        config_json = json.dumps(config)
-        escaped_config = html.escape(config_json, quote=True)
-        
-        # Surgical replacement regex based on diagram type (supports architecture, gateway, sequence)
-        if req.diagram_type in ["architecture", "gateway", "sequence"]:
-            pattern = rf'(<div\s+id="diagram-{req.diagram_type}"[^>]*data-mxgraph=")([^"]*)(")'
-        else:
-            raise HTTPException(status_code=400, detail=f"Invalid diagram type: {req.diagram_type}")
-            
-        if not re.search(pattern, html_content):
-            raise HTTPException(status_code=400, detail=f"Target diagram div for {req.diagram_type} not found in user_guide.html")
-            
-        updated_content = re.sub(pattern, lambda m: m.group(1) + escaped_config + m.group(3), html_content)
-        
-        with open(html_path, "w", encoding="utf-8") as f:
-            f.write(updated_content)
-            
-        logger.info(f"Diagram {req.diagram_type} XML successfully updated in user_guide.html")
-        return {"status": "success", "message": f"Diagram {req.diagram_type} saved successfully"}
-        
+        return {"status": "success", "xml": diagram.xml}
     except HTTPException as he:
         raise he
     except Exception as e:
+        logger.error(f"Failed to fetch diagram: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/save-diagram")
+def save_diagram_to_db(req: SaveDiagramRequest, db: Session = Depends(get_db)):
+    """
+    Saves an updated Draw.io diagram XML back into the database.
+    This enables full visual editing lifecycle of systems architecture in the UI.
+    """
+    logger.info(f"Received request to save diagram: {req.diagram_type}")
+    if req.diagram_type not in ["architecture", "gateway", "sequence"]:
+        raise HTTPException(status_code=400, detail="Invalid diagram type")
+        
+    try:
+        diagram = db.query(Diagram).filter(Diagram.id == req.diagram_type).first()
+        if not diagram:
+            diagram = Diagram(id=req.diagram_type, xml=req.xml)
+            db.add(diagram)
+        else:
+            diagram.xml = req.xml
+            
+        db.commit()
+        logger.info(f"Diagram {req.diagram_type} successfully updated in database")
+        return {"status": "success", "message": f"Diagram {req.diagram_type} saved successfully"}
+        
+    except Exception as e:
+        db.rollback()
         logger.error(f"Failed to save diagram: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 

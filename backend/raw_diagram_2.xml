@@ -1,0 +1,147 @@
+<mxfile host="embed.diagrams.net">
+  <diagram id="gateway_compliance_flow" name="Gateway &amp; Self-Healing Flow">
+    <mxGraphModel dx="1193" dy="853" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Row 1: Intake UI -->
+        <mxCell id="ui" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="Single Pane of Glass UI&lt;br&gt;&lt;i&gt;Conversational Intake / Upload&lt;/i&gt;" vertex="1">
+          <mxGeometry height="55" width="220" x="390" y="30" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 2: Kong AI Gateway & Ping -->
+        <mxCell id="gateway" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#DC2626;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="Kong AI Gateway &amp;amp; Ping&lt;br&gt;&lt;i&gt;JWT Scope Enforcement &amp;amp; PII Filter&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="240" x="380" y="115" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 3: Claims DB, Context Layer, Orchestrator -->
+        <mxCell id="claims_db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12" value="Scalable Claims DB&lt;br&gt;&lt;b&gt;320+ Approved HCP Claims&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="200" x="120" y="215" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="context" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontFamily=Helvetica;fontSize=12" value="Dynamic Context Layer&lt;br&gt;&lt;b&gt;Brand Guidelines &amp;amp; FDA Rules&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="180" x="410" y="227.5" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="orchestrator" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="Master Orchestrator Agent&lt;br&gt;&lt;i&gt;AWS AgentCore + Gemini 1.5 Pro (2M Context)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="250" x="650" y="225" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 4: 1:N Tactic Fan-Out Engine -->
+        <mxCell id="fanout" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="1:N Tactic Fan-Out Engine&lt;br&gt;&lt;i&gt;Translates global strategy to tactics&lt;/i&gt;" vertex="1">
+          <mxGeometry height="55" width="220" x="390" y="325" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 5: Sub-agents -->
+        <mxCell id="email_agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="Email Tactic Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="140" y="420" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="web_agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="Web Landing Page Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="420" y="420" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sms_agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="SMS / Alert Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="160" x="700" y="420" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 6: Risk & Compliance QC Agent -->
+        <mxCell id="qc_agent" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#DC2626;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="Risk &amp;amp; Compliance QC Agent&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro (Multimodal Audit). Triggers Dotted-Line Self-Healing.&lt;/i&gt;" vertex="1">
+          <mxGeometry height="65" width="380" x="310" y="510" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 7: Integrations & Connector Manager -->
+        <mxCell id="connector_mgr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12;fontStyle=1" value="Integrations &amp;amp; Connector Manager&lt;br&gt;&lt;i&gt;Applies Cryptographic SHA-256 Lock&lt;/i&gt;" vertex="1">
+          <mxGeometry height="55" width="240" x="380" y="615" as="geometry" />
+        </mxCell>
+        
+        <!-- Row 8: Target Connectors -->
+        <mxCell id="veeva_conn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="Veeva Vault Connector&lt;br&gt;&lt;i&gt;(PromoMats Portal)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="150" x="120" y="710" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sf_conn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="Salesforce Connector&lt;br&gt;&lt;i&gt;(Marketing Cloud)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="150" x="300" y="710" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fda_gateway" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=11" value="FDA ESG Portal&lt;br&gt;&lt;b&gt;Form FDA 2253 (eCTD)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="150" x="480" y="710" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="outlook_conn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11" value="Outlook / Email Channels" vertex="1">
+          <mxGeometry height="50" width="150" x="660" y="710" as="geometry" />
+        </mxCell>
+        
+        <!-- Core Connectors -->
+        <mxCell id="e1" edge="1" parent="1" source="ui" target="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="gateway" target="orchestrator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="gateway" target="claims_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="orchestrator" target="claims_db" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="orchestrator" target="context" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="orchestrator" target="fanout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="claims_db" target="fanout" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="fanout" target="email_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="fanout" target="web_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="fanout" target="sms_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="email_agent" target="qc_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="web_agent" target="qc_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="sms_agent" target="qc_agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" edge="1" parent="1" source="qc_agent" target="connector_mgr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="connector_mgr" target="veeva_conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="connector_mgr" target="sf_conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="connector_mgr" target="fda_gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" edge="1" parent="1" source="connector_mgr" target="outlook_conn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- RED DOTTED SELF-HEALING LOOP (qc_agent -> fanout) -->
+        <mxCell id="self_healing_loop" edge="1" parent="1" source="qc_agent" target="fanout" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=1;html=1;strokeWidth=2.5;strokeColor=#DC2626;dashed=1;fontColor=#DC2626;fontSize=10;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0" value="Dotted-Line Self-Healing Trigger">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="542.5" as="sourcePoint" />
+            <mxPoint x="390" y="352.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="80" y="543" />
+              <mxPoint x="80" y="353" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
