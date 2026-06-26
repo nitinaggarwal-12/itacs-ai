@@ -1219,6 +1219,26 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Keyboard navigation for global slideshow presentation modal!
+  useEffect(() => {
+    if (!isPresentationViewOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        setPresentationActiveSlide(prev => Math.min(5, prev + 1));
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setPresentationActiveSlide(prev => Math.max(1, prev - 1));
+      } else if (e.key === 'Escape') {
+        setIsPresentationViewOpen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPresentationViewOpen]);
+
   useEffect(() => {
     // Synchronize initial body class to respect theme state
     if (theme === 'light') {
@@ -1242,6 +1262,8 @@ export default function App() {
   const [isCompilingDeck, setIsCompilingDeck] = useState(false);
   const [compilationStep, setCompilationStep] = useState(0);
   const [deckEditMode, setDeckEditMode] = useState(false);
+  const [isPresentationViewOpen, setIsPresentationViewOpen] = useState(false);
+  const [presentationActiveSlide, setPresentationActiveSlide] = useState(1);
   const [deckSlides, setDeckSlides] = useState(() => {
     const saved = localStorage.getItem('itacs_deck_slides');
     if (saved) {
@@ -8204,8 +8226,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     setTimeout(() => setCompilationStep(3), 3000);
                     setTimeout(() => {
                       setIsCompilingDeck(false);
-                      handleDownloadFullDeck();
-                      alert("⚡ GOLT Strategic Presentation compiled successfully! Download dispatched.");
+                      setPresentationActiveSlide(1);
+                      setIsPresentationViewOpen(true);
                     }, 4500);
                   }}
                   disabled={isCompilingDeck}
@@ -12043,6 +12065,260 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* 5. GLOBAL IMMERSIVE SLIDESHOW PRESENTATION MODE */}
+      {isPresentationViewOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0,
+          width: '100vw', height: '100vh',
+          background: 'rgba(9, 12, 20, 0.96)',
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '24px',
+          boxSizing: 'border-box',
+          fontFamily: 'system-ui, -apple-system, sans-serif'
+        }}>
+          {/* Top Control Header */}
+          <div style={{
+            width: '100%',
+            maxWidth: '1200px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '16px',
+            color: '#ffffff'
+          }}>
+            <div>
+              <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                ITACS PRESENTATION STUDIO
+              </span>
+              <h2 style={{ margin: '4px 0 0 0', fontSize: '18px', fontWeight: 800 }}>
+                GOLT Strategic Launch Presentation (Inline View)
+              </h2>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleDownloadFullDeck}
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '6px',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                📥 Download Copy
+              </button>
+              <button
+                onClick={() => setIsPresentationViewOpen(false)}
+                style={{
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  padding: '8px 16px',
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                ✕ Close Show
+              </button>
+            </div>
+          </div>
+
+          {/* Widescreen 16:9 Slide Canvas Mockup */}
+          <div style={{
+            width: '100%',
+            maxWidth: '1200px',
+            aspectRatio: '16/9',
+            background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+            border: '2px solid rgba(99, 102, 241, 0.3)',
+            borderRadius: '16px',
+            boxShadow: '0 25px 60px rgba(0,0,0,0.8), 0 0 40px rgba(99,102,241,0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            padding: '48px',
+            boxSizing: 'border-box',
+            position: 'relative',
+            color: '#0f172a',
+            overflow: 'hidden'
+          }}>
+            {/* Slide Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '20px', height: '20px', borderRadius: '4px', background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '10px', color: 'white', fontWeight: 'bold' }}>🧬</span>
+                </div>
+                <strong style={{ fontSize: '13px', color: '#4f46e5', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                  ITACS GOLT STRATEGIC ROADMAP
+                </strong>
+              </div>
+              <span style={{ fontSize: '10.5px', color: '#64748b', fontWeight: 600 }}>
+                Strictly Confidential • Oncology Launch Command
+              </span>
+            </div>
+
+            {/* Slide Body Content (Exactly Rendered!) */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '24px', marginTop: '20px' }}>
+              {presentationActiveSlide === 1 ? (
+                /* Slide 1: Premium Title Page Layout */
+                <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+                  <h1 style={{ fontSize: '42px', fontWeight: 900, color: '#0f172a', lineHeight: '1.2', margin: '0 0 16px 0', letterSpacing: '-0.5px' }}>
+                    {deckSlides[1].title}
+                  </h1>
+                  <p style={{ fontSize: '18px', color: '#4f46e5', fontWeight: 600, margin: '0 0 32px 0' }}>
+                    {deckSlides[1].subtitle}
+                  </p>
+                  <div style={{ fontSize: '12px', color: '#64748b', lineHeight: '1.6' }}>
+                    <strong>Presented by:</strong> {deckSlides[1].author}<br />
+                    <strong>Date:</strong> {deckSlides[1].date}
+                  </div>
+                </div>
+              ) : (
+                /* Slides 2, 3, 4, 5: Split-Card Layout */
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
+                  <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.5px' }}>
+                    {deckSlides[presentationActiveSlide].title}
+                  </h2>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', flex: 1, alignItems: 'stretch' }}>
+                    {/* Left Pillar Card */}
+                    <div style={{
+                      background: '#ffffff',
+                      border: '1.5px solid #e0e7ff',
+                      borderLeft: '5px solid #4f46e5',
+                      borderRadius: '12px',
+                      padding: '24px',
+                      boxShadow: '0 4px 12px rgba(79, 70, 229, 0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '10.5px', color: '#4f46e5', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {deckSlides[presentationActiveSlide].leftHeader}
+                      </span>
+                      <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: '1.6' }}>
+                        {deckSlides[presentationActiveSlide].leftBody}
+                      </p>
+                    </div>
+
+                    {/* Right Pillar Card */}
+                    <div style={{
+                      background: '#ffffff',
+                      border: '1.5px solid #f3e8ff',
+                      borderLeft: '5px solid #7c3aed',
+                      borderRadius: '12px',
+                      padding: '24px',
+                      boxShadow: '0 4px 12px rgba(124, 58, 237, 0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '10.5px', color: '#7c3aed', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {deckSlides[presentationActiveSlide].rightHeader}
+                      </span>
+                      <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: '1.6' }}>
+                        {deckSlides[presentationActiveSlide].rightBody}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Slide Footer */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              borderTop: '1.5px solid #e2e8f0',
+              paddingTop: '20px',
+              marginTop: '20px',
+              fontSize: '11px',
+              color: '#64748b'
+            }}>
+              <span>Author: Global Oncology Leadership Team (GOLT)</span>
+              <strong style={{ color: '#4f46e5', fontWeight: 'bold' }}>
+                Slide {presentationActiveSlide} of 5
+              </strong>
+            </div>
+          </div>
+
+          {/* Bottom Navigation Control Bar */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '24px',
+            marginTop: '24px',
+            color: '#ffffff'
+          }}>
+            <button
+              disabled={presentationActiveSlide === 1}
+              onClick={() => setPresentationActiveSlide(prev => Math.max(1, prev - 1))}
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '50%',
+                width: '44px', height: '44px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: presentationActiveSlide === 1 ? 'not-allowed' : 'pointer',
+                opacity: presentationActiveSlide === 1 ? 0.3 : 1,
+                fontSize: '18px',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              ◀
+            </button>
+            
+            <span style={{ fontSize: '14px', fontWeight: 600 }}>
+              Slide {presentationActiveSlide} of 5
+            </span>
+
+            <button
+              disabled={presentationActiveSlide === 5}
+              onClick={() => setPresentationActiveSlide(prev => Math.min(5, prev + 1))}
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '50%',
+                width: '44px', height: '44px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: presentationActiveSlide === 5 ? 'not-allowed' : 'pointer',
+                opacity: presentationActiveSlide === 5 ? 0.3 : 1,
+                fontSize: '18px',
+                fontWeight: 'bold',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              ▶
+            </button>
+          </div>
+          
+          {/* Quick Shortcuts Hint */}
+          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '16px' }}>
+            💡 Shortcuts: Use <strong>Left / Right Arrows</strong> or <strong>Space</strong> to navigate. Press <strong>ESC</strong> to exit presentation.
+          </span>
         </div>
       )}
 
