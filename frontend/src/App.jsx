@@ -1713,15 +1713,21 @@ export default function App() {
     }
   };
 
-  const handleUpdateImperativeDetails = async (impId, details) => {
-    // Optimistic UI update
+  const handleUpdateLocalImperativeDetails = (impId, details) => {
     setImperatives(prev => prev.map(imp => {
       if (imp.id === impId) {
-        return { ...imp, ...details };
+        const updated = { ...imp, ...details };
+        // Instantly sync the active workshop drawer state
+        if (selectedImperative && selectedImperative.id === impId) {
+          setSelectedImperative(updated);
+        }
+        return updated;
       }
       return imp;
     }));
+  };
 
+  const handlePersistImperativeDetails = async (impId, details) => {
     try {
       const res = await fetch(`${API_URL}/api/imperatives/${impId}`, {
         method: 'PATCH',
@@ -1730,13 +1736,12 @@ export default function App() {
       });
       if (res.ok) {
         const result = await res.json();
-        // Update selectedImperative if it is currently open
         if (selectedImperative && selectedImperative.id === impId) {
           setSelectedImperative(result.imperative);
         }
       }
     } catch (e) {
-      console.error("Failed to update imperative details:", e);
+      console.error("Failed to persist imperative details:", e);
     }
   };
 
@@ -5083,7 +5088,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         <textarea 
                           rows={2}
                           value={selectedImperative.trade_offs || ""}
-                          onChange={(e) => handleUpdateImperativeDetails(selectedImperative.id, { trade_offs: e.target.value })}
+                          onChange={(e) => handleUpdateLocalImperativeDetails(selectedImperative.id, { trade_offs: e.target.value })}
+                          onBlur={(e) => handlePersistImperativeDetails(selectedImperative.id, { trade_offs: e.target.value })}
                           placeholder="e.g., Heavy deployment of medical affairs field teams requires diverting budget from regional advisory boards..."
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11.5px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
                         />
@@ -5095,7 +5101,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         <textarea 
                           rows={2}
                           value={selectedImperative.risks || ""}
-                          onChange={(e) => handleUpdateImperativeDetails(selectedImperative.id, { risks: e.target.value })}
+                          onChange={(e) => handleUpdateLocalImperativeDetails(selectedImperative.id, { risks: e.target.value })}
+                          onBlur={(e) => handlePersistImperativeDetails(selectedImperative.id, { risks: e.target.value })}
                           placeholder="e.g., Timeline delays in diagnostics deployment could lead to lost patient identification opportunities in Q3..."
                           style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11.5px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
                         />

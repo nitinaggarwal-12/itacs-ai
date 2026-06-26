@@ -35,7 +35,7 @@ const path = require('path');
   
   try {
     const targetUrl = 'https://itacs-frontend-production.up.railway.app';
-    const apiUrl = 'https://itacs-ai-production.up.railway.app';
+    const apiUrl = 'https://itacs-backend-production.up.railway.app';
 
     // Programmatically clear all existing strategic imperatives & validate the first insight in Node context (bypassing browser CORS!)
     console.log("🔄 Resetting database in Node context (purging imperatives & validating first insight)...");
