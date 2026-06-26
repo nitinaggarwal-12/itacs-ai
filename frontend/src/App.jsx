@@ -8902,6 +8902,26 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   }
                 : (() => {
                     const step = tourSteps[tourStep];
+                    if (step.targetId === 'insight-card-list') {
+                      return {
+                        position: 'absolute',
+                        top: highlightStyle.top + 100,
+                        left: highlightStyle.left + highlightStyle.width + 16,
+                        zIndex: 10000,
+                        width: '320px',
+                        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                      };
+                    }
+                    if (step.targetId === 'card-details-panel') {
+                      return {
+                        position: 'absolute',
+                        top: highlightStyle.top + 100,
+                        left: highlightStyle.left - 320 - 16,
+                        zIndex: 10000,
+                        width: '320px',
+                        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                      };
+                    }
                     const isSidebar = step.targetId && step.targetId.startsWith('nav-');
                     if (isSidebar) {
                       return {
