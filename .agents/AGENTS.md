@@ -86,4 +86,29 @@ When designing features that involve saving, modifying, or persisting user-gener
 * **Container-Bundled Seeding**: For baseline data (like default diagram layouts or templates), bundle the raw assets inside the backend container's directory (e.g. `/backend`) so they are distributed. On backend startup, read these local baselines to seed the database if it is empty, providing a self-healing fallback if database rows are missing.
 * **Defensive Fallbacks**: Always write defensive try-catch fallbacks in the frontend fetch lifecycle. If the database is empty or the backend is offline, the page must gracefully fall back to the hardcoded baseline template, ensuring the UI never breaks or stays blank.
 
+---
+
+## 🧪 RULE: E2E Testing Synchronization & Headless Puppeteer Fallbacks (Best Practices)
+
+### 1. The Constraint
+When conducting E2E interface validations, visual audits, or user journey stress-tests, you **must never** rely solely on pre-packaged sandbox visual tools. If the sandbox browser context fails to connect or launch, you **must immediately** write a custom, headless Puppeteer script and execute it locally via the command shell.
+
+### 2. What NOT to Do (Anti-Patterns)
+* **Siloed Selector Guessing**: Never guess CSS classes, IDs, or element tags when writing automation scripts (e.g. assuming a `.sidebar-menu` or `<a>` link exists). Guessing leads to immediate script timeouts.
+* **Double-Render Race Conditions**: Never set screenshot or click delays that are shorter than the cumulative interval times of the React state machine (e.g. if step animations trigger every 2000ms, waiting 5500ms for step 3 is a race condition; you must wait at least 7000ms).
+* **Abandoning on Tool Failures**: Never treat a sandbox tool crash as a complete task blocker. If the browser subagent fails, you have full Node/Python execution capabilities to run headless automation.
+
+### 3. What to Do (Best Practices & Protocol)
+* **Active-Code Selector Extraction**: Before writing any Puppeteer or Playwright script, **always** perform a grep search on the active codebase (e.g. `App.jsx`, `index.css`) to extract the exact DOM structure, class names (e.g. `aside.sidebar-navigation`), and element types (e.g. `button.sidebar-nav-btn`).
+* **Headless Puppeteer Fallbacks**: Always write clean, self-contained Node.js scripts using `puppeteer-core` and launch them using the verified local browser binary:
+  ```javascript
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  });
+  ```
+* **Clean Visual Gallery Housekeeping**: Programmatically purge the target screenshot folder (`fs.unlinkSync`) *before* executing the Puppeteer run to prevent stale, misaligned, or orphaned screenshots from cluttering the workspace.
+* **GOLT & Multi-State Verification**: Always simulate human-in-the-loop consensus actions (like clicking voting options or drag-and-dropping cards) and capture the resulting state transitions.
+
+
 
