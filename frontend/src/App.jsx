@@ -1005,9 +1005,29 @@ export default function App() {
       }
     },
     {
-      targetId: "wargame-results-hud",
-      title: "Stress-Test Results & Evolved Card 🧠",
-      description: "Wargame complete! Observe the Alignment Consensus Score showing how grounded your expectations are. Review the Skeptic (clinical), Counter-Factualist (competitive), and Bias-Detector (cognitive) critiques on the left, and check out the AI-synthesized Evolved Strategy Card on the right!",
+      targetId: "wargame-consensus-gauge",
+      title: "SME-AI Alignment Consensus 📊",
+      description: "Wargame complete! Focus first on the Consensus Score. This index measures how aligned your SME expectations are with the raw clinical trial evidence, auditing for cognitive over-optimism and clinical gaps.",
+      buttonText: "Review Wargame Critiques ➔",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
+        setActiveTab('matrix');
+        if (setDetailTab) setDetailTab('wargaming');
+      }
+    },
+    {
+      targetId: "wargame-critiques-row",
+      title: "Triple Wargaming Critiques ⚔️",
+      description: "Analyze the wargaming critiques: (1) The Skeptic (clinical gaps audit), (2) The Counter-Factualist (simulating competitor timeline speedups), and (3) The Bias-Detector (cognitive optimism audit). These expose the operational risks of your strategy.",
+      buttonText: "Review Evolved Imperative ➔",
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
+        setActiveTab('matrix');
+        if (setDetailTab) setDetailTab('wargaming');
+      }
+    },
+    {
+      targetId: "wargame-evolved-card",
+      title: "Evolved Strategic Imperative 🧠",
+      description: "Finally, look at the AI-synthesized Evolved Card! It expands your strategy from a simple freezer purchase to a bulletproof launch plan covering community clinic onboarding, nurse training, and patient journey management.",
       buttonText: "Complete Wargame Review ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
         setActiveTab('matrix');
@@ -4436,7 +4456,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                           <div id="wargame-results-hud" className="wargame-results-details animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
                             
                             {/* Consensus Score Gauge */}
-                            <div style={{
+                            <div id="wargame-consensus-gauge" style={{
                               background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(129, 140, 248, 0.08) 100%)',
                               border: '1px solid rgba(6, 182, 212, 0.3)',
                               borderRadius: '10px',
@@ -4461,7 +4481,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             </div>
 
                             {/* Triple Critiques */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <div id="wargame-critiques-row" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                               
                               {/* 1. The Skeptic */}
                               <div style={{ background: 'rgba(6, 182, 212, 0.04)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', padding: '12px 14px' }}>
@@ -4496,7 +4516,7 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                             </div>
 
                             {/* The Evolved Card */}
-                            <div style={{
+                            <div id="wargame-evolved-card" style={{
                               marginTop: '8px',
                               background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, transparent 100%)',
                               border: '2px solid var(--brand-cyan)',
@@ -9624,7 +9644,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     const isInDrawer = step.targetId === 'card-details-panel' 
                       || step.targetId === 'detail-tab-wargaming-btn' 
                       || step.targetId === 'run-challenger-btn' 
-                      || step.targetId === 'wargame-results-hud';
+                      || step.targetId === 'wargame-results-hud'
+                      || step.targetId === 'wargame-consensus-gauge'
+                      || step.targetId === 'wargame-critiques-row'
+                      || step.targetId === 'wargame-evolved-card';
 
                     if (isInDrawer) {
                       return {
