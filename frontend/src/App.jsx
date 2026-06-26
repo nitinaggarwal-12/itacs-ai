@@ -652,6 +652,26 @@ export default function App() {
   const [selectedBuilderCard, setSelectedBuilderCard] = useState(null);
   const [isBuilderDrawerOpen, setIsBuilderDrawerOpen] = useState(false);
 
+  // Phase 3: Strategic Imperatives & Tactical Actions States
+  const [imperatives, setImperatives] = useState([]);
+  const [selectedImperative, setSelectedImperative] = useState(null);
+  const [isImperativeDrawerOpen, setIsImperativeDrawerOpen] = useState(false);
+  const [isCreateImperativeModalOpen, setIsCreateImperativeModalOpen] = useState(false);
+
+  // Modal form states for creating new Strategic Imperatives
+  const [newImpTitle, setNewImpTitle] = useState("");
+  const [newImpDescription, setNewImpDescription] = useState("");
+  const [newImpCategory, setNewImpCategory] = useState("clinical");
+  const [newImpPriority, setNewImpPriority] = useState("medium");
+  const [newImpResourceTier, setNewImpResourceTier] = useState("medium");
+  const [newImpTradeOffs, setNewImpTradeOffs] = useState("");
+  const [newImpRisks, setNewImpRisks] = useState("");
+
+  // Drawer form states for adding Tactical Actions
+  const [newActionText, setNewActionText] = useState("");
+  const [newActionOwnerRole, setNewActionOwnerRole] = useState("Medical Affairs Lead");
+  const [newActionEvidenceCardId, setNewActionEvidenceCardId] = useState("");
+
   // Dynamic Tasks State (Fully interactive project board!)
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -1302,6 +1322,17 @@ export default function App() {
         console.error("Failed to load tactical tasks:", e);
       }
       
+      // Fetch dynamic strategic imperatives from PostgreSQL!
+      try {
+        const impRes = await fetch(`${API_URL}/api/imperatives`);
+        if (impRes.ok) {
+          const impData = await impRes.json();
+          setImperatives(impData);
+        }
+      } catch (e) {
+        console.error("Failed to load strategic imperatives:", e);
+      }
+      
       triggerSynthesisAPI();
     } catch (err) {
       console.error("API Fetch failed, running on mock data mode.", err);
@@ -1569,6 +1600,128 @@ export default function App() {
       alert("AI Auto-sort endpoint failed.");
     } finally {
       setIsSorting(false);
+    }
+  };
+
+  // Phase 3: Strategic Imperatives & Tactical Actions Event Handlers
+  const handleCreateImperative = async (title, description, category, priority, resourceTier, tradeOffs, risks) => {
+    try {
+      const res = await fetch(`${API_URL}/api/imperatives`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          category,
+          priority,
+          resource_tier: resourceTier,
+          trade_offs: tradeOffs,
+          risks
+        })
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setImperatives(prev => [result.imperative, ...prev]);
+        return result.imperative;
+      }
+    } catch (e) {
+      console.error("Failed to create imperative:", e);
+    }
+  };
+
+  const handleMoveImperative = async (impId, targetResourceTier) => {
+    // Optimistic UI update
+    setImperatives(prev => prev.map(imp => {
+      if (imp.id === impId) {
+        return { ...imp, resource_tier: targetResourceTier };
+      }
+      return imp;
+    }));
+
+    try {
+      await fetch(`${API_URL}/api/imperatives/${impId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resource_tier: targetResourceTier })
+      });
+    } catch (e) {
+      console.error("Failed to persist imperative move:", e);
+    }
+  };
+
+  const handleUpdateImperativeDetails = async (impId, details) => {
+    // Optimistic UI update
+    setImperatives(prev => prev.map(imp => {
+      if (imp.id === impId) {
+        return { ...imp, ...details };
+      }
+      return imp;
+    }));
+
+    try {
+      const res = await fetch(`${API_URL}/api/imperatives/${impId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(details)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        // Update selectedImperative if it is currently open
+        if (selectedImperative && selectedImperative.id === impId) {
+          setSelectedImperative(result.imperative);
+        }
+      }
+    } catch (e) {
+      console.error("Failed to update imperative details:", e);
+    }
+  };
+
+  const handleAddTacticalAction = async (impId, actionText, ownerRole, evidenceCardId) => {
+    try {
+      const res = await fetch(`${API_URL}/api/imperatives/${impId}/actions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action_text: actionText,
+          owner_role: ownerRole,
+          strength_of_evidence: 1.00,
+          evidence_card_id: evidenceCardId || null
+        })
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setImperatives(prev => prev.map(imp => {
+          if (imp.id === impId) {
+            return { ...imp, actions: [...imp.actions, result.action] };
+          }
+          return imp;
+        }));
+        if (selectedImperative && selectedImperative.id === impId) {
+          setSelectedImperative(prev => ({
+            ...prev,
+            actions: [...prev.actions, result.action]
+          }));
+        }
+      }
+    } catch (e) {
+      console.error("Failed to add tactical action:", e);
+    }
+  };
+
+  const handleDeleteImperative = async (impId) => {
+    // Optimistic UI update
+    setImperatives(prev => prev.filter(imp => imp.id !== impId));
+    if (selectedImperative && selectedImperative.id === impId) {
+      setIsImperativeDrawerOpen(false);
+      setSelectedImperative(null);
+    }
+
+    try {
+      await fetch(`${API_URL}/api/imperatives/${impId}`, {
+        method: 'DELETE'
+      });
+    } catch (e) {
+      console.error("Failed to delete imperative:", e);
     }
   };
 
@@ -4657,184 +4810,123 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           </main>
         )}
 
-        {/* MISSING MODULE 1: THE IMPERATIVE BUILDER (STRATEGIC KANBAN BOARD) */}
+        {/* PHASE 3: THE STRATEGIC IMPERATIVE BUILDER & CROSS-FUNCTIONAL WORKSHOP BOARD */}
         {activeTab === 'builder' && (
           <div style={{ padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: '16px', height: '100%', boxSizing: 'border-box' }}>
             
-            {/* Dynamic Controls Header Bar */}
+            {/* Header Controls Bar */}
             <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', width: '100%', boxSizing: 'border-box', flexShrink: 0 }}>
               <div>
                 <h3 style={{ fontSize: '15px', margin: 0, fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <ClipboardList size={16} style={{ color: 'var(--brand-indigo)' }} /> Strategic Imperative Builder
+                  <ClipboardList size={16} style={{ color: 'var(--brand-indigo)' }} /> Cross-Functional Strategic Imperative Builder
                 </h3>
                 <p style={{ margin: '2px 0 0 0', fontSize: '10px', color: 'var(--text-muted)' }}>
-                  Organize tactical launch implications into strategic macro-pillars. Auto-sort with Gemini AI or export slides.
+                  Map validated implications to Strategic macro-imperatives. Sort by Resource Commitment, weigh Trade-offs, and draft Actions.
                 </p>
               </div>
               
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button 
-                  onClick={handleAutoSort} 
-                  className="btn" 
-                  disabled={isSorting}
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', color: '#a5b4fc', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
-                >
-                  {isSorting ? <RefreshCw className="animate-spin" size={13} /> : '✨ Auto-Sort with Gemini'}
-                </button>
-                <button 
-                  onClick={handleAddPillar} 
-                  className="btn" 
-                  style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--bg-tertiary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
-                >
-                  <Plus size={13} /> Add Strategic Pillar
-                </button>
-                <button 
-                  onClick={handleExportPptx} 
+                  id="add-imperative-btn"
+                  onClick={() => {
+                    setNewImpTitle("");
+                    setNewImpDescription("");
+                    setNewImpCategory("clinical");
+                    setNewImpPriority("medium");
+                    setNewImpResourceTier("medium");
+                    setNewImpTradeOffs("");
+                    setNewImpRisks("");
+                    setIsCreateImperativeModalOpen(true);
+                  }}
                   className="btn btn-primary" 
                   style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', padding: '8px 14px', cursor: 'pointer', borderRadius: '8px' }}
                 >
-                  <FileText size={13} /> Export GOLT Presentation (PPTX)
+                  <Plus size={13} /> Formulate Strategic Imperative
                 </button>
               </div>
             </div>
 
-            {/* 4-Column Board Wrapper */}
-            <main className="kanban-board" style={{ gridTemplateColumns: `repeat(${pillars.length + 1}, 1fr)`, height: 'calc(100vh - 220px)', padding: 0 }}>
+            {/* 3-Column Resource Kanban Board */}
+            <main className="kanban-board" style={{ gridTemplateColumns: 'repeat(3, 1fr)', height: 'calc(100vh - 220px)', padding: 0 }}>
               
-              {/* Column 0: Unassigned Inbox */}
-              <div className="kanban-column" style={{ background: 'rgba(15, 23, 42, 0.015)', borderStyle: 'dashed', borderWidth: '1.5px' }}>
-                <div className="kanban-column-header">
-                  <h3 style={{ color: 'var(--text-muted)' }}>Unassigned Implications Inbox</h3>
-                  <span className="kanban-card-count">
-                    {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).length} Cards
-                  </span>
-                </div>
-                
-                <div className="kanban-cards-container">
-                  {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).map(card => (
-                    <div 
-                      key={card.id} 
-                      className="kanban-card animate-fade-in" 
-                      onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
-                      style={{ cursor: 'pointer', borderLeft: '4px solid #64748b' }}
-                      title="Click to explore Clinical Grounding and slide lineage"
-                    >
-                      <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>{card.opportunity_space}</h4>
-                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineHeight: '1.4' }}>
-                        "Implication: {card.implication}"
-                      </p>
-                      
-                      <div className="kanban-card-footer">
-                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                          {pillars.map(p => (
-                            <button
-                              key={p.key_name}
-                              onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
-                              className="kanban-move-btn"
-                              style={{ padding: '4px 6px', fontSize: '11px' }}
-                              title={`Move to ${p.display_name}`}
-                            >
-                              {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {insights.filter(ins => (!ins.strategic_pillar || ins.strategic_pillar === '') && ins.is_validated).length === 0 && (
-                    <div style={{ textAlign: 'center', padding: '40px 10px', fontSize: '10.5px', color: '#475569' }}>
-                      ✨ All implications sorted into pillars!consensus achieved.
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Dynamic Columns */}
-              {pillars.map(col => {
-                const colCards = insights.filter(ins => ins.strategic_pillar === col.key_name && ins.is_validated);
+              {/* Columns: Low, Medium, High Resource Commitment */}
+              {['low', 'medium', 'high'].map(tier => {
+                const tierImperatives = imperatives.filter(imp => imp.resource_tier === tier);
+                const columnTitle = tier === 'low' ? 'Low Resource Commitment' : (tier === 'medium' ? 'Medium Resource Commitment' : 'High Resource / Heavy Commitment');
+                const columnBadgeColor = tier === 'low' ? '#10b981' : (tier === 'medium' ? '#3b82f6' : '#ef4444');
                 
                 return (
-                  <div key={col.key_name} className="kanban-column">
-                    <div className={`kanban-column-header ${col.class_name}`} style={{ position: 'relative', paddingRight: '36px' }}>
-                      <h3>{col.display_name}</h3>
-                      <span className="kanban-card-count">{colCards.length} Cards</span>
-                      
-                      {/* Delete column button (Red cross on hover, highly premium!) */}
-                      <button
-                        onClick={() => handleDeletePillar(col.id, col.key_name)}
-                        style={{
-                          position: 'absolute',
-                          top: '12px',
-                          right: '12px',
-                          background: 'transparent',
-                          border: 'none',
-                          color: 'var(--text-muted)',
-                          cursor: 'pointer',
-                          padding: '4px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          borderRadius: '4px',
-                          transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => { 
-                          e.currentTarget.style.color = '#ef4444'; 
-                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'; 
-                        }}
-                        onMouseLeave={(e) => { 
-                          e.currentTarget.style.color = 'var(--text-muted)'; 
-                          e.currentTarget.style.background = 'transparent'; 
-                        }}
-                        title="Delete strategic pillar column"
-                      >
-                        <X size={13} />
-                      </button>
+                  <div key={tier} className="kanban-column" style={{ background: 'rgba(15, 23, 42, 0.01)' }}>
+                    <div className="kanban-column-header" style={{ borderTop: `3px solid ${columnBadgeColor}`, paddingTop: '10px' }}>
+                      <h3 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: columnBadgeColor }}></span>
+                        {columnTitle}
+                      </h3>
+                      <span className="kanban-card-count">{tierImperatives.length} Initiatives</span>
                     </div>
 
                     <div className="kanban-cards-container">
-                      {colCards.map(card => (
-                        <div 
-                          key={card.id} 
-                          className="kanban-card animate-fade-in"
-                          onClick={() => { setSelectedBuilderCard(card); setIsBuilderDrawerOpen(true); }}
-                          style={{ cursor: 'pointer', borderLeft: `4px solid ${col.class_name === 'diff' ? 'var(--brand-indigo)' : (col.class_name === 'value' ? 'var(--brand-cyan)' : 'var(--brand-purple)')}` }}
-                          title="Click to explore Clinical Grounding and slide lineage"
-                        >
-                          <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>{card.opportunity_space}</h4>
-                          <p style={{ fontSize: '12px', fontStyle: 'italic', color: 'var(--text-secondary)', margin: '8px 0 12px 0', whiteSpace: 'normal', lineHeight: '1.4' }}>
-                            "Implication: {card.implication}"
-                          </p>
-                          
-                          <div className="kanban-card-footer">
-                            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Asset: {card.metadata.asset}</span>
-                            <div style={{ display: 'flex', gap: '6px' }}>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, 'unassigned'); }}
-                                className="kanban-move-btn"
-                                style={{ padding: '4px 6px', fontSize: '11px' }}
-                                title="Move back to Unassigned Inbox"
-                              >
-                                📥
-                              </button>
-                              {pillars.filter(p => p.key_name !== col.key_name).map(p => (
-                                <button
-                                  key={p.key_name}
-                                  onClick={(e) => { e.stopPropagation(); handleMoveCard(card.id, p.key_name); }}
-                                  className="kanban-move-btn"
-                                  style={{ padding: '4px 6px', fontSize: '11px' }}
-                                  title={`Move to ${p.display_name}`}
-                                >
-                                  {p.class_name === 'diff' ? '🎯' : (p.class_name === 'value' ? '💳' : '🧬')}
-                                </button>
-                              ))}
+                      {tierImperatives.map(imp => {
+                        const catBadgeStyle = imp.category === 'clinical' 
+                          ? { background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)', color: '#a5b4fc' }
+                          : (imp.category === 'payer' 
+                            ? { background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', color: '#6ee7b7' }
+                            : { background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)', color: '#d8b4fe' });
+
+                        const priorityStyle = imp.priority === 'high'
+                          ? { background: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5' }
+                          : (imp.priority === 'medium'
+                            ? { background: 'rgba(245, 158, 11, 0.1)', color: '#fde047' }
+                            : { background: 'rgba(16, 185, 129, 0.1)', color: '#6ee7b7' });
+
+                        return (
+                          <div 
+                            key={imp.id} 
+                            className="kanban-card strategic-imperative-card animate-fade-in"
+                            onClick={() => { setSelectedImperative(imp); setIsImperativeDrawerOpen(true); }}
+                            style={{ cursor: 'pointer', borderLeft: `4px solid ${columnBadgeColor}` }}
+                            title="Explore Options, Trade-offs, and Tactical Actions"
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                              <span style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '2px 6px', borderRadius: '4px', ...catBadgeStyle }}>
+                                {imp.category}
+                              </span>
+                              <span style={{ fontSize: '9px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px', ...priorityStyle }}>
+                                {imp.priority} Priority
+                              </span>
+                            </div>
+
+                            <h4 style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 6px 0', lineHeight: '1.3' }}>
+                              {imp.title}
+                            </h4>
+                            <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', margin: '0 0 12px 0', lineHeight: '1.4' }}>
+                              {imp.description.length > 90 ? `${imp.description.substring(0, 90)}...` : imp.description}
+                            </p>
+
+                            <div className="kanban-card-footer" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.03)', paddingTop: '8px' }}>
+                              <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
+                                📋 {imp.actions ? imp.actions.length : 0} Tactical Actions
+                              </span>
+                              <div style={{ display: 'flex', gap: '4px' }}>
+                                {['low', 'medium', 'high'].filter(t => t !== tier).map(t => (
+                                  <button
+                                    key={t}
+                                    onClick={(e) => { e.stopPropagation(); handleMoveImperative(imp.id, t); }}
+                                    className="kanban-move-btn"
+                                    style={{ padding: '3px 5px', fontSize: '9px', textTransform: 'uppercase' }}
+                                    title={`Move to ${t} resource tier`}
+                                  >
+                                    {t === 'low' ? 'Low' : (t === 'medium' ? 'Med' : 'Heavy')}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                      {colCards.length === 0 && (
+                        );
+                      })}
+                      {tierImperatives.length === 0 && (
                         <div style={{ textAlign: 'center', padding: '40px 10px', fontSize: '10.5px', color: '#475569', border: '1px dashed rgba(255,255,255,0.02)', borderRadius: '8px' }}>
-                          Drag/Move implications here to formulate macro-strategy
+                          No initiatives formulated in this resource tier.
                         </div>
                       )}
                     </div>
@@ -4842,6 +4934,275 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 );
               })}
             </main>
+
+            {/* Slide-out Strategic Workshop Drawer */}
+            {isImperativeDrawerOpen && selectedImperative && (
+              <div className="drawer-overlay" onClick={() => setIsImperativeDrawerOpen(false)} style={{ display: 'block' }}>
+                <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ width: '460px', padding: '24px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+                  
+                  {/* Drawer Header */}
+                  <div className="drawer-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '16px', marginBottom: '16px', flexShrink: 0 }}>
+                    <div>
+                      <span style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#a5b4fc', fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', padding: '2px 6px', borderRadius: '4px', letterSpacing: '0.5px' }}>
+                        Strategic Workshop Console ⚔️
+                      </span>
+                      <h3 style={{ margin: '6px 0 0 0', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                        {selectedImperative.title}
+                      </h3>
+                    </div>
+                    <button className="btn btn-close" onClick={() => setIsImperativeDrawerOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {/* Scrollable Drawer Body */}
+                  <div className="drawer-body" style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    
+                    {/* description */}
+                    <div>
+                      <label style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Strategic Mandate</label>
+                      <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{selectedImperative.description}</p>
+                    </div>
+
+                    {/* Section: Options, Trade-offs, Risks (Slide 23 Core!) */}
+                    <div className="glass-card" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      <h4 style={{ margin: 0, fontSize: '11px', fontWeight: 900, color: 'var(--brand-indigo)', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid rgba(255, 255, 255, 0.03)', paddingBottom: '6px' }}>
+                        ⚖️ Strategic Implications Editor (Slide 23)
+                      </h4>
+                      
+                      {/* Trade-offs */}
+                      <div>
+                        <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Resource Trade-offs</label>
+                        <textarea 
+                          rows={2}
+                          value={selectedImperative.trade_offs || ""}
+                          onChange={(e) => handleUpdateImperativeDetails(selectedImperative.id, { trade_offs: e.target.value })}
+                          placeholder="e.g., Heavy deployment of medical affairs field teams requires diverting budget from regional advisory boards..."
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11.5px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Risks */}
+                      <div>
+                        <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Execution Risks</label>
+                        <textarea 
+                          rows={2}
+                          value={selectedImperative.risks || ""}
+                          onChange={(e) => handleUpdateImperativeDetails(selectedImperative.id, { risks: e.target.value })}
+                          placeholder="e.g., Timeline delays in diagnostics deployment could lead to lost patient identification opportunities in Q3..."
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11.5px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Section: Tactical Actions Builder */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <h4 style={{ margin: 0, fontSize: '11px', fontWeight: 900, color: 'var(--brand-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        📋 Tactical Actions Ledger
+                      </h4>
+
+                      {/* Add Action Form */}
+                      <div className="glass-card" style={{ padding: '12px', background: 'rgba(255,255,255,0.01)', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: '10px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <input 
+                            type="text"
+                            value={newActionText}
+                            onChange={(e) => setNewActionText(e.target.value)}
+                            placeholder="Add a new tactical action item..."
+                            style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '6px 10px', borderRadius: '6px', fontSize: '11px', width: '100%', outline: 'none', boxSizing: 'border-box' }}
+                          />
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <select 
+                              value={newActionOwnerRole}
+                              onChange={(e) => setNewActionOwnerRole(e.target.value)}
+                              style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '6px', borderRadius: '6px', fontSize: '10px', flex: 1, outline: 'none' }}
+                            >
+                              <option>Medical Affairs Lead</option>
+                              <option>CI Director</option>
+                              <option>Market Access Specialist</option>
+                              <option>Diagnostics Lead</option>
+                            </select>
+                            
+                            <select
+                              value={newActionEvidenceCardId}
+                              onChange={(e) => setNewActionEvidenceCardId(e.target.value)}
+                              style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '6px', borderRadius: '6px', fontSize: '10px', flex: 1, outline: 'none' }}
+                            >
+                              <option value="">-- Link Evidence --</option>
+                              {insights.filter(ins => ins.is_validated).map(ins => (
+                                <option key={ins.id} value={ins.id}>{ins.opportunity_space.substring(0, 20)}...</option>
+                              ))}
+                            </select>
+
+                            <button 
+                              onClick={() => {
+                                if (!newActionText) return;
+                                handleAddTacticalAction(selectedImperative.id, newActionText, newActionOwnerRole, newActionEvidenceCardId);
+                                setNewActionText("");
+                                setNewActionEvidenceCardId("");
+                              }}
+                              className="btn btn-primary" 
+                              style={{ fontSize: '10px', padding: '6px 12px' }}
+                            >
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions List */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {selectedImperative.actions && selectedImperative.actions.map(act => (
+                          <div 
+                            key={act.id} 
+                            style={{ 
+                              background: 'rgba(255,255,255,0.015)', 
+                              border: '1px solid rgba(255,255,255,0.04)', 
+                              borderRadius: '8px', 
+                              padding: '10px 12px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '4px'
+                            }}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--brand-cyan)' }}>
+                                👤 {act.owner_role}
+                              </span>
+                              {act.evidence_card_id && (
+                                <span style={{ fontSize: '8px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '1px 4px', borderRadius: '3px', fontWeight: 'bold' }}>
+                                  ✓ Grounded Evidence
+                                </span>
+                              )}
+                            </div>
+                            <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--text-secondary)', lineHeight: '1.3' }}>
+                              {act.action_text}
+                            </p>
+                          </div>
+                        ))}
+                        {(!selectedImperative.actions || selectedImperative.actions.length === 0) && (
+                          <div style={{ textAlign: 'center', padding: '20px', fontSize: '10.5px', color: 'var(--text-muted)' }}>
+                            No tactical action items added yet.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Drawer Footer */}
+                  <div className="drawer-footer" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '14px', marginTop: '16px', display: 'flex', justifyContent: 'space-between', flexShrink: 0 }}>
+                    <button 
+                      onClick={() => {
+                        if (confirm("Are you sure you want to delete this strategic imperative and all its tactical actions?")) {
+                          handleDeleteImperative(selectedImperative.id);
+                        }
+                      }}
+                      className="btn btn-warn" 
+                      style={{ background: '#ef4444', border: 'none', fontSize: '11.5px', padding: '8px 14px' }}
+                    >
+                      Delete Imperative
+                    </button>
+                    <button onClick={() => setIsImperativeDrawerOpen(false)} className="btn btn-primary" style={{ fontSize: '11.5px', padding: '8px 14px' }}>
+                      Save & Close
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* Create Strategic Imperative Modal */}
+            {isCreateImperativeModalOpen && (
+              <div className="modal-overlay" onClick={() => setIsCreateImperativeModalOpen(false)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 1000 }}>
+                <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()} style={{ width: '440px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', borderRadius: '14px' }}>
+                  <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-primary)', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px' }}>
+                     Formulate Strategic Imperative
+                  </h3>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div className="form-group">
+                      <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Imperative Title</label>
+                      <input 
+                        type="text"
+                        value={newImpTitle}
+                        onChange={(e) => setNewImpTitle(e.target.value)}
+                        placeholder="e.g., Optimize regional cold-chain distribution channels..."
+                        style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '12px', width: '100%', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Description / Strategic Mandate</label>
+                      <textarea 
+                        rows={2}
+                        value={newImpDescription}
+                        onChange={(e) => setNewImpDescription(e.target.value)}
+                        placeholder="Define the strategic objective and expected macro impact..."
+                        style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '12px', width: '100%', resize: 'none', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Category</label>
+                        <select 
+                          value={newImpCategory} 
+                          onChange={(e) => setNewImpCategory(e.target.value)}
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}
+                        >
+                          <option value="clinical">Clinical</option>
+                          <option value="payer">Payer</option>
+                          <option value="diagnostics">Diagnostics</option>
+                        </select>
+                      </div>
+
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Priority</label>
+                        <select 
+                          value={newImpPriority} 
+                          onChange={(e) => setNewImpPriority(e.target.value)}
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}
+                        >
+                          <option value="high">High</option>
+                          <option value="medium">Medium</option>
+                          <option value="low">Low</option>
+                        </select>
+                      </div>
+
+                      <div className="form-group" style={{ flex: 1 }}>
+                        <label style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Resource Tier</label>
+                        <select 
+                          value={newImpResourceTier} 
+                          onChange={(e) => setNewImpResourceTier(e.target.value)}
+                          style={{ background: 'var(--bg-primary)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)', padding: '8px', borderRadius: '8px', fontSize: '11px', width: '100%', outline: 'none' }}
+                        >
+                          <option value="low">Low Resource</option>
+                          <option value="medium">Medium Resource</option>
+                          <option value="high">High Resource</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px', marginTop: '4px' }}>
+                    <button onClick={() => setIsCreateImperativeModalOpen(false)} className="btn btn-subtle" style={{ fontSize: '11.5px', padding: '8px 14px' }}>Cancel</button>
+                    <button 
+                      onClick={async () => {
+                        if (!newImpTitle || !newImpDescription) return;
+                        await handleCreateImperative(newImpTitle, newImpDescription, newImpCategory, newImpPriority, newImpResourceTier, newImpTradeOffs, newImpRisks);
+                        setIsCreateImperativeModalOpen(false);
+                      }}
+                      className="btn btn-primary" 
+                      style={{ fontSize: '11.5px', padding: '8px 14px' }}
+                    >
+                      Formulate Imperative
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 
