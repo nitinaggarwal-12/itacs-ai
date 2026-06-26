@@ -8,19 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #0B0F19;         /* Dark navy background */
-            --bg-card: #151D30;         /* Glassmorphic dark card background */
-            --bg-sub: #0F1626;          /* Deep navy accents */
+            --bg-body: #080C14;         /* Premium deep dark navy */
+            --bg-card: #0F1626;         /* Translucent card background */
+            --bg-sub: #0B0F19;          /* Deep accent navy */
             --color-primary: #06B6D4;   /* Brand Cyan */
             --color-primary-hover: #0891B2;
-            --color-primary-glow: rgba(6, 182, 212, 0.08);
-            --color-text-main: #F8FAFC; /* Crisp white-slate text */
-            --color-text-muted: #94A3B8; /* Slate grey muted text */
-            --border-color: rgba(255, 255, 255, 0.05); /* Soft translucent borders */
-            --accent-purple: #8B5CF6;   /* Brand Indigo */
-            --accent-green: #10B981;    /* Success green */
-            --accent-amber: #F59E0B;    /* Warning amber */
-            --accent-red: #EF4444;      /* Alert red */
+            --color-primary-glow: rgba(6, 182, 212, 0.06);
+            --color-text-main: #F8FAFC; /* Crisp slate white text */
+            --color-text-muted: #64748B; /* Slate grey muted text */
+            --border-color: rgba(255, 255, 255, 0.04); /* Thin glassmorphic borders */
+            --accent-purple: #8B5CF6;
+            --accent-green: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
             --font-outfit: 'Outfit', sans-serif;
             --font-inter: 'Inter', sans-serif;
         }
@@ -36,9 +36,9 @@
 
         /* HEADER STYLING */
         .guide-header {
-            background: linear-gradient(180deg, #0F1626 0%, #0B0F19 100%);
+            background: linear-gradient(135deg, #0B0F19 0%, #0F1626 100%);
             border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem 2rem;
+            padding: 1.1rem 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -64,7 +64,7 @@
             border-radius: 30px;
             font-size: 0.68rem;
             display: inline-block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.35rem;
             border: 1px solid var(--color-primary);
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -72,9 +72,9 @@
 
         .guide-header h1 {
             font-family: var(--font-outfit);
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin: 0 0 0.4rem 0;
+            margin: 0 0 0.2rem 0;
             background: linear-gradient(to right, #FFFFFF, #94A3B8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -82,8 +82,8 @@
 
         .guide-header p {
             color: var(--color-text-muted);
-            font-size: 0.95rem;
-            max-width: 700px;
+            font-size: 0.92rem;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -91,7 +91,7 @@
         .guide-container {
             max-width: 1600px;
             width: 94%;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1rem;
             display: grid;
             grid-template-columns: 280px 1fr;
@@ -133,20 +133,18 @@
             font-size: 0.88rem;
             font-weight: 500;
             transition: all 0.2s ease;
-            border: 1px solid transparent;
         }
 
         .sidebar-menu a:hover {
             color: var(--color-text-main);
             background: rgba(6, 182, 212, 0.04);
-            border-color: rgba(6, 182, 212, 0.1);
         }
 
         .sidebar-menu a.active {
             color: white;
             background: var(--color-primary);
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
         }
 
         /* CONTENT AREAS */
@@ -161,13 +159,13 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 2.5rem;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             scroll-margin-top: 2rem;
         }
 
         .guide-section h2 {
             font-family: var(--font-outfit);
-            font-size: 1.75rem;
+            font-size: 1.6rem;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 1.5rem;
@@ -176,7 +174,6 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            color: var(--color-text-main);
         }
 
         .section-icon {
@@ -202,7 +199,7 @@
 
         .timeline-step {
             position: relative;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .timeline-step:last-child {
@@ -234,7 +231,7 @@
 
         .step-title {
             font-family: var(--font-outfit);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin: 0 0 0.5rem 0;
             color: var(--color-text-main);
@@ -247,13 +244,13 @@
         }
 
         .step-code {
-            background-color: #0B0F19;
+            background-color: #0B0F19; /* Deep dark code block */
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 0.75rem 1rem;
             font-family: monospace;
             font-size: 0.85rem;
-            color: #38BDF8;
+            color: #22D3EE;
             margin-top: 0.75rem;
             display: block;
             overflow-x: auto;
@@ -332,7 +329,7 @@
         }
 
         .alert-note {
-            background-color: rgba(6, 182, 212, 0.02);
+            background-color: rgba(6, 182, 212, 0.01);
             border-left: 4px solid var(--color-primary);
             color: var(--color-text-muted);
         }
@@ -352,6 +349,151 @@
                 display: none;
             }
         }
+
+        /* SEAMLESS DIAGRAM EDITOR MODAL */
+        .editor-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 12, 20, 0.9); /* Translucent dark navy backdrop */
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .editor-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .editor-modal-container {
+            width: 96%;
+            height: 94%;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            transform: scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .editor-modal-overlay.active .editor-modal-container {
+            transform: scale(1);
+        }
+
+        .editor-modal-header {
+            padding: 0.8rem 1.5rem;
+            background: var(--bg-sub);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-modal-header h3 {
+            margin: 0;
+            font-family: var(--font-outfit);
+            font-weight: 700;
+            color: var(--color-text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .editor-modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .editor-modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-red);
+        }
+
+        .editor-modal-body {
+            flex: 1;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .editor-modal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .inline-edit-btn {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%) !important;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-family: var(--font-outfit);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .inline-edit-btn:hover {
+            box-shadow: 0 6px 16px rgba(6, 182, 212, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        /* Premium Table Styles */
+        .premium-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .premium-table th {
+            background: var(--bg-sub);
+            color: var(--color-text-main);
+            padding: 1rem;
+            font-family: var(--font-outfit);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .premium-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.01);
+        }
+        
+        .premium-table tr:last-child td {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -363,7 +505,7 @@
         </a>
         <div class="logo-badge">ITACS Enterprise</div>
         <h1>User Guide & Workflow Verification</h1>
-        <p>Your step-by-step handbook to execute, test, and validate multi-agent strategic oncology consensus pipelines.</p>
+        <p>Your step-by-step handbook to execute, test, and validate multi-agent oncology compliance pipelines.</p>
     </header>
 
     <div class="guide-container">
@@ -374,7 +516,8 @@
             <ul class="sidebar-menu">
                 <li><a href="#overview" class="active" onclick="activateMenu(this)">📖 Platform Overview</a></li>
                 <li><a href="#architecture" onclick="activateMenu(this)">🏗️ Multi-Agent Architecture</a></li>
-                <li><a href="#compliance" onclick="activateMenu(this)">🛡️ Compliance & QC Gating</a></li>
+                <li><a href="#gateway_architecture" onclick="activateMenu(this)">🛡️ Gateway & QC Flow</a></li>
+                <li><a href="#detailed_flow" onclick="activateMenu(this)">🎛️ Detailed Sequence Flow</a></li>
                 <li><a href="#ui_guide" onclick="activateMenu(this)">🖥️ Interface & UI Guide</a></li>
                 <li><a href="#workflow1" onclick="activateMenu(this)">📥 Ingestion & Validation</a></li>
                 <li><a href="#workflow2" onclick="activateMenu(this)">⚖️ Strategic Workshop</a></li>
@@ -402,36 +545,56 @@
 
             <!-- SECTION 1: System Architecture -->
             <section id="architecture" class="guide-section">
-                <h2><span class="section-icon">🏗️</span> Multi-Agent System Architecture</h2>
-                <p>The ITACS platform decouples clinical slide ingestion from strategic planning. Below is the active dataflow representing all active agents, databases, decision nodes, technology stacks, and target connectors.</p>
-                
-                <!-- Diagram Flowchart representation using styled CSS nodes -->
-                <div style="background: var(--bg-sub); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin: 1.5rem 0;">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: center;">
-                        <div style="background: rgba(6,182,212,0.08); border: 1px solid var(--color-primary); padding: 15px; border-radius: 6px;">
-                            <strong style="color: var(--color-primary); display: block; font-size: 0.85rem; text-transform: uppercase;">1. Ingestion Agent</strong>
-                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Extracts raw slide text & pixel data via PixelRAG</span>
-                        </div>
-                        <div style="background: rgba(139,92,246,0.08); border: 1px solid var(--accent-purple); padding: 15px; border-radius: 6px;">
-                            <strong style="color: var(--accent-purple); display: block; font-size: 0.85rem; text-transform: uppercase;">2. Compliance Supervisor</strong>
-                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Calculates compliance scores & flags violations</span>
-                        </div>
-                        <div style="background: rgba(16,185,129,0.08); border: 1px solid var(--accent-green); padding: 15px; border-radius: 6px;">
-                            <strong style="color: var(--accent-green); display: block; font-size: 0.85rem; text-transform: uppercase;">3. Red Team Challenger</strong>
-                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Challenges assumptions, bias & counter-factuals</span>
-                        </div>
-                        <div style="background: rgba(245,158,11,0.08); border: 1px solid var(--accent-amber); padding: 15px; border-radius: 6px;">
-                            <strong style="color: var(--accent-amber); display: block; font-size: 0.85rem; text-transform: uppercase;">4. GenAI Historian</strong>
-                            <span style="font-size: 0.8rem; color: var(--color-text-muted);">pgvector semantic search to deduplicate memory</span>
-                        </div>
-                    </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+                    <h2 style="margin: 0; border: none; padding: 0;"><span class="section-icon">🏗️</span> End-to-End System Architecture</h2>
+                    <button class="inline-edit-btn" onclick="openDiagramEditor('architecture')">
+                        <span>✏️</span> Edit Diagram Inline
+                    </button>
                 </div>
-
-                <div class="alert-box alert-note">
+                <p>ITACS's orchestration framework is built upon a secure, multi-agent network that decouples slide ingestion from strategic planning. Below is the interactive, editable **Draw.io system architecture and dataflow diagram** representing all active agents, databases, decision nodes, technology stacks, and target connectors.</p>
+                
+                <!-- Draw.io Interactive Embed Container -->
+                <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
+                    <div id="diagram-architecture" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="{&quot;highlight&quot;: &quot;#06B6D4&quot;, &quot;nav&quot;: true, &quot;resize&quot;: true, &quot;toolbar&quot;: &quot;zoom layers tags edit&quot;, &quot;edit&quot;: &quot;_blank&quot;, &quot;xml&quot;: &quot;<mxfile host=\&quot;embed.diagrams.net\&quot;>\n  <diagram id=\&quot;baseline_architecture\&quot; name=\&quot;Baseline Architecture\&quot;>\n    <mxGraphModel dx=\&quot;1193\&quot; dy=\&quot;853\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;1000\&quot; pageHeight=\&quot;920\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;>\n      <root>\n        <mxCell id=\&quot;0\&quot; />\n        <mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; />\n        \n        <!-- Row 1: Adobe Workfront Origin / Intake UI -->\n        <mxCell id=\&quot;intake\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Clinical Slide / PDF Ingestion&lt;br&gt;&lt;i&gt;Functional Slide Deck Upload&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;30\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 2: Master Orchestrator Agent -->\n        <mxCell id=\&quot;orchestrator\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;ITACS Master Orchestrator&lt;br&gt;&lt;i&gt;Google GenAI SDK + Gemini 1.5 Pro&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;115\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 3: Amazon RDS DB, BigQuery CDP, Context Layer -->\n        <mxCell id=\&quot;claims_db\&quot; parent=\&quot;1\&quot; style=\&quot;shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;PostgreSQL / pgvector DB&lt;br&gt;&lt;b&gt;Validated Enterprise Memory&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;80\&quot; width=\&quot;230\&quot; x=\&quot;110\&quot; y=\&quot;202.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;cdp\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Indication Roadmap Registry&lt;br&gt;&lt;i&gt;Filing Timelines &amp;amp; Milestones&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;215\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;rules\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;Compliance supervisor Layer&lt;br&gt;&lt;b&gt;Merck Brand Guidelines &amp;amp; FDA Rules&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;200\&quot; x=\&quot;650\&quot; y=\&quot;215\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 4: 1:N Tactic Fan-Out Engine -->\n        <mxCell id=\&quot;fanout\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Consensus &amp;amp; Synthesis Engine&lt;br&gt;&lt;i&gt;Clusters functional insights to themes&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;310\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 5: Sub-agents -->\n        <mxCell id=\&quot;email_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Compliance supervisor Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;140\&quot; y=\&quot;395\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;web_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Red Team Challenger Agent&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;420\&quot; y=\&quot;395\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sms_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;GenAI Historian Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;700\&quot; y=\&quot;395\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 6: Imagen 3 & Ledger -->\n        <mxCell id=\&quot;imagen3\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontFamily=Helvetica;fontSize=11;fontStyle=1\&quot; value=\&quot;Wargaming &amp;amp; Stress-Test Agent&lt;br&gt;&lt;i&gt;Consensus score &amp;amp; debate models&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;180\&quot; x=\&quot;130\&quot; y=\&quot;480\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;fallback_imagen\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontFamily=Helvetica;fontSize=11;fontStyle=2\&quot; value=\&quot;Skeptical Challenger Fallback&lt;br&gt;&lt;i&gt;(gemini-1.5-flash-8b)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;180\&quot; x=\&quot;130\&quot; y=\&quot;565\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;ledger_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=11;fontStyle=1\&quot; value=\&quot;Memory Audit Trail Agent&lt;br&gt;&lt;b&gt;SHA-256 Cryptographic Seal&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;180\&quot; x=\&quot;410\&quot; y=\&quot;480\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 7: Integrations & Connector Manager -->\n        <mxCell id=\&quot;connector_mgr\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Strategic Workshop Manager&lt;br&gt;&lt;i&gt;Weighs Trade-offs &amp;amp; Actions&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;380\&quot; y=\&quot;660\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 8: Target Connectors -->\n        <mxCell id=\&quot;veeva_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Indication Roadmap Cockpit&lt;br&gt;&lt;i&gt;(Melanoma / NSCLC Roadmaps)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;120\&quot; y=\&quot;750\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sf_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;SME Validation Queue&lt;br&gt;&lt;i&gt;(Insight review panel)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;300\&quot; y=\&quot;750\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;fda_gateway\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Strategic Imperatives Board&lt;br&gt;&lt;b&gt;Options, Trade-offs &amp;amp; Risks&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;480\&quot; y=\&quot;750\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;outlook_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Automated Gap Engine\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;660\&quot; y=\&quot;750\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Core Connectors -->\n        <mxCell id=\&quot;e1\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;intake\&quot; target=\&quot;orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e2\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;claims_db\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e3\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;rules\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e4\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;cdp\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e5\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;claims_db\&quot; target=\&quot;cdp\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e6\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;cdp\&quot; target=\&quot;fanout\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e7\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;email_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e8\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;web_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e9\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;sms_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e10\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;email_agent\&quot; target=\&quot;imagen3\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e11\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;imagen3\&quot; target=\&quot;fallback_imagen\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#DC2626;fontColor=#DC2626;fontSize=10;fontStyle=1\&quot; value=\&quot;If 404 NOT_FOUND\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e12\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;300\&quot; y=\&quot;420\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;500\&quot; y=\&quot;480\&quot; as=\&quot;targetPoint\&quot; />\n          </mxGeometry>\n        </mxCell>\n        <mxCell id=\&quot;e13\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;web_agent\&quot; target=\&quot;ledger_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e14\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;700\&quot; y=\&quot;420\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;500\&quot; y=\&quot;480\&quot; as=\&quot;targetPoint\&quot; />\n          </mxGeometry>\n        </mxCell>\n        <mxCell id=\&quot;e15\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ledger_agent\&quot; target=\&quot;connector_mgr\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e16\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fallback_imagen\&quot; target=\&quot;connector_mgr\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e17\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;veeva_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e18\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;sf_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e19\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;fda_gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e20\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;outlook_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n      </root>\n    </mxGraphModel>\n  </diagram>\n</mxfile>&quot;}"></div>
+                </div>
+                
+                <div class="alert-box alert-note" style="margin-top: 1rem;">
                     <span class="alert-icon">💡</span>
                     <div>
-                        <strong>Data Security:</strong> Every step of the agent orchestration pipeline is backed by **SPIFFE/OIDC identities** and is logged cryptographically in the postgres ledger to satisfy corporate compliance audits.
+                        <strong>How to Edit this Diagram:</strong> Hover over the diagram above and click the **"Edit"** button in the toolbar. It will instantly open this exact live architecture in **draw.io** (diagrams.net) for your team to modify!
                     </div>
+                </div>
+            </section>
+
+            <!-- SECTION 1B: Enterprise Gateway & Self-Healing Architecture -->
+            <section id="gateway_architecture" class="guide-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+                    <h2 style="margin: 0; border: none; padding: 0;"><span class="section-icon">🛡️</span> Enterprise Gateway & Consensus Flow</h2>
+                    <button class="inline-edit-btn" onclick="openDiagramEditor('gateway')">
+                        <span>✏️</span> Edit Diagram Inline
+                    </button>
+                </div>
+                <p>For large-scale, highly regulated oncology deployments, the system architecture enforces strict identity governance, OIDC scopes, data privacy, and real-time validation layers. Below is the advanced **Enterprise OIDC Gateway and Red Team QC Challenger flow diagram**, representing active consensus-building integration points:</p>
+                
+                <!-- Draw.io Interactive Embed Container -->
+                <div style="width: 100%; height: 840px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
+                    <div id="diagram-gateway" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="{&quot;highlight&quot;: &quot;#06B6D4&quot;, &quot;nav&quot;: true, &quot;resize&quot;: true, &quot;toolbar&quot;: &quot;zoom layers tags edit&quot;, &quot;edit&quot;: &quot;_blank&quot;, &quot;xml&quot;: &quot;<mxfile host=\&quot;embed.diagrams.net\&quot;>\n  <diagram id=\&quot;gateway_compliance_flow\&quot; name=\&quot;Gateway &amp; Self-Healing Flow\&quot;>\n    <mxGraphModel dx=\&quot;1193\&quot; dy=\&quot;853\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;1000\&quot; pageHeight=\&quot;950\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;>\n      <root>\n        <mxCell id=\&quot;0\&quot; />\n        <mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; />\n        \n        <!-- Row 1: Intake UI -->\n        <mxCell id=\&quot;ui\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;ITACS Strategic Dashboard UI&lt;br&gt;&lt;i&gt;Slide Ingestion / Cockpit Upload&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;30\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 2: Kong AI Gateway & Ping -->\n        <mxCell id=\&quot;gateway\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#DC2626;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;SPIFFE/OIDC Gateway&lt;br&gt;&lt;i&gt;Zero-Trust Identity &amp;amp; RAG filters&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;240\&quot; x=\&quot;380\&quot; y=\&quot;115\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 3: Claims DB, Context Layer, Orchestrator -->\n        <mxCell id=\&quot;claims_db\&quot; parent=\&quot;1\&quot; style=\&quot;shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;PostgreSQL pgvector DB&lt;br&gt;&lt;b&gt;Validated Enterprise Memory&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;80\&quot; width=\&quot;200\&quot; x=\&quot;120\&quot; y=\&quot;215\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;context\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;Compliance supervisor Layer&lt;br&gt;&lt;b&gt;Merck Brand Guidelines &amp;amp; FDA Rules&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;180\&quot; x=\&quot;410\&quot; y=\&quot;227.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;orchestrator\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;ITACS Master Orchestrator&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro (2M Context)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;250\&quot; x=\&quot;650\&quot; y=\&quot;225\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 4: 1:N Tactic Fan-Out Engine -->\n        <mxCell id=\&quot;fanout\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Consensus &amp;amp; Synthesis Engine&lt;br&gt;&lt;i&gt;Clusters functional insights to themes&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;325\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 5: Sub-agents -->\n        <mxCell id=\&quot;email_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Compliance supervisor Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;140\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;web_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Red Team Challenger Agent&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;420\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sms_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;GenAI Historian Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;700\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 6: Risk & Compliance QC Agent -->\n        <mxCell id=\&quot;qc_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#DC2626;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Red Team QC Challenger&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro (Red-Teaming). Triggers consensus debate loop.&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;65\&quot; width=\&quot;380\&quot; x=\&quot;310\&quot; y=\&quot;510\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 7: Integrations & Connector Manager -->\n        <mxCell id=\&quot;connector_mgr\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;Strategic Workshop Manager&lt;br&gt;&lt;i&gt;Weighs Trade-offs &amp;amp; Actions&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;380\&quot; y=\&quot;615\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 8: Target Connectors -->\n        <mxCell id=\&quot;veeva_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Indication Roadmap Cockpit&lt;br&gt;&lt;i&gt;(Melanoma / NSCLC Roadmaps)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;120\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sf_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;SME Validation Queue&lt;br&gt;&lt;i&gt;(Insight review panel)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;300\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;fda_gateway\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Strategic Imperatives Board&lt;br&gt;&lt;b&gt;Options, Trade-offs &amp;amp; Risks&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;480\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;outlook_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;Automated Gap Engine\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;660\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Core Connectors -->\n        <mxCell id=\&quot;e1\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;ui\&quot; target=\&quot;gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e2\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;gateway\&quot; target=\&quot;orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e3\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;gateway\&quot; target=\&quot;claims_db\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e4\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;claims_db\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e5\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;context\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e6\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;orchestrator\&quot; target=\&quot;fanout\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e7\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;claims_db\&quot; target=\&quot;fanout\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e8\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;email_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e9\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;web_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e10\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;fanout\&quot; target=\&quot;sms_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e11\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;email_agent\&quot; target=\&quot;qc_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e12\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;web_agent\&quot; target=\&quot;qc_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e13\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;sms_agent\&quot; target=\&quot;qc_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e14\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;qc_agent\&quot; target=\&quot;connector_mgr\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e15\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;veeva_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e16\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;sf_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e17\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;fda_gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e18\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;outlook_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- RED DOTTED SELF-HEALING LOOP (qc_agent -> fanout) -->\n        <mxCell id=\&quot;self_healing_loop\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;qc_agent\&quot; target=\&quot;fanout\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;curved=1;rounded=1;html=1;strokeWidth=2.5;strokeColor=#DC2626;dashed=1;fontColor=#DC2626;fontSize=10;fontStyle=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0\&quot; value=\&quot;Dynamic Consensus Debate Trigger\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;310\&quot; y=\&quot;542.5\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;390\&quot; y=\&quot;352.5\&quot; as=\&quot;targetPoint\&quot; />\n            <Array as=\&quot;points\&quot;>\n              <mxPoint x=\&quot;80\&quot; y=\&quot;543\&quot; />\n              <mxPoint x=\&quot;80\&quot; y=\&quot;353\&quot; />\n            </Array>\n          </mxGeometry>\n        </mxCell>\n        \n      </root>\n    </mxGraphModel>\n  </diagram>\n</mxfile>&quot;}"></div>
+                </div>
+            </section>
+
+            <!-- SECTION 1C: Detailed Sequence Ingestion Flow -->
+            <section id="detailed_flow" class="guide-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+                    <h2 style="margin: 0; border: none; padding: 0;"><span class="section-icon">🎛️</span> Detailed Ingestion Sequence Flow</h2>
+                    <button class="inline-edit-btn" onclick="openDiagramEditor('sequence')">
+                        <span>✏️</span> Edit Diagram Inline
+                    </button>
+                </div>
+                <p>This sequence diagram details the step-by-step token transit, RAG grounding, vector search checks, and Red Team challenges that execute sequentially when a new clinical slide deck is ingested by the platform:</p>
+                
+                <!-- Draw.io Interactive Embed Container -->
+                <div style="width: 100%; height: 940px; background: var(--bg-sub); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; position: relative;">
+                    <div id="diagram-sequence" class="mxgraph" style="max-width:100%; height: 100%; border:none; box-sizing:border-box;" data-mxgraph="{&quot;highlight&quot;: &quot;#06B6D4&quot;, &quot;nav&quot;: true, &quot;resize&quot;: true, &quot;toolbar&quot;: &quot;zoom layers tags edit&quot;, &quot;edit&quot;: &quot;_blank&quot;, &quot;xml&quot;: &quot;<mxfile host=\&quot;embed.diagrams.net\&quot;>\n  <diagram id=\&quot;target_agentic_flow\&quot; name=\&quot;Google-Native Target-State Flow\&quot;>\n    <mxGraphModel dx=\&quot;1193\&quot; dy=\&quot;853\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;1100\&quot; pageHeight=\&quot;950\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;>\n      <root>\n        <mxCell id=\&quot;0\&quot; />\n        <mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; />\n        \n        <!-- Row 1: Adobe Ingestion & Kong Gateway -->\n        <mxCell id=\&quot;adobe_intake\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[1]&lt;/b&gt; Clinical Slide Ingestion&lt;br&gt;&lt;i&gt;Oncology Slide Deck Upload&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;390\&quot; y=\&quot;30\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;kong_gateway\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[2]&lt;/b&gt; SPIFFE/OIDC Gateway&lt;br&gt;&lt;i&gt;Zero-Trust Identity &amp;amp; RAG filters&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;380\&quot; y=\&quot;115\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- AWS MCP Agents (Exposed legacy/specialized agents running on AWS) -->\n        <mxCell id=\&quot;aws_mcp_agents\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9900;strokeColor=#CC6600;strokeWidth=2;fontColor=#FFFFFF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[2a]&lt;/b&gt; Registered MCP Servers&lt;br&gt;&lt;i&gt;External Medical Repositories (Veeva)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;210\&quot; x=\&quot;80\&quot; y=\&quot;112.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 2: Grounding & Governance Layer (AWS as Data Host, Google as AI Brain) -->\n        <mxCell id=\&quot;aws_data\&quot; parent=\&quot;1\&quot; style=\&quot;shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FF9900;strokeColor=#CC6600;fontColor=#FFFFFF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[3]&lt;/b&gt; PostgreSQL pgvector Host&lt;br&gt;&lt;b&gt;Enterprise Memory DB&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;80\&quot; width=\&quot;210\&quot; x=\&quot;90\&quot; y=\&quot;205\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;google_vector\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;&lt;b&gt;[4]&lt;/b&gt; Google Vertex AI RAG Search&lt;br&gt;&lt;b&gt;Real-time Grounding (Oncology Memory)&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;230\&quot; x=\&quot;385\&quot; y=\&quot;217.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;agent_designer\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=2;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[5]&lt;/b&gt; Vertex AI Agent Designer&lt;br&gt;&lt;i&gt;Supervisor &amp;amp; Challenger Personas&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;690\&quot; y=\&quot;217.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 3: Google Agentic Execution Core -->\n        <mxCell id=\&quot;agent_registry\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;&lt;b&gt;[6]&lt;/b&gt; Google Agent Registry&lt;br&gt;&lt;i&gt;OIDC Governance &amp;amp; Security Hub&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;210\&quot; x=\&quot;90\&quot; y=\&quot;325\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;master_orchestrator\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[7]&lt;/b&gt; ITACS Master Orchestrator&lt;br&gt;&lt;b&gt;Gemini 1.5 Pro (2M Context)&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;250\&quot; x=\&quot;375\&quot; y=\&quot;322.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;google_adk\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontFamily=Helvetica;fontSize=12\&quot; value=\&quot;&lt;b&gt;[8]&lt;/b&gt; Google ADK (Agent Dev Kit)&lt;br&gt;&lt;i&gt;Task Execution &amp;amp; RAG Grounding&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;220\&quot; x=\&quot;690\&quot; y=\&quot;325\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- [8b] Vertex AI Imagen 3 (Image & Asset Generation) -->\n        <mxCell id=\&quot;imagen_3\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=2;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[8b]&lt;/b&gt; Wargaming Arena Agent&lt;br&gt;&lt;i&gt;Stress-Test Competitor Simulation Models&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;60\&quot; width=\&quot;180\&quot; x=\&quot;920\&quot; y=\&quot;322.5\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Google-AWS A2A Bridge (Cross-cloud Pub/Sub tunnel placed in empty left-hand column space) -->\n        <mxCell id=\&quot;a2a_bridge\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;dashed=1;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[8a]&lt;/b&gt; Google-AWS A2A Bridge&lt;br&gt;&lt;i&gt;EventBridge / pgvector Tunnel&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;210\&quot; x=\&quot;90\&quot; y=\&quot;515\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 4: Specialized Tactic Sub-Agents (Google-Native) -->\n        <mxCell id=\&quot;email_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[9a]&lt;/b&gt; Compliance supervisor Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash via ADK&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;140\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;web_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[9b]&lt;/b&gt; Red Team Challenger Agent&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro via ADK&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;420\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sms_agent\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[9c]&lt;/b&gt; GenAI Historian Agent&lt;br&gt;&lt;i&gt;Gemini 2.0 Flash via ADK&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;160\&quot; x=\&quot;700\&quot; y=\&quot;420\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 5: Multimodal Quality Control & Real-time Audit -->\n        <mxCell id=\&quot;vertex_monitor\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#E6FFFA;strokeColor=#0D9488;strokeWidth=3;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[10]&lt;/b&gt; Vertex AI Model Monitoring &amp;amp; Auditor&lt;br&gt;&lt;i&gt;Gemini 1.5 Pro (Red-Teaming: Audits Bias, Skeptic, &amp;amp; pgvector Consensus scores)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;65\&quot; width=\&quot;400\&quot; x=\&quot;300\&quot; y=\&quot;510\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 6: Secure Connector & Enterprise Integrations -->\n        <mxCell id=\&quot;connector_mgr\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontFamily=Helvetica;fontSize=12;fontStyle=1\&quot; value=\&quot;&lt;b&gt;[11]&lt;/b&gt; Strategic Workshop Manager&lt;br&gt;&lt;i&gt;Applies Cryptographic SHA-256 Lock&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;55\&quot; width=\&quot;240\&quot; x=\&quot;380\&quot; y=\&quot;615\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Row 7: Target Connectors -->\n        <mxCell id=\&quot;veeva_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[12a]&lt;/b&gt; Indication Roadmap Cockpit&lt;br&gt;&lt;i&gt;(Melanoma / NSCLC Roadmaps)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;120\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;sf_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[12b]&lt;/b&gt; SME Validation Queue&lt;br&gt;&lt;i&gt;(Insight review panel)&lt;/i&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;300\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;fda_gateway\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[12c]&lt;/b&gt; Strategic Imperatives Board&lt;br&gt;&lt;b&gt;Options, Trade-offs &amp;amp; Risks&lt;/b&gt;\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;480\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <mxCell id=\&quot;outlook_conn\&quot; parent=\&quot;1\&quot; style=\&quot;rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;fontFamily=Helvetica;fontSize=11\&quot; value=\&quot;&lt;b&gt;[12d]&lt;/b&gt; Automated Gap Engine\&quot; vertex=\&quot;1\&quot;>\n          <mxGeometry height=\&quot;50\&quot; width=\&quot;150\&quot; x=\&quot;660\&quot; y=\&quot;710\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Edges -->\n        <mxCell id=\&quot;e1\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;adobe_intake\&quot; target=\&quot;kong_gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e2\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;kong_gateway\&quot; target=\&quot;master_orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e3\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;kong_gateway\&quot; target=\&quot;aws_data\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e4\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;aws_data\&quot; target=\&quot;master_orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e5\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_vector\&quot; target=\&quot;master_orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e6\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;agent_designer\&quot; target=\&quot;master_orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e7\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;agent_registry\&quot; target=\&quot;master_orchestrator\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e8\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;master_orchestrator\&quot; target=\&quot;google_adk\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e9\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_adk\&quot; target=\&quot;email_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e10\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_adk\&quot; target=\&quot;web_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e11\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_adk\&quot; target=\&quot;sms_agent\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e12\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;email_agent\&quot; target=\&quot;vertex_monitor\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e13\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;web_agent\&quot; target=\&quot;vertex_monitor\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e14\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;sms_agent\&quot; target=\&quot;vertex_monitor\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e15\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;vertex_monitor\&quot; target=\&quot;connector_mgr\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e16\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;veeva_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e17\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;sf_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e18\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;fda_gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        <mxCell id=\&quot;e19\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;connector_mgr\&quot; target=\&quot;outlook_conn\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#666666\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- DOTTED SELF-HEALING LOOP (vertex_monitor -> agent_designer) - Routed on the far right at x=940 -->\n        <mxCell id=\&quot;self_healing_loop\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;vertex_monitor\&quot; target=\&quot;agent_designer\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;curved=1;rounded=1;html=1;strokeWidth=2.5;strokeColor=#DC2626;dashed=1;fontColor=#DC2626;fontSize=10;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0\&quot; value=\&quot;[10a] Dynamic Consensus Debate Loop\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;700\&quot; y=\&quot;542.5\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;910\&quot; y=\&quot;245\&quot; as=\&quot;targetPoint\&quot; />\n            <Array as=\&quot;points\&quot;>\n              <mxPoint x=\&quot;940\&quot; y=\&quot;543\&quot; />\n              <mxPoint x=\&quot;940\&quot; y=\&quot;245\&quot; />\n            </Array>\n          </mxGeometry>\n        </mxCell>\n        \n        <!-- NEW CROSS-CLOUD CONNECTIONS -->\n        <!-- AWS MCP Agents -> Kong Gateway (Secure Ingress) -->\n        <mxCell id=\&quot;e_mcp1\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;aws_mcp_agents\&quot; target=\&quot;kong_gateway\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#FF9900\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- Dotted bi-directional MCP Link (Dynamic Tool-Calling) - Routed through the clear gap channel at x=330 -->\n        <mxCell id=\&quot;e_mcp2\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;master_orchestrator\&quot; target=\&quot;aws_mcp_agents\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=1;curved=1;html=1;strokeWidth=2;strokeColor=#1A73E8;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0\&quot; value=\&quot;MCP Protocol Link (Tool Calling)\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;375\&quot; y=\&quot;352.5\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;300\&quot; y=\&quot;142.5\&quot; as=\&quot;targetPoint\&quot; />\n            <Array as=\&quot;points\&quot;>\n              <mxPoint x=\&quot;330\&quot; y=\&quot;353\&quot; />\n              <mxPoint x=\&quot;330\&quot; y=\&quot;143\&quot; />\n            </Array>\n          </mxGeometry>\n        </mxCell>\n        \n        <!-- Google ADK -> A2A Bridge (Asynchronous handoff) -->\n        <mxCell id=\&quot;e_a2a1\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_adk\&quot; target=\&quot;a2a_bridge\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#6C8EBF;dashed=1\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n        <!-- A2A Bridge -> AWS MCP Agents (Cross-Cloud Event Tunnel) - Routed safely on the far left margin at x=50 -->\n        <mxCell id=\&quot;e_a2a2\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;a2a_bridge\&quot; target=\&quot;aws_mcp_agents\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=1;curved=1;html=1;strokeWidth=1.5;strokeColor=#FF9900;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;>\n            <mxPoint x=\&quot;90\&quot; y=\&quot;542.5\&quot; as=\&quot;sourcePoint\&quot; />\n            <mxPoint x=\&quot;80\&quot; y=\&quot;142.5\&quot; as=\&quot;targetPoint\&quot; />\n            <Array as=\&quot;points\&quot;>\n              <mxPoint x=\&quot;50\&quot; y=\&quot;543\&quot; />\n              <mxPoint x=\&quot;50\&quot; y=\&quot;143\&quot; />\n            </Array>\n          </mxGeometry>\n        </mxCell>\n        \n        <!-- Google ADK -> Imagen 3 (Shared Image Gen tool) -->\n        <mxCell id=\&quot;e_imagen\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;google_adk\&quot; target=\&quot;imagen_3\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#9673A6\&quot;>\n          <mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; />\n        </mxCell>\n        \n      </root>\n    </mxGraphModel>\n  </diagram>\n</mxfile>&quot;}"></div>
                 </div>
             </section>
 
@@ -440,7 +603,7 @@
                 <h2><span class="section-icon">🛡️</span> Compliance & QC Gating</h2>
                 <p>To operate at enterprise scale, ITACS enforces a dual-layered compliance gate:</p>
                 <ul style="color: var(--color-text-muted); font-size: 0.95rem; padding-left: 1.5rem; line-height: 1.8;">
-                    <li><strong>Compliance Supervisor (White Line check)</strong>: Evaluates incoming slide text against corporate compliance lists (e.g., off-label promotions, unvalidated efficacy claims). High-confidence items proceed to validation; items with $< 85\%$ compliance scores are quarantined.</li>
+                    <li><strong>Compliance Supervisor (White Line check)</strong>: Evaluates incoming slide text against corporate compliance lists (e.g., off-label promotions, unvalidated efficacy claims). High-confidence items proceed to validation; items with compliance scores under 85% are quarantined.</li>
                     <li><strong>Red Team Challenger</strong>: Prompts specialized personas (Skeptic, Payer, Competitor) to review the slide before validation, flagging blind spots and generating counter-factual scenarios.</li>
                 </ul>
                 <div class="step-code">
@@ -453,16 +616,50 @@
             <!-- SECTION 3: Interface & UI Guide -->
             <section id="ui_guide" class="guide-section">
                 <h2><span class="section-icon">🖥️</span> Interface & UI Guide</h2>
-                <p>The ITACS dashboard features a premium, dark-mode, glassmorphic layout divided into three main operational panels:</p>
+                <p>Maestro is structured as a **Single Pane of Glass** to eliminate "format fatigue" and abstract complex backend agent interactions into a clean, intuitive canvas. Below is a detailed breakdown of each tab, panel, and page in the workspace, along with the business and compliance rationale for why it exists.</p>
                 
-                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">A. The Indication Roadmap & Cockpit</h3>
-                <p>The home screen lists our active strategic Indication Roadmaps (e.g., Melanoma KEYNOTE-940, NSCLC MK-1084). Clicking any timeline block displays active clinical studies, filings, and regulatory milestones, letting you jump directly to target validation workshops.</p>
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">1. The Four Main Workspace Tabs</h3>
+                <p>The top navigation allows you to switch between different operational dimensions of the ITACS platform:</p>
                 
-                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">B. The SME Validation Queue</h3>
-                <p>The inbox panel lists raw extracted insights. Click any card to open the drawer: review compliance scores, run competitor stress-tests in the Wargaming Console, read Red Team critiques, and approve them to the Enterprise Memory.</p>
-
-                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">C. The Strategic Imperative Builder</h3>
-                <p>A drag-and-drop Kanban board sorting macro-imperatives by resource commitment. Click any card to open the Strategic Workshop Drawer, weigh trade-offs/risks, and add concrete tactical actions backed by evidence.</p>
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th>Tab Page</th>
+                            <th>What It Displays</th>
+                            <th>Why It Exists (Business Value)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 700; color: var(--color-primary);">Indication Roadmap</td>
+                            <td>The primary strategic timeline containing clinical studies, filing pipelines, and active regulatory milestones.</td>
+                            <td>Provides a single visual workspace for leaders to track asset launch schedules (V940, MK-1084) without bouncing between tools.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: var(--accent-purple);">SME Validation Queue</td>
+                            <td>The active incoming queue of compliance-cleared slide insights waiting for functional expert validation.</td>
+                            <td>Acts as the critical **Human-in-the-Loop gate** where clinical researchers confirm, edit, or quarantine AI-extracted findings.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: var(--accent-green);">Strategic Builder</td>
+                            <td>The cross-functional Kanban workspace where validated insights are formulated into macro-imperatives.</td>
+                            <td>Guarantees that all corporate strategic initiatives are **directly grounded in source evidence cards** via the actions ledger.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 700; color: var(--accent-amber);">Memory Audit Ledger</td>
+                            <td>A chronological, cryptographic ledger recording every user edit, validation, and SHA-256 digital seal.</td>
+                            <td>Provides an **immutable audit trail** for legal and regulatory compliance reviews, proving data provenance.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3 style="font-family: var(--font-outfit); color: var(--color-primary); margin-top: 1.5rem;">2. Core Workspace Panels</h3>
+                <p>The main cockpit is split into three highly focused columns to maximize strategic focus and operational visibility:</p>
+                <ul style="color: var(--color-text-muted); font-size: 0.95rem; padding-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Intake & Timeline (Left)</strong>: Contains slide upload dropzones, active roadmap timeline blocks, and the real-time AI execution log console.</li>
+                    <li><strong>Active Workspace (Center)</strong>: Renders the interactive wargaming arena, the dual-ranking bias engine, and the visual cards grid.</li>
+                    <li><strong>Interactive Drawer (Right)</strong>: Slides open to show detailed wargaming results, Red Team critiques, implications editor, and the actions ledger.</li>
+                </ul>
             </section>
 
             <!-- SECTION 4: Ingestion Workflow -->
@@ -506,7 +703,7 @@
                     <div class="timeline-step completed">
                         <div class="step-badge-num">1</div>
                         <h3 class="step-title">Formulate a Strategic Imperative</h3>
-                        <p class="step-desc">Navigate to the **Imperative Builder** page. Click **"+ Formulate Imperative"**, fill the title/description, and create the card on the board.</p>
+                        <p class="step-desc">Navigate to the **Strategic Builder** page. Click **"+ Formulate Imperative"**, fill the title/description, and create the card on the board.</p>
                     </div>
                     <div class="timeline-step">
                         <div class="step-badge-num">2</div>
@@ -575,6 +772,159 @@
         </main>
     </div>
 
+    <!-- SEAMLESS DIAGRAM EDITOR MODAL -->
+    <div id="diagram-editor-overlay" class="editor-modal-overlay">
+        <div class="editor-modal-container">
+            <div class="editor-modal-header">
+                <h3 id="modal-title-text"><span>🏗️</span> Edit Diagram</h3>
+                <button class="editor-modal-close-btn" onclick="closeDiagramEditor()">&times;</button>
+            </div>
+            <div id="iframe-container" class="editor-modal-body"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // --- SEAMLESS EMBEDDED DIAGRAM EDITOR CONTROLLER ---
+        let drawioIframe = null;
+        let diagramXml = "";
+        let activeDiagramType = "";
+
+        function getCurrentXml(diagramType) {
+            let containerId = "diagram-architecture";
+            if (diagramType === "gateway") containerId = "diagram-gateway";
+            if (diagramType === "sequence") containerId = "diagram-sequence";
+            
+            const container = document.getElementById(containerId);
+            if (!container) return "";
+            
+            try {
+                const configAttr = container.getAttribute('data-mxgraph');
+                const config = JSON.parse(configAttr);
+                return config.xml || "";
+            } catch (e) {
+                console.error("Error reading current XML:", e);
+                return "";
+            }
+        }
+
+        function openDiagramEditor(diagramType) {
+            activeDiagramType = diagramType;
+            diagramXml = getCurrentXml(diagramType);
+            if (!diagramXml) {
+                alert("Could not load the current diagram XML.");
+                return;
+            }
+
+            const titleEl = document.getElementById('modal-title-text');
+            if (diagramType === 'architecture') titleEl.innerHTML = "<span>🏗️</span> Edit End-to-End System Architecture";
+            else if (diagramType === 'gateway') titleEl.innerHTML = "<span>🛡️</span> Edit Enterprise Gateway & Consensus Flow";
+            else titleEl.innerHTML = "<span>🎛️</span> Edit Detailed Ingestion Sequence Flow";
+
+            const overlay = document.getElementById('diagram-editor-overlay');
+            const iframeContainer = document.getElementById('iframe-container');
+            
+            iframeContainer.innerHTML = `
+                <iframe id="drawio-iframe" class="editor-modal-iframe" 
+                        src="https://embed.diagrams.net/?embed=1&ui=atlas&spin=1&proto=json">
+                </iframe>
+            `;
+            
+            drawioIframe = document.getElementById('drawio-iframe');
+            overlay.classList.add('active');
+            window.addEventListener('message', handleEditorMessage);
+        }
+
+        function closeDiagramEditor() {
+            const overlay = document.getElementById('diagram-editor-overlay');
+            const iframeContainer = document.getElementById('iframe-container');
+            
+            overlay.classList.remove('active');
+            iframeContainer.innerHTML = '';
+            drawioIframe = null;
+            window.removeEventListener('message', handleEditorMessage);
+        }
+
+        function handleEditorMessage(evt) {
+            if (!evt.data || evt.data.length === 0) return;
+            
+            let message = {};
+            try {
+                message = JSON.parse(evt.data);
+            } catch (e) {
+                return;
+            }
+
+            const source = drawioIframe ? drawioIframe.contentWindow : null;
+
+            if (message.event === 'init') {
+                if (source) {
+                    source.postMessage(JSON.stringify({
+                        action: 'load',
+                        xml: diagramXml
+                    }), '*');
+                }
+            }
+            else if (message.event === 'save') {
+                if (message.xml) {
+                    saveDiagramToBackend(message.xml);
+                }
+            }
+            else if (message.event === 'exit') {
+                closeDiagramEditor();
+            }
+        }
+
+        function saveDiagramToBackend(newXml) {
+            const source = drawioIframe ? drawioIframe.contentWindow : null;
+            if (source) {
+                source.postMessage(JSON.stringify({
+                    action: 'spinner',
+                    message: 'Saving diagram to backend...'
+                }), '*');
+            }
+
+            const apiBase = window.location.hostname.includes('railway.app') 
+                ? 'https://itacs-backend-production.up.railway.app' 
+                : '';
+
+            fetch(`${apiBase}/api/save-diagram`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    xml: newXml,
+                    diagram_type: activeDiagramType
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to save diagram.");
+                return res.json();
+            })
+            .then(data => {
+                if (source) {
+                    source.postMessage(JSON.stringify({
+                        action: 'spinner',
+                        visible: false
+                    }));
+                }
+                alert("✨ Diagram saved successfully! The page will now reload to reflect your changes.");
+                closeDiagramEditor();
+                window.location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                if (source) {
+                    source.postMessage(JSON.stringify({
+                        action: 'spinner',
+                        visible: false
+                    }));
+                }
+                alert("❌ Error saving diagram: " + err.message);
+            });
+        }
+    </script>
+
     <script>
         // Smooth scrolling navigation activation
         function activateMenu(elem) {
@@ -604,5 +954,6 @@
             });
         });
     </script>
+    <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js" async></script>
 </body>
 </html>

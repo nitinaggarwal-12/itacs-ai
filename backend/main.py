@@ -2803,6 +2803,67 @@ def startup_db_init():
     except Exception as e:
         logger.error(f"Error during DB startup tables initialization/migration: {e}")
 
+class SaveDiagramRequest(BaseModel):
+    xml: str
+    diagram_type: str = "architecture"
+
+@app.post("/api/save-diagram")
+def save_diagram_to_user_guide(req: SaveDiagramRequest):
+    """
+    Saves an updated Draw.io diagram XML back into the static HTML user guide.
+    This enables full visual editing lifecycle of systems architecture in the UI.
+    """
+    logger.info(f"Received request to save diagram: {req.diagram_type}")
+    try:
+        import os
+        import re
+        import json
+        
+        # Paths
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        html_path = os.path.join(os.path.dirname(base_dir), "frontend", "public", "user_guide.html")
+        
+        if not os.path.exists(html_path):
+            raise HTTPException(status_code=404, detail="user_guide.html not found on server")
+            
+        with open(html_path, "r", encoding="utf-8") as f:
+            html_content = f.read()
+            
+        # Configure the Draw.io embed dictionary
+        config = {
+            "highlight": "#06B6D4",
+            "nav": True,
+            "resize": True,
+            "toolbar": "zoom layers tags edit",
+            "edit": "_blank",
+            "xml": req.xml
+        }
+        
+        # Serialize to JSON and escape quotes for HTML insertion
+        config_json = json.dumps(config)
+        escaped_config = config_json.replace('"', '&quot;')
+        
+        # Surgical replacement regex based on diagram ID
+        if req.diagram_type == "architecture":
+            pattern = r'(<div\s+id="diagram-architecture"[^>]*data-mxgraph=")([^"]*)(")'
+        else:
+            pattern = r'(<div\s+id="diagram-gateway"[^>]*data-mxgraph=")([^"]*)(")'
+            
+        if not re.search(pattern, html_content):
+            raise HTTPException(status_code=400, detail=f"Target diagram div for {req.diagram_type} not found in user_guide.html")
+            
+        updated_content = re.sub(pattern, rf'\g<1>{escaped_config}\g<3>', html_content)
+        
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write(updated_content)
+            
+        logger.info("Diagram XML successfully updated in user_guide.html")
+        return {"status": "success", "message": f"Diagram {req.diagram_type} saved successfully"}
+        
+    except Exception as e:
+        logger.error(f"Failed to save diagram: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
