@@ -6482,13 +6482,13 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               overflowY: 'auto'
             }}>
               <div>
-                <span style={{ fontSize: '7.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                <span style={{ fontSize: '10.5px', color: 'var(--brand-purple)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                   SHOWCASE MULTI-AGENT ARENA
                 </span>
-                <h2 style={{ margin: '4px 0 0 0', fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <h2 style={{ margin: '6px 0 0 0', fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Simulation Theater
                 </h2>
-                <p style={{ margin: '4px 0 0 0', fontSize: '10px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5' }}>
                   Run live, animated agentic scenarios showing the platform's eyes, safety guardrails, department clashes, and deep research outbound loops.
                 </p>
               </div>
@@ -6521,12 +6521,12 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                      <span style={{ fontSize: '14px' }}>{scene.icon}</span>
-                      <h4 style={{ margin: 0, fontSize: '12.5px', fontWeight: 700, color: simActiveScene === scene.id ? 'white' : 'var(--text-secondary)' }}>
+                      <span style={{ fontSize: '16px' }}>{scene.icon}</span>
+                      <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: simActiveScene === scene.id ? 'white' : 'var(--text-secondary)' }}>
                         {scene.label}
                       </h4>
                     </div>
-                    <p style={{ margin: 0, fontSize: '9.5px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                       {scene.desc}
                     </p>
                   </div>
@@ -6540,11 +6540,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 className="btn btn-primary"
                 style={{
                   width: '100%',
-                  padding: '12px',
+                  padding: '14px',
                   borderRadius: '10px',
                   background: 'linear-gradient(135deg, var(--brand-indigo) 0%, var(--brand-purple) 100%)',
                   fontWeight: 'bold',
-                  fontSize: '12px',
+                  fontSize: '13px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -6556,11 +6556,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
               >
                 {simStatus === 'running' ? (
                   <>
-                    <RefreshCw className="animate-spin" size={14} /> Running Live Agent Simulation...
+                    <RefreshCw className="animate-spin" size={16} /> Running Live Agent Simulation...
                   </>
                 ) : (
                   <>
-                    <Play size={14} fill="white" /> Execute Showcase Simulation
+                    <Play size={16} fill="white" /> Execute Showcase Simulation
                   </>
                 )}
               </button>
@@ -6639,11 +6639,11 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
 
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px', marginBottom: '12px' }}>
-                          <span style={{ fontSize: '8px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>FILE INGRESS: MELANOMA_V940_LATE_PHASE.PPTX</span>
-                          <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>Slide 12 of 24</span>
+                          <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold' }}>FILE INGRESS: MELANOMA_V940_LATE_PHASE.PPTX</span>
+                          <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Slide 12 of 24</span>
                         </div>
                         
-                        <h3 style={{ margin: '0 0 14px 0', fontSize: '14px', color: 'white', fontWeight: 800 }}>
+                        <h3 style={{ margin: '0 0 14px 0', fontSize: '16px', color: 'white', fontWeight: 800 }}>
                           V940 + Pembrolizumab Adjuvant Survival Evidence
                         </h3>
                       </div>
@@ -6658,10 +6658,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         marginBottom: '10px',
                         transition: 'all 0.4s ease'
                       }}>
-                        <span style={{ fontSize: '7px', color: 'var(--brand-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '10px', color: 'var(--brand-cyan)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
                           QUADRANT 1: ADJUVANT EFFICACY MATRIX
                         </span>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: 'var(--text-secondary)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: 'var(--text-secondary)' }}>
                           <span>Adjuvant Combo (V940 + Pembro)</span>
                           <strong style={{ color: 'white' }}>44% Recurrence Risk Reduction (HR: 0.56)</strong>
                         </div>
@@ -6678,10 +6678,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         transition: 'all 0.4s ease',
                         fontStyle: 'italic'
                       }}>
-                        <span style={{ fontSize: '7px', color: 'var(--brand-blue)', fontWeight: 'bold', display: 'block', marginBottom: '4px', fontStyle: 'normal' }}>
+                        <span style={{ fontSize: '10px', color: 'var(--brand-blue)', fontWeight: 'bold', display: 'block', marginBottom: '4px', fontStyle: 'normal' }}>
                           QUADRANT 2: OPERATIONAL CLINICAL SIGNALS
                         </span>
-                        <p style={{ margin: 0, fontSize: '9px', lineHeight: '1.4', color: 'var(--text-muted)' }}>
+                        <p style={{ margin: 0, fontSize: '12.5px', lineHeight: '1.5', color: 'var(--text-muted)' }}>
                           "Reimbursement timelines are highly sensitive to HEOR package submissions immediately following FDA clearance."
                         </p>
                       </div>
@@ -6695,10 +6695,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         borderRadius: '8px',
                         transition: 'all 0.4s ease'
                       }}>
-                        <span style={{ fontSize: '7px', color: 'var(--brand-purple)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '10px', color: 'var(--brand-purple)', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
                           QUADRANT 3: LAUNCH IMPERATIVES RECOMMENDATION
                         </span>
-                        <p style={{ margin: 0, fontSize: '9px', color: 'white', fontWeight: 600 }}>
+                        <p style={{ margin: 0, fontSize: '12.5px', color: 'white', fontWeight: 600 }}>
                           Recommendation: Deploy HEOR surrogate models to Access leads by Q3.
                         </p>
                       </div>
@@ -6718,16 +6718,16 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         background: '#04060b',
                         border: '1px solid rgba(255,255,255,0.05)',
                         borderRadius: '12px',
-                        padding: '14px',
+                        padding: '16px',
                         fontFamily: 'monospace',
-                        fontSize: '9.5px',
+                        fontSize: '12.5px',
                         color: 'var(--brand-cyan)',
                         overflowY: 'auto',
                         whiteSpace: 'pre-wrap',
-                        lineHeight: '1.4'
+                        lineHeight: '1.5'
                       }}>
-                        <span style={{ color: '#818cf8', fontWeight: 'bold' }}>[VLM Copilot Visual Extraction Node]</span>
-                        <pre style={{ margin: '8px 0 0 0', fontFamily: 'inherit', color: '#22d3ee', whiteSpace: 'pre-wrap' }}>
+                        <span style={{ color: '#818cf8', fontWeight: 'bold', fontSize: '13px' }}>[VLM Copilot Visual Extraction Node]</span>
+                        <pre style={{ margin: '10px 0 0 0', fontFamily: 'inherit', color: '#22d3ee', whiteSpace: 'pre-wrap', fontSize: '12px' }}>
                           {simText || "Awaiting simulation trigger. Click 'Execute' to begin visual extraction..."}
                         </pre>
                       </div>
@@ -7193,10 +7193,10 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 overflow: 'hidden'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', paddingBottom: '6px', marginBottom: '6px', flexShrink: 0 }}>
-                  <span style={{ fontSize: '8px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                     📊 Multi-Agent Real-Time Telemetry Log
                   </span>
-                  <span style={{ fontSize: '7.5px', color: 'var(--brand-cyan)' }}>
+                  <span style={{ fontSize: '10.5px', color: 'var(--brand-cyan)' }}>
                     System Status: {simStatus === 'running' ? 'Active Ingress Pipeline' : 'Idle'}
                   </span>
                 </div>
@@ -7205,8 +7205,8 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   flex: 1,
                   overflowY: 'auto',
                   fontFamily: 'monospace',
-                  fontSize: '9.5px',
-                  lineHeight: '1.4',
+                  fontSize: '12.5px',
+                  lineHeight: '1.5',
                   color: 'rgba(255,255,255,0.85)',
                   display: 'flex',
                   flexDirection: 'column',
