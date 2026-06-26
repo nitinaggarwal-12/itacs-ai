@@ -978,7 +978,7 @@ export default function App() {
       targetId: "insight-card-list",
       title: "Select a Strategic Card 📊",
       description: "This is your Commercial Intelligence Matrix. To wargame a strategic imperative, first select any card from your active strategy list to open its validation details drawer!",
-      buttonText: "Select a card... 🔒",
+      buttonText: "Next Step ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight) => {
         setActiveTab('matrix');
         if (setSelectedInsight) setSelectedInsight(null);
@@ -988,7 +988,7 @@ export default function App() {
       targetId: "detail-tab-wargaming-btn",
       title: "Open AI Wargaming Tab ⚡",
       description: "Excellent! Now, open the '⚡ AI Wargaming' sub-tab inside the details drawer. This is where you connect to the Challenger Agent's stress-test cores!",
-      buttonText: "Open Wargaming tab... 🔒",
+      buttonText: "Next Step ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
         setActiveTab('matrix');
         if (setDetailTab) setDetailTab('framework');
@@ -998,7 +998,7 @@ export default function App() {
       targetId: "run-challenger-btn",
       title: "Run Challenger Stress-Test ⚡",
       description: "This is the wargaming console. Click 'Run Challenger Stress-Test' to initiate the clinical, competitive, and cognitive wargame simulation!",
-      buttonText: "Run Stress-Test... 🔒",
+      buttonText: "Review Consensus ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
         setActiveTab('matrix');
         if (setDetailTab) setDetailTab('wargaming');
@@ -1028,7 +1028,7 @@ export default function App() {
       targetId: "approve-to-memory-btn",
       title: "Approve and Promote to Memory 🔵",
       description: "Outstanding! You have wargamed your launch strategy and evolved it. Now, click the 'Approve to Memory' button at the bottom of the drawer to officially validate this risk-mitigated strategy, lock in the evolved fields, and write a new block to the Postgres Memory Bank Ledger!",
-      buttonText: "Approve Strategy... 🔒",
+      buttonText: "Complete Mission ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline, setSelectedInsight, setDetailTab) => {
         setActiveTab('matrix');
         if (setDetailTab) setDetailTab('wargaming');
