@@ -20,3 +20,17 @@ Before wrapping up your turn or notifying the user that a change is live, you **
 
 ### 3. Rationale
 This prevents false-positives caused by silent cloud rollbacks, Docker build caching anomalies, CDN edge caching, and browser bundle caching, ensuring 100% accuracy and respecting the user's time.
+
+## 🎨 RULE: UI Robustness & Onboarding Tour Design
+
+### 1. Viewport & Layout Integrity
+* **Fixed Viewport Layout**: The main application layout (`.matrix-layout`) must always have a fixed viewport height (`height: calc(100vh - 80px)`) and `overflow: hidden`. The search toolbar and sidebar must remain fixed, and only individual panels (like `.matrix-grid` and the details drawer) are scrollable. This prevents the entire page from scrolling and causing layout clipping.
+* **Drawer-Relative Tooltip Positioning**: For onboarding tours, any step targeting elements inside a slide-out drawer (like `card-details-panel`, `detail-tab-wargaming-btn`, `run-challenger-btn`, `wargame-results-hud`, `approve-to-memory-btn`) **MUST** position the popover card to the **left side of the drawer** (using `left: highlightStyle.left - 320 - 16` and a fixed offset `top: highlightStyle.top + 100`). Never position tooltips below drawer elements, as their extreme height will push the tooltip off-screen.
+
+### 2. Immersive Onboarding & State-Aware Locks
+* **State-Aware Locks on Actions**: Tour steps must require the user to perform the actual UI actions to proceed (e.g. selecting a card, running a wargame, clicking "Approve to Memory"). 
+* **Clean Default Button Labels**: Do **never** hardcode lock icons (`🔒`) in the default `buttonText` array of tour steps. Instead, keep default buttons clean (e.g., `Review Consensus ➔` or `Complete Mission ➔`), and only inject the lock icon `🔒` dynamically in the button text logic when the lock is active. This ensures the button instantly updates to a clean, inviting state the second the user satisfies the condition.
+* **Escape Hatches**: Every tour or modal must have two bulletproof escape hatches:
+  1. A global keydown listener that closes the tour/modal instantly when the **`Escape` key** is pressed.
+  2. A clickable backdrop/mask (for centered steps) that closes the tour when clicked.
+
