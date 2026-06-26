@@ -1058,6 +1058,18 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [tourStep, tourActive]);
 
+  // Bulletproof Escape Hatch key listener (Phase 2)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setTourActive(false);
+        setIsExtractingClinicalData(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   useEffect(() => {
     // Synchronize initial body class to respect theme state
     if (theme === 'light') {
@@ -9571,12 +9583,14 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
           {/* Full-screen click-blocking mask for centered steps */}
           {highlightStyle.opacity === 0 && (
             <div 
+              onClick={() => setTourActive(false)}
               style={{
                 position: 'fixed',
                 top: 0, left: 0, right: 0, bottom: 0,
                 background: 'rgba(3, 4, 7, 0.65)',
                 backdropFilter: 'blur(4px)',
-                zIndex: 9998
+                zIndex: 9998,
+                cursor: 'pointer'
               }}
             />
           )}
@@ -9605,21 +9619,28 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                   }
                 : (() => {
                     const step = tourSteps[tourStep];
-                    if (step.targetId === 'insight-card-list') {
+                    
+                    // Unified details drawer relative positioning (Float to the LEFT of the drawer!)
+                    const isInDrawer = step.targetId === 'card-details-panel' 
+                      || step.targetId === 'detail-tab-wargaming-btn' 
+                      || step.targetId === 'run-challenger-btn' 
+                      || step.targetId === 'wargame-results-hud';
+
+                    if (isInDrawer) {
                       return {
                         position: 'absolute',
                         top: highlightStyle.top + 100,
-                        left: highlightStyle.left + highlightStyle.width + 16,
+                        left: highlightStyle.left - 320 - 16,
                         zIndex: 10000,
                         width: '320px',
                         transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
                       };
                     }
-                    if (step.targetId === 'card-details-panel') {
+                    if (step.targetId === 'insight-card-list') {
                       return {
                         position: 'absolute',
                         top: highlightStyle.top + 100,
-                        left: highlightStyle.left - 320 - 16,
+                        left: highlightStyle.left + highlightStyle.width + 16,
                         zIndex: 10000,
                         width: '320px',
                         transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
