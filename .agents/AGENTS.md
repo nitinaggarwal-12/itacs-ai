@@ -56,5 +56,6 @@ When writing automated E2E test scripts (using Puppeteer, Playwright, or Seleniu
   2. Switching active tabs (`setActiveTab`).
   3. Clicking elements that trigger drawer opening/closing animations.
 * **Animation Cooldowns**: For heavy holographic animations (like the clinical scanner), always wait at least **4500ms** to allow the visual timeline to reach completion and display success badges before attempting to close the modal.
-* **DOM-Level Clicks for Spots**: Always prefer direct DOM-level clicks (`page.$eval(selector, el => el.click())`) over physical mouse coordinate clicks for spotlighted elements to prevent overlay interception blocks.
+* **DOM-Level Clicks for Spots**: Always prefer direct DOM-level clicks (`page.$eval(selector, el => el.click())`) over physical mouse coordinate clicks for spotlighted elements and tour control buttons (like `#tour-next-btn`). Physical coordinate clicks are highly vulnerable to being intercepted by the wargaming spotlight mask overlay, causing lost inputs and desynchronized tour states.
+* **Node-Level Sleep for Reloads**: When a tour action triggers a page reload (`window.location.reload()`) or navigation, never use `page.evaluate` to pause or sleep the script immediately after. The page reload will destroy the execution context, causing `page.evaluate` to crash. Instead, always use Node.js-level timeouts (`await new Promise(resolve => setTimeout(resolve, N))`) to allow the browser to reload in peace before taking screenshots or querying the DOM.
 
