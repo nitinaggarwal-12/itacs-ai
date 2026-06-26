@@ -486,7 +486,7 @@ def run_quality_and_deduplicate_agent(
     duplicate_record = None
     try:
         query = text("""
-            SELECT id, opportunity_space, csf, insight, rationale, implication, quotes, slide_reference, strength_of_evidence_score
+            SELECT id, opportunity_space, csf, insight, rationale, implication, quotes, slide_reference, evidence_score
             FROM enterprise_memory
             WHERE asset = :asset AND tumor = :tumor AND is_validated = true AND is_quarantined = false
             ORDER BY embedding <=> CAST(:vec AS vector)
@@ -592,7 +592,7 @@ def run_quality_and_deduplicate_agent(
         consolidated_insight["quotes"] = merged_quotes
         consolidated_insight["slide_reference"] = merged_slides
         
-        new_evidence_score = round(min(1.00, float(duplicate_record.strength_of_evidence_score or 0.8) + 0.1), 2)
+        new_evidence_score = round(min(1.00, float(duplicate_record.evidence_score or 0.8) + 0.1), 2)
         consolidated_insight["evidence_score"] = new_evidence_score
 
     log_audit_trail(
