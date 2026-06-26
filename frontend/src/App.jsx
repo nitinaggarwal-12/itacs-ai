@@ -866,9 +866,10 @@ export default function App() {
       title: "Welcome Home Portal 🏠",
       description: "This is your brand welcome home and educational portal. It contains your V940 oncology launch briefing, operating playbook, and live ingestion terminal!",
       buttonText: "Next Step ➔",
-      action: (setActiveTab) => {
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline) => {
         setActiveTab('home');
-        setHasDraggedTimeline(false); // Reset interaction states
+        if (setHasDraggedTimeline) setHasDraggedTimeline(false);
+        if (setWarTimeline) setWarTimeline(6);
       }
     },
     {
@@ -885,6 +886,7 @@ export default function App() {
       buttonText: "Next Step ➔",
       action: (setActiveTab, setSelectedRoadmapMilestone) => {
         setActiveTab('cascade');
+        if (setSelectedRoadmapMilestone) setSelectedRoadmapMilestone(null);
       }
     },
     {
@@ -892,14 +894,21 @@ export default function App() {
       title: "Competitive Wargaming ⚔️",
       description: "Now, let's explore the Competitive Wargaming console. Here, you can adjust competitor trial timelines and price-cut threats using real-time sliders to calculate strategic risk!",
       buttonText: "Next Step ➔",
-      action: (setActiveTab) => setActiveTab('wargaming')
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline) => {
+        setActiveTab('wargaming');
+        if (setHasDraggedTimeline) setHasDraggedTimeline(false);
+        if (setWarTimeline) setWarTimeline(6);
+      }
     },
     {
       targetId: "radar-region-eu",
       title: "Global HTA Radar 📡",
       description: "Finally, let's open the global market rollout radar. Here, we track country-by-country Health Technology Assessment (HTA) approval waves and launch windows in real-time.",
       buttonText: "Go to Market Radar ➔",
-      action: (setActiveTab) => setActiveTab('radar')
+      action: (setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter) => {
+        setActiveTab('radar');
+        if (setSelectedRegionFilter) setSelectedRegionFilter('ALL');
+      }
     },
     {
       targetId: null,
@@ -962,7 +971,7 @@ export default function App() {
 
     const step = tourSteps[tourStep];
     if (step.action) {
-      step.action(setActiveTab, setSelectedRoadmapMilestone);
+      step.action(setActiveTab, setSelectedRoadmapMilestone, setSelectedRegionFilter, setHasDraggedTimeline, setWarTimeline);
     }
 
     if (!step.targetId) {
