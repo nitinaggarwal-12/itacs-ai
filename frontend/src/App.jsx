@@ -571,22 +571,7 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
 
-  // Sidebar Group Mapping Helper
-  const getGroupForTab = (tab) => {
-    if (['home', 'cockpit', 'cascade', 'wargaming', 'radar', 'tracker'].includes(tab)) return 'command';
-    if (['matrix', 'builder', 'workshop', 'kol'].includes(tab)) return 'collaborate';
-    if (['deck', 'budget', 'roleplay'].includes(tab)) return 'deliverables';
-    if (['ingest', 'logistics', 'skills'].includes(tab)) return 'govern';
-    if (['theater'].includes(tab)) return 'showcase';
-    return 'command';
-  };
-
-  const [expandedGroup, setExpandedGroup] = useState(() => getGroupForTab(activeTab));
-
-  // Auto-expand group when activeTab changes
-  useEffect(() => {
-    setExpandedGroup(getGroupForTab(activeTab));
-  }, [activeTab]);
+  const [expandedGroup, setExpandedGroup] = useState('command');
 
   // Effect 1: Handle browser back/forward and hash changes reactively updating the state
   useEffect(() => {
