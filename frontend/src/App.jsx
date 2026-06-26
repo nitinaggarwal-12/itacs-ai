@@ -9490,9 +9490,18 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
-                <span>🟢 Positive Sentiment (&gt;75%)</span>
-                <span>🟡 Neutral Payer Pushback (40%-70%)</span>
+              {/* Healed Legend Contrast! */}
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                fontSize: '11.5px', 
+                color: 'var(--text-secondary)', 
+                fontWeight: 'bold',
+                borderTop: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.05)',
+                paddingTop: '12px'
+              }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>🟢 Positive Sentiment (&gt;75%)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>🟡 Neutral Payer Pushback (40%-70%)</span>
               </div>
             </div>
 
@@ -9585,9 +9594,17 @@ Based on the **ITACS Enterprise Memory**, I have synthesized a strategic assessm
                         <h6 style={{ margin: '0 0 6px 0', fontSize: '13.5px', color: 'var(--text-primary)', fontWeight: 'bold', lineHeight: '1.4' }}>
                           {pub.title}
                         </h6>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                        {/* Healed abstract item contrast! */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>
                           <span>{pub.journal}</span>
-                          <span style={{ color: pub.sentiment.includes('Positive') ? '#10b981' : '#f59e0b', fontWeight: 'bold' }}>{pub.sentiment}</span>
+                          <span style={{ 
+                            color: pub.sentiment.includes('Positive') 
+                              ? (theme === 'light' ? '#047857' : '#34d399') 
+                              : (theme === 'light' ? '#b45309' : '#fbbf24'), 
+                            fontWeight: 'bold' 
+                          }}>
+                            {pub.sentiment}
+                          </span>
                         </div>
                       </div>
                     ))}
