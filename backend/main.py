@@ -2314,6 +2314,46 @@ def list_imperatives(db: Session = Depends(get_db)):
         })
     return res
 
+@app.get("/api/diagnose-seed")
+def diagnose_seed(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("""
+            INSERT INTO strategic_imperatives (id, title, description, category, priority, resource_tier, trade_offs, risks) VALUES
+            ('a0e8d8d3-575d-4f30-8c22-79919f2f8111', 
+             'Optimize Regional Cold-Chain Distribution Channels', 
+             'Mitigate temperature fluctuation risks by deploying IoT-enabled smart sensors across regional distributor warehouses.', 
+             'clinical', 'medium', 'low', 
+             'Increases minor operational overhead for local warehouse staff, but avoids costly batch failures.', 
+             'Potential sensor battery failures or connection dropouts in older facilities.'),
+             
+            ('b1f9e9e4-686e-5041-9d33-8aa2af3f9222', 
+             'Establish Dedicated Regional Care Coordinators', 
+             'Hire specialized oncology nurse coordinators in high-volume community clinics to streamline personalized mRNA vaccine scheduling and patient onboarding.', 
+             'operational', 'high', 'medium', 
+             'Requires direct headcount budget reallocation, but reduces patient scheduling delays by 35%.', 
+             'Slower hiring cycles in rural markets might delay regional launch timelines.'),
+             
+            ('c2a0faf5-797f-6152-ae44-9bb3bf4fa333', 
+             'Launch Community Practicing Educational Campaign', 
+             'Deploy a nationwide medical affairs field campaign targeting community oncologists to build confidence in customized vaccine safety and sequencing protocols.', 
+             'clinical', 'high', 'high', 
+             'Demands significant travel and marketing capital, but directly counters competitor monotherapy market share gains.', 
+             'Oncologist scheduling fatigue might limit engagement; requires highly polished, brief materials.')
+            ON CONFLICT (id) DO NOTHING;
+        """))
+        
+        db.execute(text("""
+            INSERT INTO tactical_actions (id, imperative_id, action_text, owner_role, strength_of_evidence) VALUES
+            ('d3f8f8c4-1a2b-3c4d-5e6f-7a8b9c0d1e11', 'a0e8d8d3-575d-4f30-8c22-79919f2f8111', 'Conduct a pilot run of 50 smart sensors in the Southwest regional hub.', 'Supply Chain Lead', 0.92),
+            ('e4a9a9d5-2b3c-4d5e-6f7a-8b9c0d1e2f22', 'b1f9e9e4-686e-5041-9d33-8aa2af3f9222', 'Deploy nurse coordinators to top 15 community practice sites by Q3.', 'Clinical Operations Director', 0.88),
+            ('f5b0b0e6-3c4d-5e6f-7a8b-9c0d1e2f3a33', 'c2a0faf5-797f-6152-ae44-9bb3bf4fa333', 'Deliver 120 regional peer-to-peer dinner symposia led by key opinion leaders.', 'Medical Affairs Lead', 0.95)
+            ON CONFLICT (id) DO NOTHING;
+        """))
+        db.commit()
+        return {"status": "success", "message": "Database seeded successfully!"}
+    except Exception as e:
+        return {"status": "error", "error_message": str(e)}
+
 @app.post("/api/imperatives")
 def create_imperative(payload: ImperativeCreatePayload, db: Session = Depends(get_db)):
     """Creates a new strategic imperative."""
